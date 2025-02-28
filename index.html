@@ -75,13 +75,23 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        window.nextStep = function() {
+            document.getElementById('step-1').classList.remove('active');
+            document.getElementById('step-2').classList.add('active');
+        };
+        
+        window.prevStep = function() {
+            document.getElementById('step-2').classList.remove('active');
+            document.getElementById('step-1').classList.add('active');
+        };
+
         window.submitForm = async function () {
             const formData = {
                 name: document.getElementById('name').value,
                 city: document.getElementById('city').value,
                 event_date: document.getElementById('event_date').value,
-                services: Array.from(document.querySelectorAll('input[name=\"services\"]:checked')).map(e => e.value),
-                rehearsal: document.querySelector('input[name=\"rehearsal\"]:checked')?.value || "No",
+                services: Array.from(document.querySelectorAll('input[name="services"]:checked')).map(e => e.value),
+                rehearsal: document.querySelector('input[name="rehearsal"]:checked')?.value || "No",
                 budget: document.getElementById('budget').value.trim() || null,
                 special_requests: document.getElementById('special-requests').value
             };
