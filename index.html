@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rent For Event Inquiry Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { max-width: 600px; margin: auto; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+        .hidden { display: none; }
+    </style>
     <script>
         function showWarning(message) {
             alert(message);
@@ -11,17 +18,26 @@
         
         function checkCity() {
             let city = document.getElementById('city').value;
+            let karaoke = document.getElementById('karaoke');
             if (city !== 'Los Angeles' && city !== 'Miami' && city !== 'New York') {
                 showWarning("Unfortunately, we don’t serve this area. The minimum order is $2500.");
             }
+            if (karaoke.checked && (city !== 'Los Angeles' && city !== 'Miami')) {
+                showWarning("Unfortunately, we don’t have Karaoke in this area.");
+                karaoke.checked = false;
+            }
         }
         
-        function checkKaraoke() {
-            let city = document.getElementById('city').value;
-            let karaoke = document.getElementById('karaoke').checked;
-            if (karaoke && (city !== 'Los Angeles' && city !== 'Miami')) {
-                showWarning("Unfortunately, we don’t have Karaoke in this area.");
-            }
+        function toggleRehearsal() {
+            let rehearsalSection = document.getElementById('rehearsal-section');
+            let rehearsalNeeded = document.querySelector('input[name="rehearsal"]:checked').value;
+            rehearsalSection.style.display = rehearsalNeeded === 'Yes' ? 'block' : 'none';
+        }
+        
+        function toggleStageDetails() {
+            let stageSection = document.getElementById('stage-details');
+            let stageChecked = document.getElementById('stage').checked;
+            stageSection.style.display = stageChecked ? 'block' : 'none';
         }
     </script>
 </head>
@@ -30,7 +46,7 @@
     
     <form>
         <label for="name">What is your name?</label>
-        <input type="text" id="name" name="name" required><br><br>
+        <input type="text" id="name" name="name" required>
         
         <label for="city">What city and state is your event in?</label>
         <select id="city" name="city" onchange="checkCity()">
@@ -38,21 +54,44 @@
             <option value="Miami">Miami</option>
             <option value="New York">New York</option>
             <option value="Other">Other</option>
-        </select><br><br>
+        </select>
         
-        <label>Which services do you need?</label><br>
-        <input type="checkbox" id="karaoke" name="services" value="Karaoke" onchange="checkKaraoke()"> Karaoke<br>
-        <input type="checkbox" name="services" value="Stage"> Stage<br>
+        <label>Which services do you need?</label>
+        <input type="checkbox" id="karaoke" name="services" value="Karaoke"> Karaoke<br>
+        <input type="checkbox" id="stage" name="services" value="Stage" onchange="toggleStageDetails()"> Stage<br>
         <input type="checkbox" name="services" value="Audio"> Audio<br>
         <input type="checkbox" name="services" value="Lighting"> Lighting<br>
         <input type="checkbox" name="services" value="Video Production"> Video Production<br>
-        <br>
+        
+        <div id="stage-details" class="hidden">
+            <label for="stage-size">Stage Size (ft):</label>
+            <input type="text" id="stage-size" name="stage-size">
+            <label for="stage-railings">Do you need railings?</label>
+            <select id="stage-railings" name="stage-railings">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </div>
         
         <label for="event_date">Event Date:</label>
-        <input type="date" id="event_date" name="event_date"><br><br>
+        <input type="date" id="event_date" name="event_date">
         
         <label for="event_time">Event Start Time:</label>
-        <input type="time" id="event_time" name="event_time"><br><br>
+        <input type="time" id="event_time" name="event_time">
+        
+        <label>Will there be a rehearsal for the event?</label>
+        <input type="radio" name="rehearsal" value="Yes" onclick="toggleRehearsal()"> Yes
+        <input type="radio" name="rehearsal" value="No" onclick="toggleRehearsal()"> No
+        
+        <div id="rehearsal-section" class="hidden">
+            <label for="rehearsal-date">Rehearsal Date:</label>
+            <input type="date" id="rehearsal-date" name="rehearsal-date">
+            <label for="rehearsal-time">Rehearsal Time:</label>
+            <input type="time" id="rehearsal-time" name="rehearsal-time">
+        </div>
+        
+        <label for="notes">Do you have any final comments or requests?</label>
+        <textarea id="notes" name="notes"></textarea>
         
         <input type="submit" value="Submit">
     </form>
