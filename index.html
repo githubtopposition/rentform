@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <form id="event-form">
+    <form id="event-form" onsubmit="event.preventDefault(); submitForm();">
         <!-- Step 1: Qualification -->
         <div id="step-1" class="step active">
             <h2>Step 1: Qualification</h2>
@@ -46,7 +46,7 @@
                 <option value="3000+">3000+</option>
             </select>
             
-            <label for="services">Requested Services *</label>
+            <label>Requested Services *</label>
             <input type="checkbox" id="service_stage" name="services" value="Stage" onchange="toggleStageDetails()"> Stage<br>
             <input type="checkbox" id="service_audio" name="services" value="Audio"> Audio<br>
             <input type="checkbox" id="service_lighting" name="services" value="Lighting"> Lighting<br>
