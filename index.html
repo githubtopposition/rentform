@@ -11,7 +11,7 @@
         <!-- Step 1: Qualification -->
         <div id="step-1" class="step active">
             <h2>Step 1: Qualification</h2>
-            <label for="client_name">Client Name (Required)</label>
+            <label for="client_name">Client Name (Required) *</label>
             <input type="text" id="client_name" name="client_name" required>
             
             <label for="company_name">Company Name</label>
@@ -20,14 +20,16 @@
             <label for="client_phone">Phone Number</label>
             <input type="tel" id="client_phone" name="client_phone">
             
-            <label for="client_status">Client Status</label>
-            <select id="client_status" name="client_status">
+            <label for="client_status">Client Status *</label>
+            <select id="client_status" name="client_status" required>
+                <option value="">Select...</option>
                 <option value="new">New</option>
                 <option value="existing">Existing</option>
             </select>
             
-            <label for="event_type">Event Type</label>
-            <select id="event_type" name="event_type">
+            <label for="event_type">Event Type *</label>
+            <select id="event_type" name="event_type" required>
+                <option value="">Select...</option>
                 <option value="corporate">Corporate</option>
                 <option value="wedding">Wedding</option>
                 <option value="concert">Concert</option>
@@ -35,15 +37,16 @@
                 <option value="other">Other</option>
             </select>
             
-            <label for="number_of_attendees">Number of Attendees</label>
-            <select id="number_of_attendees" name="number_of_attendees" onchange="toggleSmallEventSection()">
+            <label for="number_of_attendees">Number of Attendees *</label>
+            <select id="number_of_attendees" name="number_of_attendees" required>
+                <option value="">Select...</option>
                 <option value="0-100">0-100</option>
                 <option value="100-500">100-500</option>
                 <option value="500-3000">500-3000</option>
                 <option value="3000+">3000+</option>
             </select>
             
-            <label>Requested Services</label>
+            <label>Requested Services *</label>
             <input type="checkbox" name="services" value="Stage" onchange="toggleStageDetails()"> Stage<br>
             <input type="checkbox" name="services" value="Audio"> Audio<br>
             <input type="checkbox" name="services" value="Lighting"> Lighting<br>
@@ -51,7 +54,7 @@
             <input type="checkbox" name="services" value="Live Stream"> Live Stream<br>
             
             <div id="stage-details" class="hidden">
-                <label for="stage_size">Stage Size</label>
+                <label for="stage_size">Stage Size *</label>
                 <input type="text" id="stage_size" name="stage_size">
                 <label for="stage_stairs">Do you need stairs?</label>
                 <select id="stage_stairs" name="stage_stairs">
@@ -66,7 +69,7 @@
             </div>
             
             <div class="btn-container">
-                <button type="button" class="btn" onclick="nextStep()">Next</button>
+                <button type="button" class="btn" onclick="validateAndNextStep()">Next</button>
             </div>
         </div>
         
@@ -76,8 +79,9 @@
             <label for="client_budget">Client Budget</label>
             <input type="text" id="client_budget" name="client_budget">
             
-            <label for="venue_type">Venue Type</label>
-            <select id="venue_type" name="venue_type">
+            <label for="venue_type">Venue Type *</label>
+            <select id="venue_type" name="venue_type" required>
+                <option value="">Select...</option>
                 <option value="hotel">Hotel</option>
                 <option value="event_space">Event Space</option>
                 <option value="outdoor">Outdoor</option>
@@ -97,8 +101,8 @@
                 <option value="generator">Generator Needed</option>
             </select>
             
-            <label for="contract_terms">Contract Terms Agreement</label>
-            <input type="checkbox" id="contract_terms" name="contract_terms"> Yes, I Agree
+            <label for="contract_terms">Contract Terms Agreement *</label>
+            <input type="checkbox" id="contract_terms" name="contract_terms" required> Yes, I Agree
             
             <div class="btn-container">
                 <button type="button" class="btn" onclick="prevStep()">Back</button>
@@ -109,5 +113,12 @@
 
     <script src="firebase-config.js"></script>
     <script src="form-handler.js"></script>
+    <script>
+        function validateAndNextStep() {
+            if (validateStep1()) {
+                nextStep();
+            }
+        }
+    </script>
 </body>
 </html>
