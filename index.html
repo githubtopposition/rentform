@@ -5,62 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rent For Event - Qualification & Sales</title>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
     <style>
         .step { display: none; }
         .active { display: block; }
         .btn-container { margin-top: 20px; text-align: center; }
     </style>
-    <script>
-       
-    const firebaseConfig = {
-        apiKey: "AIzaSyAt5epmObu48vITxwDaNnEbc1ni5_G8-YQ",
-        authDomain: "rent-form.firebaseapp.com",
-        projectId: "rent-form",
-        storageBucket: "rent-form.appspot.com",
-        messagingSenderId: "136805752728",
-        appId: "1:136805752728:web:0d9a1bdb1b65fda0aafded",
-        measurementId: "G-QKHCPHR9ZC"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-        
-        let currentStep = 1;
-        function showStep(step) {
-            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-            document.getElementById(`step-${step}`).classList.add('active');
-            currentStep = step;
-        }
-        function nextStep() {
-            if (currentStep < 2) showStep(currentStep + 1);
-        }
-        function prevStep() {
-            if (currentStep > 1) showStep(currentStep - 1);
-        }
-        function submitForm() {
-            const formData = {
-                name: document.getElementById('name').value,
-                city: document.getElementById('city').value,
-                event_date: document.getElementById('event_date').value,
-                services: Array.from(document.querySelectorAll('input[name="services"]:checked')).map(e => e.value),
-                rehearsal: document.querySelector('input[name="rehearsal"]:checked')?.value || "No",
-                budget: document.getElementById('budget').value,
-                special_requests: document.getElementById('special-requests').value
-            };
-            
-            db.collection("event_inquiries").add(formData)
-                .then(() => {
-                    alert("Form submitted successfully!");
-                    location.reload();
-                })
-                .catch(error => {
-                    console.error("Error writing document: ", error);
-                    alert("Error submitting form.");
-                });
-        }
-    </script>
 </head>
 <body>
     <form onsubmit="event.preventDefault(); submitForm();">
@@ -108,5 +57,44 @@
             </div>
         </div>
     </form>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAt5epmObu48vITxwDaNnEbc1ni5_G8-YQ",
+            authDomain: "rent-form.firebaseapp.com",
+            projectId: "rent-form",
+            storageBucket: "rent-form.appspot.com",
+            messagingSenderId: "136805752728",
+            appId: "1:136805752728:web:0d9a1bdb1b65fda0aafded",
+            measurementId: "G-QKHCPHR9ZC"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.submitForm = async function () {
+            const formData = {
+                name: document.getElementById('name').value,
+                city: document.getElementById('city').value,
+                event_date: document.getElementById('event_date').value,
+                services: Array.from(document.querySelectorAll('input[name=\"services\"]:checked')).map(e => e.value),
+                rehearsal: document.querySelector('input[name=\"rehearsal\"]:checked')?.value || "No",
+                budget: document.getElementById('budget').value.trim() || null,
+                special_requests: document.getElementById('special-requests').value
+            };
+
+            try {
+                await addDoc(collection(db, "event_inquiries"), formData);
+                alert("Form submitted successfully!");
+                location.reload();
+            } catch (error) {
+                console.error("Error writing document: ", error);
+                alert("Error submitting form.");
+            }
+        };
+    </script>
 </body>
 </html>
