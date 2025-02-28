@@ -8,59 +8,97 @@
 </head>
 <body>
     <form id="event-form">
+        <!-- Step 1: Qualification -->
         <div id="step-1" class="step active">
             <h2>Step 1: Qualification</h2>
-            <label for="event_purpose">What is the purpose of audio at your event? (Required)</label>
-            <select id="event_purpose" name="event_purpose" required>
-                <option value="Corporate Presentation">Corporate Presentation / Panel Discussion</option>
-                <option value="DJ Performance">DJ Performance / Wedding / Private Party</option>
-                <option value="Live Band">Live Band Performance / Concert</option>
-                <option value="Experiential Marketing">Experiential Marketing / Large Public Event</option>
-                <option value="Other">Other</option>
+            <label for="client_name">Client Name (Required)</label>
+            <input type="text" id="client_name" name="client_name" required>
+            
+            <label for="company_name">Company Name</label>
+            <input type="text" id="company_name" name="company_name">
+            
+            <label for="client_phone">Phone Number</label>
+            <input type="tel" id="client_phone" name="client_phone">
+            
+            <label for="client_status">Client Status</label>
+            <select id="client_status" name="client_status">
+                <option value="new">New</option>
+                <option value="existing">Existing</option>
             </select>
             
-            <label for="attendees">How many attendees are expected? (Required)</label>
-            <select id="attendees" name="attendees" required>
-                <option value="0-100">0-100 (Small – Standard PA Package)</option>
-                <option value="100-500">100-500 (Medium – Customizable PA & Wireless Mics)</option>
-                <option value="500-3000">500-3000 (Large – L-Acoustics Line Array Recommended)</option>
-                <option value="3000+">3000+ (Major Event – Full-Scale Production Planning)</option>
+            <label for="event_type">Event Type</label>
+            <select id="event_type" name="event_type">
+                <option value="corporate">Corporate</option>
+                <option value="wedding">Wedding</option>
+                <option value="concert">Concert</option>
+                <option value="trade_show">Trade Show</option>
+                <option value="other">Other</option>
             </select>
             
-            <label>Do you need microphones? (Optional)</label>
-            <input type="checkbox" name="microphones" value="Handheld Wireless"> Handheld Wireless<br>
-            <input type="checkbox" name="microphones" value="Lavalier"> Lavalier<br>
-            <input type="checkbox" name="microphones" value="Headset"> Headset<br>
-            <input type="checkbox" name="microphones" value="Wired Handheld"> Wired Handheld<br>
+            <label for="number_of_attendees">Number of Attendees</label>
+            <select id="number_of_attendees" name="number_of_attendees" onchange="toggleSmallEventSection()">
+                <option value="0-100">0-100</option>
+                <option value="100-500">100-500</option>
+                <option value="500-3000">500-3000</option>
+                <option value="3000+">3000+</option>
+            </select>
+            
+            <label>Requested Services</label>
+            <input type="checkbox" name="services" value="Stage" onchange="toggleStageDetails()"> Stage<br>
+            <input type="checkbox" name="services" value="Audio"> Audio<br>
+            <input type="checkbox" name="services" value="Lighting"> Lighting<br>
+            <input type="checkbox" name="services" value="LED Wall"> LED Wall<br>
+            <input type="checkbox" name="services" value="Live Stream"> Live Stream<br>
+            
+            <div id="stage-details" class="hidden">
+                <label for="stage_size">Stage Size</label>
+                <input type="text" id="stage_size" name="stage_size">
+                <label for="stage_stairs">Do you need stairs?</label>
+                <select id="stage_stairs" name="stage_stairs">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+                <label for="stage_railings">Do you need railings?</label>
+                <select id="stage_railings" name="stage_railings">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
             
             <div class="btn-container">
                 <button type="button" class="btn" onclick="nextStep()">Next</button>
             </div>
         </div>
         
+        <!-- Step 2: Sales -->
         <div id="step-2" class="step">
             <h2>Step 2: Sales Questions</h2>
-            <label>Will there be a rehearsal for the event? (Required)</label>
-            <input type="radio" name="rehearsal" value="Yes"> Yes
-            <input type="radio" name="rehearsal" value="No"> No
+            <label for="client_budget">Client Budget</label>
+            <input type="text" id="client_budget" name="client_budget">
             
-            <label for="sound_system">What type of sound system do you need? (Required)</label>
-            <select id="sound_system" name="sound_system" required>
-                <option value="Standard PA">Standard PA System</option>
-                <option value="L-Acoustics">L-Acoustics Line Array</option>
-                <option value="Custom Sound">Custom Sound Design</option>
+            <label for="venue_type">Venue Type</label>
+            <select id="venue_type" name="venue_type">
+                <option value="hotel">Hotel</option>
+                <option value="event_space">Event Space</option>
+                <option value="outdoor">Outdoor</option>
+                <option value="private_house">Private House</option>
             </select>
             
-            <label for="venue_power">What type of power is available at the venue? (Required)</label>
-            <select id="venue_power" name="venue_power" required>
-                <option value="110V">Standard 110V outlets</option>
-                <option value="220V">220V outlets</option>
-                <option value="Generator">Generator power needed</option>
-                <option value="Not sure">Not sure</option>
+            <label for="rehearsal">Will there be a rehearsal?</label>
+            <input type="radio" name="rehearsal" value="yes"> Yes
+            <input type="radio" name="rehearsal" value="no"> No
+            
+            <label for="loading_path">Loading Path Details</label>
+            <input type="text" id="loading_path" name="loading_path">
+            
+            <label for="power">Will power be available, or do you need a generator?</label>
+            <select id="power" name="power">
+                <option value="venue_power">Venue Power</option>
+                <option value="generator">Generator Needed</option>
             </select>
             
-            <label for="special_requests">Any additional requests? (Optional)</label>
-            <textarea id="special_requests" name="special_requests"></textarea>
+            <label for="contract_terms">Contract Terms Agreement</label>
+            <input type="checkbox" id="contract_terms" name="contract_terms"> Yes, I Agree
             
             <div class="btn-container">
                 <button type="button" class="btn" onclick="prevStep()">Back</button>
