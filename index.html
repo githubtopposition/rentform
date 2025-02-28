@@ -47,11 +47,11 @@
             </select>
             
             <label>Requested Services *</label>
-            <input type="checkbox" id="service_stage" name="services" value="Stage" onchange="toggleStageDetails()"> Stage<br>
-            <input type="checkbox" id="service_audio" name="services" value="Audio"> Audio<br>
-            <input type="checkbox" id="service_lighting" name="services" value="Lighting"> Lighting<br>
-            <input type="checkbox" id="service_ledwall" name="services" value="LED Wall"> LED Wall<br>
-            <input type="checkbox" id="service_livestream" name="services" value="Live Stream"> Live Stream<br>
+            <input type="checkbox" id="service_stage" name="services" value="Stage" onchange="toggleStageDetails()"> <label for="service_stage">Stage</label><br>
+            <input type="checkbox" id="service_audio" name="services" value="Audio"> <label for="service_audio">Audio</label><br>
+            <input type="checkbox" id="service_lighting" name="services" value="Lighting"> <label for="service_lighting">Lighting</label><br>
+            <input type="checkbox" id="service_ledwall" name="services" value="LED Wall"> <label for="service_ledwall">LED Wall</label><br>
+            <input type="checkbox" id="service_livestream" name="services" value="Live Stream"> <label for="service_livestream">Live Stream</label><br>
             
             <div id="stage-details" class="hidden">
                 <label for="stage_size">Stage Size *</label>
@@ -89,8 +89,8 @@
             </select>
             
             <label for="rehearsal">Will there be a rehearsal?</label>
-            <input type="radio" id="rehearsal_yes" name="rehearsal" value="yes"> Yes
-            <input type="radio" id="rehearsal_no" name="rehearsal" value="no"> No
+            <input type="radio" id="rehearsal_yes" name="rehearsal" value="yes"> <label for="rehearsal_yes">Yes</label>
+            <input type="radio" id="rehearsal_no" name="rehearsal" value="no"> <label for="rehearsal_no">No</label>
             
             <label for="loading_path">Loading Path Details</label>
             <input type="text" id="loading_path" name="loading_path">
@@ -102,7 +102,7 @@
             </select>
             
             <label for="contract_terms">Contract Terms Agreement *</label>
-            <input type="checkbox" id="contract_terms" name="contract_terms" required> Yes, I Agree
+            <input type="checkbox" id="contract_terms" name="contract_terms" required> <label for="contract_terms">Yes, I Agree</label>
             
             <div class="btn-container">
                 <button type="button" class="btn" onclick="prevStep()">Back</button>
