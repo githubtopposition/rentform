@@ -46,12 +46,12 @@
                 <option value="3000+">3000+</option>
             </select>
             
-            <label>Requested Services *</label>
-            <input type="checkbox" name="services" value="Stage" onchange="toggleStageDetails()"> Stage<br>
-            <input type="checkbox" name="services" value="Audio"> Audio<br>
-            <input type="checkbox" name="services" value="Lighting"> Lighting<br>
-            <input type="checkbox" name="services" value="LED Wall"> LED Wall<br>
-            <input type="checkbox" name="services" value="Live Stream"> Live Stream<br>
+            <label for="services">Requested Services *</label>
+            <input type="checkbox" id="service_stage" name="services" value="Stage" onchange="toggleStageDetails()"> Stage<br>
+            <input type="checkbox" id="service_audio" name="services" value="Audio"> Audio<br>
+            <input type="checkbox" id="service_lighting" name="services" value="Lighting"> Lighting<br>
+            <input type="checkbox" id="service_ledwall" name="services" value="LED Wall"> LED Wall<br>
+            <input type="checkbox" id="service_livestream" name="services" value="Live Stream"> Live Stream<br>
             
             <div id="stage-details" class="hidden">
                 <label for="stage_size">Stage Size *</label>
@@ -89,8 +89,8 @@
             </select>
             
             <label for="rehearsal">Will there be a rehearsal?</label>
-            <input type="radio" name="rehearsal" value="yes"> Yes
-            <input type="radio" name="rehearsal" value="no"> No
+            <input type="radio" id="rehearsal_yes" name="rehearsal" value="yes"> Yes
+            <input type="radio" id="rehearsal_no" name="rehearsal" value="no"> No
             
             <label for="loading_path">Loading Path Details</label>
             <input type="text" id="loading_path" name="loading_path">
