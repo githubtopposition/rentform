@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent For Event Inquiry Form</title>
+    <script>
+        function showWarning(message) {
+            alert(message);
+        }
+        
+        function checkCity() {
+            let city = document.getElementById('city').value;
+            if (city !== 'Los Angeles' && city !== 'Miami' && city !== 'New York') {
+                showWarning("Unfortunately, we don’t serve this area. The minimum order is $2500.");
+            }
+        }
+        
+        function checkKaraoke() {
+            let city = document.getElementById('city').value;
+            let karaoke = document.getElementById('karaoke').checked;
+            if (karaoke && (city !== 'Los Angeles' && city !== 'Miami')) {
+                showWarning("Unfortunately, we don’t have Karaoke in this area.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Rent For Event Inquiry Form</h2>
+    
+    <form>
+        <label for="name">What is your name?</label>
+        <input type="text" id="name" name="name" required><br><br>
+        
+        <label for="city">What city and state is your event in?</label>
+        <select id="city" name="city" onchange="checkCity()">
+            <option value="Los Angeles">Los Angeles</option>
+            <option value="Miami">Miami</option>
+            <option value="New York">New York</option>
+            <option value="Other">Other</option>
+        </select><br><br>
+        
+        <label>Which services do you need?</label><br>
+        <input type="checkbox" id="karaoke" name="services" value="Karaoke" onchange="checkKaraoke()"> Karaoke<br>
+        <input type="checkbox" name="services" value="Stage"> Stage<br>
+        <input type="checkbox" name="services" value="Audio"> Audio<br>
+        <input type="checkbox" name="services" value="Lighting"> Lighting<br>
+        <input type="checkbox" name="services" value="Video Production"> Video Production<br>
+        <br>
+        
+        <label for="event_date">Event Date:</label>
+        <input type="date" id="event_date" name="event_date"><br><br>
+        
+        <label for="event_time">Event Start Time:</label>
+        <input type="time" id="event_time" name="event_time"><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
