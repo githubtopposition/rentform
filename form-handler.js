@@ -56,4 +56,21 @@ window.submitForm = async function () {
     };
 
     if (document.getElementById("service_stage").checked) {
-        formData.stage_purpose = document
+        formData.stage_purpose = document.getElementById('stage_purpose')?.value || "";
+        formData.stage_type = document.getElementById('stage_type')?.value || "";
+    }
+
+    if (document.getElementById("service_audio").checked) {
+        formData.audio_purpose = document.getElementById('audio_purpose')?.value || "";
+        formData.audio_attendees = document.getElementById('audio_attendees')?.value || "";
+    }
+
+    try {
+        await addDoc(collection(db, "event_inquiries"), formData);
+        alert("Form submitted successfully!");
+        location.reload();
+    } catch (error) {
+        console.error("Error writing document: ", error);
+        alert("Error submitting form.");
+    }
+};
