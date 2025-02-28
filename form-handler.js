@@ -38,6 +38,23 @@ window.validateStep1 = function() {
     return isValid;
 };
 
+window.validateAndNextStep = function() {
+    if (validateStep1()) {
+        nextStep();
+    }
+};
+
+window.toggleStageDetails = function() {
+    let stageCheckbox = document.getElementById("service_stage");
+    let stageDetails = document.getElementById("stage-details");
+    stageDetails.style.display = stageCheckbox.checked ? "block" : "none";
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    toggleStageDetails();  // Скрыть поле при загрузке страницы
+    document.getElementById("service_stage").addEventListener("change", toggleStageDetails);
+});
+
 window.submitForm = async function () {
     const formData = {
         client_name: document.getElementById('client_name')?.value || "",
