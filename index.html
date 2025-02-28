@@ -5,11 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rent For Event Inquiry Form</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        form { max-width: 600px; margin: auto; }
-        label { font-weight: bold; display: block; margin-top: 10px; }
-        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+        body {
+            font-family: 'Lato', sans-serif;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            margin: 20px;
+            color: #343a40;
+        }
+        form {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
         .hidden { display: none; }
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .btn:hover { background: #0056b3; }
+        .summary {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
     </style>
     <script>
         function showWarning(message) {
@@ -39,61 +79,66 @@
             let stageChecked = document.getElementById('stage').checked;
             stageSection.style.display = stageChecked ? 'block' : 'none';
         }
+        
+        function showSummary() {
+            document.getElementById('form-section').style.display = 'none';
+            document.getElementById('summary-section').style.display = 'block';
+            document.getElementById('summary-name').innerText = document.getElementById('name').value;
+            document.getElementById('summary-city').innerText = document.getElementById('city').value;
+            document.getElementById('summary-event-date').innerText = document.getElementById('event_date').value || 'Not specified';
+        }
     </script>
 </head>
 <body>
-    <h2>Rent For Event Inquiry Form</h2>
-    
-    <form>
-        <label for="name">What is your name? (Required)</label>
-        <input type="text" id="name" name="name" required>
-        
-        <label for="city">What city and state is your event in? (Required)</label>
-        <select id="city" name="city" onchange="checkCity()" required>
-            <option value="Los Angeles">Los Angeles</option>
-            <option value="Miami">Miami</option>
-            <option value="New York">New York</option>
-            <option value="Other">Other</option>
-        </select>
-        
-        <label>Which services do you need? (Required)</label>
-        <input type="checkbox" id="karaoke" name="services" value="Karaoke"> Karaoke<br>
-        <input type="checkbox" id="stage" name="services" value="Stage" onchange="toggleStageDetails()"> Stage<br>
-        <input type="checkbox" name="services" value="Audio"> Audio<br>
-        <input type="checkbox" name="services" value="Lighting"> Lighting<br>
-        <input type="checkbox" name="services" value="Video Production"> Video Production<br>
-        
-        <div id="stage-details" class="hidden">
-            <label for="stage-size">Stage Size (ft) (Required if selected):</label>
-            <input type="text" id="stage-size" name="stage-size">
-            <label for="stage-railings">Do you need railings? (Required if selected)</label>
-            <select id="stage-railings" name="stage-railings">
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
+    <div id="form-section">
+        <form onsubmit="event.preventDefault(); showSummary();">
+            <h2>Rent For Event Inquiry Form</h2>
+            
+            <label for="name">What is your name? (Required)</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="city">What city and state is your event in? (Required)</label>
+            <select id="city" name="city" onchange="checkCity()" required>
+                <option value="Los Angeles">Los Angeles</option>
+                <option value="Miami">Miami</option>
+                <option value="New York">New York</option>
+                <option value="Other">Other</option>
             </select>
-        </div>
-        
-        <label for="event_date">Event Date: (Required)</label>
-        <input type="date" id="event_date" name="event_date" required>
-        
-        <label for="event_time">Event Start Time: (Optional)</label>
-        <input type="time" id="event_time" name="event_time">
-        
-        <label>Will there be a rehearsal for the event? (Required)</label>
-        <input type="radio" name="rehearsal" value="Yes" onclick="toggleRehearsal()" required> Yes
-        <input type="radio" name="rehearsal" value="No" onclick="toggleRehearsal()"> No
-        
-        <div id="rehearsal-section" class="hidden">
-            <label for="rehearsal-date">Rehearsal Date: (Optional)</label>
-            <input type="date" id="rehearsal-date" name="rehearsal-date">
-            <label for="rehearsal-time">Rehearsal Time: (Optional)</label>
-            <input type="time" id="rehearsal-time" name="rehearsal-time">
-        </div>
-        
-        <label for="notes">Do you have any final comments or requests? (Optional)</label>
-        <textarea id="notes" name="notes"></textarea>
-        
-        <input type="submit" value="Submit">
-    </form>
+            
+            <label for="event_date">Event Date: (Required)</label>
+            <input type="date" id="event_date" name="event_date" required>
+            
+            <label>Which services do you need? (Required)</label>
+            <input type="checkbox" id="karaoke" name="services" value="Karaoke"> Karaoke<br>
+            <input type="checkbox" id="stage" name="services" value="Stage" onchange="toggleStageDetails()"> Stage<br>
+            <input type="checkbox" name="services" value="Audio"> Audio<br>
+            <input type="checkbox" name="services" value="Lighting"> Lighting<br>
+            
+            <div id="stage-details" class="hidden">
+                <label for="stage-size">Stage Size (ft):</label>
+                <input type="text" id="stage-size" name="stage-size">
+                <label for="stage-railings">Do you need railings?</label>
+                <select id="stage-railings" name="stage-railings">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            
+            <label>Will there be a rehearsal for the event?</label>
+            <input type="radio" name="rehearsal" value="Yes" onclick="toggleRehearsal()"> Yes
+            <input type="radio" name="rehearsal" value="No" onclick="toggleRehearsal()"> No
+            
+            <input type="submit" class="btn" value="Review & Submit">
+        </form>
+    </div>
+    
+    <div id="summary-section" class="summary">
+        <h2>Summary</h2>
+        <p><strong>Name:</strong> <span id="summary-name"></span></p>
+        <p><strong>City:</strong> <span id="summary-city"></span></p>
+        <p><strong>Event Date:</strong> <span id="summary-event-date"></span></p>
+        <button class="btn" onclick="location.reload();">Edit</button>
+        <button class="btn" style="background: #28a745;" onclick="alert('Form Submitted!')">Submit</button>
+    </div>
 </body>
 </html>
