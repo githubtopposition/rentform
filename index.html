@@ -45,18 +45,18 @@
     <h2>Rent For Event Inquiry Form</h2>
     
     <form>
-        <label for="name">What is your name?</label>
+        <label for="name">What is your name? (Required)</label>
         <input type="text" id="name" name="name" required>
         
-        <label for="city">What city and state is your event in?</label>
-        <select id="city" name="city" onchange="checkCity()">
+        <label for="city">What city and state is your event in? (Required)</label>
+        <select id="city" name="city" onchange="checkCity()" required>
             <option value="Los Angeles">Los Angeles</option>
             <option value="Miami">Miami</option>
             <option value="New York">New York</option>
             <option value="Other">Other</option>
         </select>
         
-        <label>Which services do you need?</label>
+        <label>Which services do you need? (Required)</label>
         <input type="checkbox" id="karaoke" name="services" value="Karaoke"> Karaoke<br>
         <input type="checkbox" id="stage" name="services" value="Stage" onchange="toggleStageDetails()"> Stage<br>
         <input type="checkbox" name="services" value="Audio"> Audio<br>
@@ -64,33 +64,33 @@
         <input type="checkbox" name="services" value="Video Production"> Video Production<br>
         
         <div id="stage-details" class="hidden">
-            <label for="stage-size">Stage Size (ft):</label>
+            <label for="stage-size">Stage Size (ft) (Required if selected):</label>
             <input type="text" id="stage-size" name="stage-size">
-            <label for="stage-railings">Do you need railings?</label>
+            <label for="stage-railings">Do you need railings? (Required if selected)</label>
             <select id="stage-railings" name="stage-railings">
                 <option value="Yes">Yes</option>
                 <option value="No">No</option>
             </select>
         </div>
         
-        <label for="event_date">Event Date:</label>
-        <input type="date" id="event_date" name="event_date">
+        <label for="event_date">Event Date: (Required)</label>
+        <input type="date" id="event_date" name="event_date" required>
         
-        <label for="event_time">Event Start Time:</label>
+        <label for="event_time">Event Start Time: (Optional)</label>
         <input type="time" id="event_time" name="event_time">
         
-        <label>Will there be a rehearsal for the event?</label>
-        <input type="radio" name="rehearsal" value="Yes" onclick="toggleRehearsal()"> Yes
+        <label>Will there be a rehearsal for the event? (Required)</label>
+        <input type="radio" name="rehearsal" value="Yes" onclick="toggleRehearsal()" required> Yes
         <input type="radio" name="rehearsal" value="No" onclick="toggleRehearsal()"> No
         
         <div id="rehearsal-section" class="hidden">
-            <label for="rehearsal-date">Rehearsal Date:</label>
+            <label for="rehearsal-date">Rehearsal Date: (Optional)</label>
             <input type="date" id="rehearsal-date" name="rehearsal-date">
-            <label for="rehearsal-time">Rehearsal Time:</label>
+            <label for="rehearsal-time">Rehearsal Time: (Optional)</label>
             <input type="time" id="rehearsal-time" name="rehearsal-time">
         </div>
         
-        <label for="notes">Do you have any final comments or requests?</label>
+        <label for="notes">Do you have any final comments or requests? (Optional)</label>
         <textarea id="notes" name="notes"></textarea>
         
         <input type="submit" value="Submit">
