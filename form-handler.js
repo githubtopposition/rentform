@@ -12,9 +12,8 @@ function showStep(step) {
 }
 
 window.nextStep = function() {
-    if (validateStep1()) {
-        showStep(currentStep + 1);
-    }
+    if (currentStep === 1 && !validateStep1()) return;
+    showStep(currentStep + 1);
 };
 
 window.prevStep = function() {
@@ -24,7 +23,6 @@ window.prevStep = function() {
 window.validateStep1 = function() {
     let isValid = true;
     let requiredFields = ["client_name", "client_status", "event_type", "number_of_attendees"];
-
     requiredFields.forEach(id => {
         let field = document.getElementById(id);
         if (!field || !field.value) {
@@ -34,23 +32,11 @@ window.validateStep1 = function() {
             field.style.border = "1px solid #ccc";
         }
     });
-
     if (!isValid) {
         alert("Please fill in all required fields before proceeding.");
     }
     return isValid;
 };
-
-window.toggleStageDetails = function() {
-    let stageCheckbox = document.getElementById("service_stage");
-    let stageDetails = document.getElementById("stage-details");
-    stageDetails.style.display = stageCheckbox.checked ? "block" : "none";
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-    toggleStageDetails();  // Скрыть поле при загрузке страницы
-    document.getElementById("service_stage").addEventListener("change", toggleStageDetails);
-});
 
 window.submitForm = async function () {
     const formData = {
@@ -61,8 +47,6 @@ window.submitForm = async function () {
         event_type: document.getElementById('event_type')?.value || "",
         number_of_attendees: document.getElementById('number_of_attendees')?.value || "",
         requested_services: Array.from(document.querySelectorAll('input[name="services"]:checked')).map(e => e.value),
-        stage_size: document.getElementById('stage_size')?.value || "",
-        rehearsal: document.querySelector('input[name="rehearsal"]:checked')?.value || "No",
         venue_type: document.getElementById('venue_type')?.value || "",
         client_budget: document.getElementById('client_budget')?.value || "",
         loading_path: document.getElementById('loading_path')?.value || "",
@@ -71,12 +55,5 @@ window.submitForm = async function () {
         special_requests: document.getElementById('special_requests')?.value || ""
     };
 
-    try {
-        await addDoc(collection(db, "event_inquiries"), formData);
-        alert("Form submitted successfully!");
-        location.reload();
-    } catch (error) {
-        console.error("Error writing document: ", error);
-        alert("Error submitting form.");
-    }
-};
+    if (document.getElementById("service_stage").checked) {
+        formData.stage_purpose = document
