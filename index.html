@@ -1,105 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rent For Event Inquiry Form</title>
+    <title>Rent For Event - Qualification & Sales</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
     <style>
-        body {
-            font-family: 'Lato', sans-serif;
-            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
-            margin: 20px;
-            color: #343a40;
-        }
-        form {
-            max-width: 600px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            margin: auto;
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        .hidden { display: none; }
-        .btn {
-            background: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-        .btn:hover { background: #0056b3; }
-        .summary {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            display: none;
-        }
+        .step { display: none; }
+        .active { display: block; }
+        .btn-container { margin-top: 20px; text-align: center; }
     </style>
     <script>
-        function showWarning(message) {
-            alert(message);
-        }
+       
+    const firebaseConfig = {
+        apiKey: "AIzaSyAt5epmObu48vITxwDaNnEbc1ni5_G8-YQ",
+        authDomain: "rent-form.firebaseapp.com",
+        projectId: "rent-form",
+        storageBucket: "rent-form.appspot.com",
+        messagingSenderId: "136805752728",
+        appId: "1:136805752728:web:0d9a1bdb1b65fda0aafded",
+        measurementId: "G-QKHCPHR9ZC"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
         
-        function checkCity() {
-            let city = document.getElementById('city').value;
-            let karaoke = document.getElementById('karaoke');
-            if (city !== 'Los Angeles' && city !== 'Miami' && city !== 'New York') {
-                showWarning("Unfortunately, we don’t serve this area. The minimum order is $2500.");
-            }
-            if (karaoke.checked && (city !== 'Los Angeles' && city !== 'Miami')) {
-                showWarning("Unfortunately, we don’t have Karaoke in this area.");
-                karaoke.checked = false;
-            }
+        let currentStep = 1;
+        function showStep(step) {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${step}`).classList.add('active');
+            currentStep = step;
         }
-        
-        function toggleRehearsal() {
-            let rehearsalSection = document.getElementById('rehearsal-section');
-            let rehearsalNeeded = document.querySelector('input[name="rehearsal"]:checked').value;
-            rehearsalSection.style.display = rehearsalNeeded === 'Yes' ? 'block' : 'none';
+        function nextStep() {
+            if (currentStep < 2) showStep(currentStep + 1);
         }
-        
-        function toggleStageDetails() {
-            let stageSection = document.getElementById('stage-details');
-            let stageChecked = document.getElementById('stage').checked;
-            stageSection.style.display = stageChecked ? 'block' : 'none';
+        function prevStep() {
+            if (currentStep > 1) showStep(currentStep - 1);
         }
-        
-        function showSummary() {
-            document.getElementById('form-section').style.display = 'none';
-            document.getElementById('summary-section').style.display = 'block';
-            document.getElementById('summary-name').innerText = document.getElementById('name').value;
-            document.getElementById('summary-city').innerText = document.getElementById('city').value;
-            document.getElementById('summary-event-date').innerText = document.getElementById('event_date').value || 'Not specified';
+        function submitForm() {
+            const formData = {
+                name: document.getElementById('name').value,
+                city: document.getElementById('city').value,
+                event_date: document.getElementById('event_date').value,
+                services: Array.from(document.querySelectorAll('input[name="services"]:checked')).map(e => e.value),
+                rehearsal: document.querySelector('input[name="rehearsal"]:checked')?.value || "No",
+                budget: document.getElementById('budget').value,
+                special_requests: document.getElementById('special-requests').value
+            };
+            
+            db.collection("event_inquiries").add(formData)
+                .then(() => {
+                    alert("Form submitted successfully!");
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error("Error writing document: ", error);
+                    alert("Error submitting form.");
+                });
         }
     </script>
 </head>
 <body>
-    <div id="form-section">
-        <form onsubmit="event.preventDefault(); showSummary();">
-            <h2>Rent For Event Inquiry Form</h2>
-            
+    <form onsubmit="event.preventDefault(); submitForm();">
+        <div id="step-1" class="step active">
+            <h2>Step 1: Qualification</h2>
             <label for="name">What is your name? (Required)</label>
             <input type="text" id="name" name="name" required>
             
             <label for="city">What city and state is your event in? (Required)</label>
-            <select id="city" name="city" onchange="checkCity()" required>
+            <select id="city" name="city" required>
                 <option value="Los Angeles">Los Angeles</option>
                 <option value="Miami">Miami</option>
                 <option value="New York">New York</option>
@@ -110,36 +81,32 @@
             <input type="date" id="event_date" name="event_date" required>
             
             <label>Which services do you need? (Required)</label>
-            <input type="checkbox" id="karaoke" name="services" value="Karaoke"> Karaoke<br>
-            <input type="checkbox" id="stage" name="services" value="Stage" onchange="toggleStageDetails()"> Stage<br>
+            <input type="checkbox" name="services" value="Karaoke"> Karaoke<br>
+            <input type="checkbox" name="services" value="Stage"> Stage<br>
             <input type="checkbox" name="services" value="Audio"> Audio<br>
             <input type="checkbox" name="services" value="Lighting"> Lighting<br>
-            
-            <div id="stage-details" class="hidden">
-                <label for="stage-size">Stage Size (ft):</label>
-                <input type="text" id="stage-size" name="stage-size">
-                <label for="stage-railings">Do you need railings?</label>
-                <select id="stage-railings" name="stage-railings">
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
+            <div class="btn-container">
+                <button type="button" class="btn" onclick="nextStep()">Next</button>
             </div>
+        </div>
+        
+        <div id="step-2" class="step">
+            <h2>Step 2: Sales Questions</h2>
+            <label>Will there be a rehearsal for the event? (Required)</label>
+            <input type="radio" name="rehearsal" value="Yes"> Yes
+            <input type="radio" name="rehearsal" value="No"> No
             
-            <label>Will there be a rehearsal for the event?</label>
-            <input type="radio" name="rehearsal" value="Yes" onclick="toggleRehearsal()"> Yes
-            <input type="radio" name="rehearsal" value="No" onclick="toggleRehearsal()"> No
+            <label for="budget">What is your estimated budget? (Optional)</label>
+            <input type="text" id="budget" name="budget">
             
-            <input type="submit" class="btn" value="Review & Submit">
-        </form>
-    </div>
-    
-    <div id="summary-section" class="summary">
-        <h2>Summary</h2>
-        <p><strong>Name:</strong> <span id="summary-name"></span></p>
-        <p><strong>City:</strong> <span id="summary-city"></span></p>
-        <p><strong>Event Date:</strong> <span id="summary-event-date"></span></p>
-        <button class="btn" onclick="location.reload();">Edit</button>
-        <button class="btn" style="background: #28a745;" onclick="alert('Form Submitted!')">Submit</button>
-    </div>
+            <label for="special-requests">Do you have any special requests? (Optional)</label>
+            <textarea id="special-requests" name="special-requests"></textarea>
+            
+            <div class="btn-container">
+                <button type="button" class="btn" onclick="prevStep()">Back</button>
+                <button type="submit" class="btn">Submit</button>
+            </div>
+        </div>
+    </form>
 </body>
 </html>
