@@ -5,59 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rent For Event - Qualification & Sales</title>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <style>
-        .step { display: none; }
-        .active { display: block; }
-        .btn-container { margin-top: 20px; text-align: center; }
-    </style>
-</head>
-<body>
-    <form onsubmit="event.preventDefault(); submitForm();">
-        <div id="step-1" class="step active">
-            <h2>Step 1: Qualification</h2>
-            <label for="name">What is your name? (Required)</label>
-            <input type="text" id="name" name="name" required>
-            
-            <label for="city">What city and state is your event in? (Required)</label>
-            <select id="city" name="city" required>
-                <option value="Los Angeles">Los Angeles</option>
-                <option value="Miami">Miami</option>
-                <option value="New York">New York</option>
-                <option value="Other">Other</option>
-            </select>
-            
-            <label for="event_date">Event Date: (Required)</label>
-            <input type="date" id="event_date" name="event_date" required>
-            
-            <label>Which services do you need? (Required)</label>
-            <input type="checkbox" name="services" value="Karaoke"> Karaoke<br>
-            <input type="checkbox" name="services" value="Stage"> Stage<br>
-            <input type="checkbox" name="services" value="Audio"> Audio<br>
-            <input type="checkbox" name="services" value="Lighting"> Lighting<br>
-            <div class="btn-container">
-                <button type="button" class="btn" onclick="nextStep()">Next</button>
-            </div>
-        </div>
-        
-        <div id="step-2" class="step">
-            <h2>Step 2: Sales Questions</h2>
-            <label>Will there be a rehearsal for the event? (Required)</label>
-            <input type="radio" name="rehearsal" value="Yes"> Yes
-            <input type="radio" name="rehearsal" value="No"> No
-            
-            <label for="budget">What is your estimated budget? (Optional)</label>
-            <input type="text" id="budget" name="budget">
-            
-            <label for="special-requests">Do you have any special requests? (Optional)</label>
-            <textarea id="special-requests" name="special-requests"></textarea>
-            
-            <div class="btn-container">
-                <button type="button" class="btn" onclick="prevStep()">Back</button>
-                <button type="submit" class="btn">Submit</button>
-            </div>
-        </div>
-    </form>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
@@ -75,25 +22,15 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        window.nextStep = function() {
-            document.getElementById('step-1').classList.remove('active');
-            document.getElementById('step-2').classList.add('active');
-        };
-        
-        window.prevStep = function() {
-            document.getElementById('step-2').classList.remove('active');
-            document.getElementById('step-1').classList.add('active');
-        };
-
         window.submitForm = async function () {
             const formData = {
-                name: document.getElementById('name').value,
-                city: document.getElementById('city').value,
-                event_date: document.getElementById('event_date').value,
-                services: Array.from(document.querySelectorAll('input[name="services"]:checked')).map(e => e.value),
+                event_purpose: document.getElementById('event_purpose').value,
+                attendees: document.getElementById('attendees').value,
+                microphones: Array.from(document.querySelectorAll('input[name="microphones"]:checked')).map(e => e.value),
                 rehearsal: document.querySelector('input[name="rehearsal"]:checked')?.value || "No",
-                budget: document.getElementById('budget').value.trim() || null,
-                special_requests: document.getElementById('special-requests').value
+                sound_system: document.getElementById('sound_system').value,
+                venue_power: document.getElementById('venue_power').value,
+                special_requests: document.getElementById('special_requests').value
             };
 
             try {
@@ -105,6 +42,81 @@
                 alert("Error submitting form.");
             }
         };
+    </script>
+</head>
+<body>
+    <form onsubmit="event.preventDefault(); submitForm();">
+        <div id="step-1" class="step active">
+            <h2>Step 1: Qualification</h2>
+            <label for="event_purpose">What is the purpose of audio at your event? (Required)</label>
+            <select id="event_purpose" name="event_purpose" required>
+                <option value="Corporate Presentation">Corporate Presentation / Panel Discussion</option>
+                <option value="DJ Performance">DJ Performance / Wedding / Private Party</option>
+                <option value="Live Band">Live Band Performance / Concert</option>
+                <option value="Experiential Marketing">Experiential Marketing / Large Public Event</option>
+                <option value="Other">Other</option>
+            </select>
+            
+            <label for="attendees">How many attendees are expected? (Required)</label>
+            <select id="attendees" name="attendees" required>
+                <option value="0-100">0-100 (Small – Standard PA Package)</option>
+                <option value="100-500">100-500 (Medium – Customizable PA & Wireless Mics)</option>
+                <option value="500-3000">500-3000 (Large – L-Acoustics Line Array Recommended)</option>
+                <option value="3000+">3000+ (Major Event – Full-Scale Production Planning)</option>
+            </select>
+            
+            <label>Do you need microphones? (Optional)</label>
+            <input type="checkbox" name="microphones" value="Handheld Wireless"> Handheld Wireless<br>
+            <input type="checkbox" name="microphones" value="Lavalier"> Lavalier<br>
+            <input type="checkbox" name="microphones" value="Headset"> Headset<br>
+            <input type="checkbox" name="microphones" value="Wired Handheld"> Wired Handheld<br>
+            
+            <div class="btn-container">
+                <button type="button" class="btn" onclick="nextStep()">Next</button>
+            </div>
+        </div>
+        
+        <div id="step-2" class="step">
+            <h2>Step 2: Sales Questions</h2>
+            <label>Will there be a rehearsal for the event? (Required)</label>
+            <input type="radio" name="rehearsal" value="Yes"> Yes
+            <input type="radio" name="rehearsal" value="No"> No
+            
+            <label for="sound_system">What type of sound system do you need? (Required)</label>
+            <select id="sound_system" name="sound_system" required>
+                <option value="Standard PA">Standard PA System</option>
+                <option value="L-Acoustics">L-Acoustics Line Array</option>
+                <option value="Custom Sound">Custom Sound Design</option>
+            </select>
+            
+            <label for="venue_power">What type of power is available at the venue? (Required)</label>
+            <select id="venue_power" name="venue_power" required>
+                <option value="110V">Standard 110V outlets</option>
+                <option value="220V">220V outlets</option>
+                <option value="Generator">Generator power needed</option>
+                <option value="Not sure">Not sure</option>
+            </select>
+            
+            <label for="special_requests">Any additional requests? (Optional)</label>
+            <textarea id="special_requests" name="special_requests"></textarea>
+            
+            <div class="btn-container">
+                <button type="button" class="btn" onclick="prevStep()">Back</button>
+                <button type="submit" class="btn">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        function nextStep() {
+            document.getElementById('step-1').classList.remove('active');
+            document.getElementById('step-2').classList.add('active');
+        }
+        
+        function prevStep() {
+            document.getElementById('step-2').classList.remove('active');
+            document.getElementById('step-1').classList.add('active');
+        }
     </script>
 </body>
 </html>
