@@ -8,24 +8,12 @@
 </head>
 <body>
     <form id="event-form" onsubmit="event.preventDefault(); submitForm();">
+        
         <!-- Step 1: Qualification -->
         <div id="step-1" class="step active">
             <h2>Step 1: Qualification</h2>
             <label for="client_name">Client Name (Required) *</label>
             <input type="text" id="client_name" name="client_name" required>
-            
-            <label for="company_name">Company Name</label>
-            <input type="text" id="company_name" name="company_name">
-            
-            <label for="client_phone">Phone Number</label>
-            <input type="tel" id="client_phone" name="client_phone">
-            
-            <label for="client_status">Client Status *</label>
-            <select id="client_status" name="client_status" required>
-                <option value="">Select...</option>
-                <option value="new">New</option>
-                <option value="existing">Existing</option>
-            </select>
             
             <label for="event_type">Event Type *</label>
             <select id="event_type" name="event_type" required>
@@ -37,76 +25,65 @@
                 <option value="other">Other</option>
             </select>
             
-            <label for="number_of_attendees">Number of Attendees *</label>
-            <select id="number_of_attendees" name="number_of_attendees" required>
-                <option value="">Select...</option>
-                <option value="0-100">0-100</option>
-                <option value="100-500">100-500</option>
-                <option value="500-3000">500-3000</option>
-                <option value="3000+">3000+</option>
-            </select>
-            
             <label>Requested Services *</label>
-            <input type="checkbox" id="service_stage" name="services" value="Stage" onchange="toggleStageDetails()"> <label for="service_stage">Stage</label><br>
-            <input type="checkbox" id="service_audio" name="services" value="Audio"> <label for="service_audio">Audio</label><br>
-            <input type="checkbox" id="service_lighting" name="services" value="Lighting"> <label for="service_lighting">Lighting</label><br>
-            <input type="checkbox" id="service_ledwall" name="services" value="LED Wall"> <label for="service_ledwall">LED Wall</label><br>
-            <input type="checkbox" id="service_livestream" name="services" value="Live Stream"> <label for="service_livestream">Live Stream</label><br>
-            
-            <div id="stage-details" class="hidden">
-                <label for="stage_size">Stage Size *</label>
-                <input type="text" id="stage_size" name="stage_size">
-                <label for="stage_stairs">Do you need stairs?</label>
-                <select id="stage_stairs" name="stage_stairs">
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-                <label for="stage_railings">Do you need railings?</label>
-                <select id="stage_railings" name="stage_railings">
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-            </div>
+            <input type="checkbox" id="service_stage" name="services" value="Stage" onchange="toggleServiceQuestions()"> <label for="service_stage">Stage Rental</label><br>
+            <input type="checkbox" id="service_audio" name="services" value="Audio" onchange="toggleServiceQuestions()"> <label for="service_audio">Audio Rental</label><br>
             
             <div class="btn-container">
                 <button type="button" class="btn" onclick="validateAndNextStep()">Next</button>
             </div>
         </div>
         
-        <!-- Step 2: Sales -->
-        <div id="step-2" class="step">
-            <h2>Step 2: Sales Questions</h2>
-            <label for="client_budget">Client Budget</label>
-            <input type="text" id="client_budget" name="client_budget">
-            
-            <label for="venue_type">Venue Type *</label>
-            <select id="venue_type" name="venue_type" required>
-                <option value="">Select...</option>
-                <option value="hotel">Hotel</option>
-                <option value="event_space">Event Space</option>
-                <option value="outdoor">Outdoor</option>
-                <option value="private_house">Private House</option>
+        <!-- Step 2: Stage Rental Questionnaire (Appears if Stage is selected) -->
+        <div id="step-2-stage" class="step hidden">
+            <h2>Step 2: Stage Rental Questionnaire</h2>
+            <label for="stage_purpose">What is the purpose of the stage rental?</label>
+            <select id="stage_purpose" name="stage_purpose">
+                <option value="presentation">Presentation/Speech</option>
+                <option value="live_band">Live Band</option>
+                <option value="dj">DJ Performance</option>
+                <option value="fashion_show">Fashion Show</option>
+                <option value="product_launch">Product Launch</option>
+                <option value="award_ceremony">Award Ceremony</option>
+                <option value="other">Other</option>
             </select>
             
-            <label for="rehearsal">Will there be a rehearsal?</label>
-            <input type="radio" id="rehearsal_yes" name="rehearsal" value="yes"> <label for="rehearsal_yes">Yes</label>
-            <input type="radio" id="rehearsal_no" name="rehearsal" value="no"> <label for="rehearsal_no">No</label>
-            
-            <label for="loading_path">Loading Path Details</label>
-            <input type="text" id="loading_path" name="loading_path">
-            
-            <label for="power">Will power be available, or do you need a generator?</label>
-            <select id="power" name="power">
-                <option value="venue_power">Venue Power</option>
-                <option value="generator">Generator Needed</option>
+            <label for="stage_type">What type of stage do you need?</label>
+            <select id="stage_type" name="stage_type">
+                <option value="portable">Portable Stage</option>
+                <option value="mobile">Mobile Stage</option>
+                <option value="truss">Truss-Based Stage</option>
             </select>
-            
-            <label for="contract_terms">Contract Terms Agreement *</label>
-            <input type="checkbox" id="contract_terms" name="contract_terms" required> <label for="contract_terms">Yes, I Agree</label>
             
             <div class="btn-container">
                 <button type="button" class="btn" onclick="prevStep()">Back</button>
-                <button type="submit" class="btn">Submit</button>
+                <button type="button" class="btn" onclick="nextStep()">Next</button>
+            </div>
+        </div>
+        
+        <!-- Step 2: Audio Rental Questionnaire (Appears if Audio is selected) -->
+        <div id="step-2-audio" class="step hidden">
+            <h2>Step 2: Audio Rental Questionnaire</h2>
+            <label for="audio_purpose">What is the purpose of audio at your event?</label>
+            <select id="audio_purpose" name="audio_purpose">
+                <option value="corporate">Corporate Presentation / Panel Discussion</option>
+                <option value="dj">DJ Performance / Wedding / Private Party</option>
+                <option value="live_band">Live Band Performance / Concert</option>
+                <option value="marketing">Experiential Marketing / Large Public Event</option>
+                <option value="other">Other</option>
+            </select>
+            
+            <label for="audio_attendees">How many attendees are expected?</label>
+            <select id="audio_attendees" name="audio_attendees">
+                <option value="0-100">0-100 (Small – Standard PA Package)</option>
+                <option value="100-500">100-500 (Medium – Customizable PA & Wireless Mics)</option>
+                <option value="500-3000">500-3000 (Large – L-Acoustics Line Array Recommended)</option>
+                <option value="3000+">3000+ (Major Event – Full-Scale Production Planning)</option>
+            </select>
+            
+            <div class="btn-container">
+                <button type="button" class="btn" onclick="prevStep()">Back</button>
+                <button type="button" class="btn" onclick="nextStep()">Next</button>
             </div>
         </div>
     </form>
@@ -114,10 +91,9 @@
     <script type="module" src="firebase-config.js"></script>
     <script type="module" src="form-handler.js"></script>
     <script>
-        function validateAndNextStep() {
-            if (validateStep1()) {
-                nextStep();
-            }
+        function toggleServiceQuestions() {
+            document.getElementById("step-2-stage").classList.toggle("hidden", !document.getElementById("service_stage").checked);
+            document.getElementById("step-2-audio").classList.toggle("hidden", !document.getElementById("service_audio").checked);
         }
     </script>
 </body>
