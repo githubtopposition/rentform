@@ -11,7 +11,33 @@ function showStep(step) {
     currentStep = step;
 }
 
+function validateStep1() {
+    let isValid = true;
+    let requiredFields = ["client_name", "client_status", "event_type", "number_of_attendees"];
+    requiredFields.forEach(id => {
+        let field = document.getElementById(id);
+        if (!field.value) {
+            field.style.border = "2px solid red";
+            isValid = false;
+        } else {
+            field.style.border = "1px solid #ccc";
+        }
+    });
+    
+    if (!isValid) {
+        alert("Please fill in all required fields before proceeding.");
+    }
+    return isValid;
+}
+
+function toggleStageDetails() {
+    let stageCheckbox = document.querySelector('input[name="services"][value="Stage"]');
+    let stageDetails = document.getElementById("stage-details");
+    stageDetails.style.display = stageCheckbox.checked ? "block" : "none";
+}
+
 window.nextStep = function() {
+    if (currentStep === 1 && !validateStep1()) return;
     showStep(currentStep + 1);
 };
 
@@ -21,12 +47,20 @@ window.prevStep = function() {
 
 window.submitForm = async function () {
     const formData = {
-        event_purpose: document.getElementById('event_purpose').value,
-        attendees: document.getElementById('attendees').value,
-        microphones: Array.from(document.querySelectorAll('input[name="microphones"]:checked')).map(e => e.value),
+        client_name: document.getElementById('client_name').value,
+        company_name: document.getElementById('company_name').value,
+        client_phone: document.getElementById('client_phone').value,
+        client_status: document.getElementById('client_status').value,
+        event_type: document.getElementById('event_type').value,
+        number_of_attendees: document.getElementById('number_of_attendees').value,
+        requested_services: Array.from(document.querySelectorAll('input[name="services"]:checked')).map(e => e.value),
+        stage_size: document.getElementById('stage_size')?.value || "",
         rehearsal: document.querySelector('input[name="rehearsal"]:checked')?.value || "No",
-        sound_system: document.getElementById('sound_system').value,
-        venue_power: document.getElementById('venue_power').value,
+        venue_type: document.getElementById('venue_type').value,
+        client_budget: document.getElementById('client_budget').value,
+        loading_path: document.getElementById('loading_path').value,
+        power: document.getElementById('power').value,
+        contract_terms: document.getElementById('contract_terms').checked,
         special_requests: document.getElementById('special_requests').value
     };
 
@@ -39,3 +73,8 @@ window.submitForm = async function () {
         alert("Error submitting form.");
     }
 };
+
+// Event Listeners
+window.addEventListener("DOMContentLoaded", () => {
+    document.querySelector('input[name="services"][value="Stage"]').addEventListener("change", toggleStageDetails);
+});
