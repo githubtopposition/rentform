@@ -58,21 +58,24 @@ window.validateAndNextStep = function() {
     }
 };
 
-window.toggleStageDetails = function() {
+window.toggleServiceQuestions = function() {
+    let stageSection = document.getElementById("step-2-stage");
+    let audioSection = document.getElementById("step-2-audio");
     let stageCheckbox = document.getElementById("service_stage");
-    let stageDetails = document.getElementById("stage-details");
+    let audioCheckbox = document.getElementById("service_audio");
     
-    if (!stageDetails) return;
-
-    stageDetails.style.display = stageCheckbox && stageCheckbox.checked ? "block" : "none";
+    if (stageSection) {
+        stageSection.classList.toggle("hidden", !stageCheckbox.checked);
+    }
+    if (audioSection) {
+        audioSection.classList.toggle("hidden", !audioCheckbox.checked);
+    }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    toggleStageDetails();
-    let stageCheckbox = document.getElementById("service_stage");
-    if (stageCheckbox) {
-        stageCheckbox.addEventListener("change", toggleStageDetails);
-    }
+    toggleServiceQuestions();
+    document.getElementById("service_stage").addEventListener("change", toggleServiceQuestions);
+    document.getElementById("service_audio").addEventListener("change", toggleServiceQuestions);
 });
 
 window.submitForm = async function () {
