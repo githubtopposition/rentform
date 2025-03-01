@@ -25,8 +25,8 @@ window.validateStep1 = function() {
     let requiredFields = ["client_name", "client_status", "event_type", "number_of_attendees"];
     requiredFields.forEach(id => {
         let field = document.getElementById(id);
-        if (!field || !field.value) {
-            field.style.border = "2px solid red";
+        if (!field || !field.value) { // Проверяем, существует ли поле
+            if (field) field.style.border = "2px solid red";
             isValid = false;
         } else {
             field.style.border = "1px solid #ccc";
@@ -48,9 +48,9 @@ window.toggleStageDetails = function() {
     let stageCheckbox = document.getElementById("service_stage");
     let stageDetails = document.getElementById("stage-details");
     
-    if (stageCheckbox && stageDetails) { 
-        stageDetails.style.display = stageCheckbox.checked ? "block" : "none";
-    }
+    if (!stageDetails) return; // Если элемент отсутствует, не выполняем код
+
+    stageDetails.style.display = stageCheckbox && stageCheckbox.checked ? "block" : "none";
 };
 
 document.addEventListener("DOMContentLoaded", () => {
