@@ -47,12 +47,18 @@ window.validateAndNextStep = function() {
 window.toggleStageDetails = function() {
     let stageCheckbox = document.getElementById("service_stage");
     let stageDetails = document.getElementById("stage-details");
-    stageDetails.style.display = stageCheckbox.checked ? "block" : "none";
+    
+    if (stageCheckbox && stageDetails) { 
+        stageDetails.style.display = stageCheckbox.checked ? "block" : "none";
+    }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
     toggleStageDetails();  // Скрыть поле при загрузке страницы
-    document.getElementById("service_stage").addEventListener("change", toggleStageDetails);
+    let stageCheckbox = document.getElementById("service_stage");
+    if (stageCheckbox) {
+        stageCheckbox.addEventListener("change", toggleStageDetails);
+    }
 });
 
 window.submitForm = async function () {
@@ -72,12 +78,12 @@ window.submitForm = async function () {
         special_requests: document.getElementById('special_requests')?.value || ""
     };
 
-    if (document.getElementById("service_stage").checked) {
+    if (document.getElementById("service_stage")?.checked) {
         formData.stage_purpose = document.getElementById('stage_purpose')?.value || "";
         formData.stage_type = document.getElementById('stage_type')?.value || "";
     }
 
-    if (document.getElementById("service_audio").checked) {
+    if (document.getElementById("service_audio")?.checked) {
         formData.audio_purpose = document.getElementById('audio_purpose')?.value || "";
         formData.audio_attendees = document.getElementById('audio_attendees')?.value || "";
     }
