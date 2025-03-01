@@ -6,8 +6,14 @@ import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/fir
 let currentStep = 1;
 
 function showStep(step) {
+    let stepElement = document.getElementById(`step-${step}`);
+    if (!stepElement) {
+        console.error(`Step ${step} not found in DOM.`);
+        return;
+    }
+    
     document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-    document.getElementById(`step-${step}`).classList.add('active');
+    stepElement.classList.add('active');
     currentStep = step;
 }
 
@@ -26,7 +32,7 @@ window.validateStep1 = function() {
     
     requiredFields.forEach(id => {
         let field = document.getElementById(id);
-        if (!field || !field.value.trim()) { // Проверяем, существует ли поле и заполнено ли оно
+        if (!field || !field.value.trim()) {
             if (field) field.style.border = "2px solid red";
             isValid = false;
         } else {
@@ -56,13 +62,13 @@ window.toggleStageDetails = function() {
     let stageCheckbox = document.getElementById("service_stage");
     let stageDetails = document.getElementById("stage-details");
     
-    if (!stageDetails) return; // Если элемент отсутствует, не выполняем код
+    if (!stageDetails) return;
 
     stageDetails.style.display = stageCheckbox && stageCheckbox.checked ? "block" : "none";
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    toggleStageDetails();  // Скрыть поле при загрузке страницы
+    toggleStageDetails();
     let stageCheckbox = document.getElementById("service_stage");
     if (stageCheckbox) {
         stageCheckbox.addEventListener("change", toggleStageDetails);
