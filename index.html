@@ -8,79 +8,13 @@
 </head>
 <body>
     <form id="event-form" onsubmit="event.preventDefault(); submitForm();">
-        
-        <!-- Step 1: Qualification -->
-        <div id="step-1" class="step active">
-            <h2>Step 1: Qualification</h2>
-            <label for="client_name">Client Name (Required) *</label>
-            <input type="text" id="client_name" name="client_name" required>
-            
-            <label for="event_type">Event Type *</label>
-            <select id="event_type" name="event_type" required>
-                <option value="">Select...</option>
-                <option value="corporate">Corporate</option>
-                <option value="wedding">Wedding</option>
-                <option value="concert">Concert</option>
-                <option value="trade_show">Trade Show</option>
-                <option value="other">Other</option>
-            </select>
-            
-            <label>Requested Services *</label>
-            <input type="checkbox" id="service_stage" name="services" value="Stage"> <label for="service_stage">Stage Rental</label><br>
-            <input type="checkbox" id="service_audio" name="services" value="Audio"> <label for="service_audio">Audio Rental</label><br>
-            
-            <div class="btn-container">
-                <button type="button" class="btn" onclick="validateAndNextStep()">Next</button>
-            </div>
-        </div>
-        
-        <!-- Step 2: Service Selection -->
-        <div id="step-2" class="step hidden">
-            <!-- Stage Rental Questionnaire (Appears if Stage is selected) -->
-            <div id="step-2-stage" class="hidden">
-                <h2>Step 2: Stage Rental Questionnaire</h2>
-                <label for="stage_purpose">What is the purpose of the stage rental?</label>
-                <select id="stage_purpose" name="stage_purpose">
-                    <option value="presentation">Presentation/Speech</option>
-                    <option value="live_band">Live Band</option>
-                    <option value="dj">DJ Performance</option>
-                    <option value="fashion_show">Fashion Show</option>
-                    <option value="product_launch">Product Launch</option>
-                    <option value="award_ceremony">Award Ceremony</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
-            
-            <!-- Audio Rental Questionnaire (Appears if Audio is selected) -->
-            <div id="step-2-audio" class="hidden">
-                <h2>Step 2: Audio Rental Questionnaire</h2>
-                <label for="audio_purpose">What is the purpose of audio at your event?</label>
-                <select id="audio_purpose" name="audio_purpose">
-                    <option value="corporate">Corporate Presentation / Panel Discussion</option>
-                    <option value="dj">DJ Performance / Wedding / Private Party</option>
-                    <option value="live_band">Live Band Performance / Concert</option>
-                    <option value="marketing">Experiential Marketing / Large Public Event</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
-            
-            <div class="btn-container">
-                <button type="button" class="btn" onclick="prevStep()">Back</button>
-                <button type="button" class="btn" onclick="nextStep()">Next</button>
-            </div>
-        </div>
-        
-        <!-- Step 3: Logistics -->
-        <div id="step-3" class="step hidden">
-            <h2>Step 3: Logistics</h2>
-        </div>
-        
-        <!-- Step 4: Final Confirmation -->
-        <div id="step-4" class="step hidden">
-            <h2>Step 4: Final Confirmation</h2>
+        <div id="dynamic-form"></div>
+        <div class="btn-container">
+            <button type="button" class="btn" onclick="validateAndNextStep()">Next</button>
+            <button type="submit" class="btn">Submit</button>
         </div>
     </form>
-
+    
     <script type="module" src="firebase-config.js"></script>
     <script type="module" src="form-handler.js"></script>
 </body>
