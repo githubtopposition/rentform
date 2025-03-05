@@ -69,7 +69,9 @@ function addQuestionToForm(question, container) {
     }
     
     let label = document.createElement("label");
-    label.setAttribute("for", question.id);
+    if (document.getElementById(question.id)) {
+        label.setAttribute("for", question.id);
+    }
     label.textContent = question.label;
     container.appendChild(label);
     
