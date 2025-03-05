@@ -25,33 +25,36 @@
     ]
   },
   "step_2": {
-    "stage_rental": {
-      "title": "Stage Rental Questionnaire",
-      "questions": [
-        {
-          "id": "stage_purpose",
-          "type": "select",
-          "label": "What is the purpose of the stage rental?",
-          "options": ["Presentation", "Live Band", "DJ Performance", "Fashion Show", "Product Launch", "Award Ceremony", "Other"]
-        },
-        {
-          "id": "stage_type",
-          "type": "select",
-          "label": "What type of stage do you need?",
-          "options": ["Portable", "Mobile", "Truss-Based"]
-        }
-      ]
-    },
-    "audio_rental": {
-      "title": "Audio Rental Questionnaire",
-      "questions": [
-        {
-          "id": "audio_purpose",
-          "type": "select",
-          "label": "What is the purpose of audio at your event?",
-          "options": ["Corporate Presentation", "DJ Performance", "Live Band Performance", "Marketing Event", "Other"]
-        }
-      ]
+    "title": "Service Selection Questions",
+    "categories": {
+      "stage_rental": {
+        "title": "Stage Rental Questionnaire",
+        "questions": [
+          {
+            "id": "stage_purpose",
+            "type": "select",
+            "label": "What is the purpose of the stage rental?",
+            "options": ["Presentation", "Live Band", "DJ Performance", "Fashion Show", "Product Launch", "Award Ceremony", "Other"]
+          },
+          {
+            "id": "stage_type",
+            "type": "select",
+            "label": "What type of stage do you need?",
+            "options": ["Portable", "Mobile", "Truss-Based"]
+          }
+        ]
+      },
+      "audio_rental": {
+        "title": "Audio Rental Questionnaire",
+        "questions": [
+          {
+            "id": "audio_purpose",
+            "type": "select",
+            "label": "What is the purpose of audio at your event?",
+            "options": ["Corporate Presentation", "DJ Performance", "Live Band Performance", "Marketing Event", "Other"]
+          }
+        ]
+      }
     }
   },
   "step_3": {
