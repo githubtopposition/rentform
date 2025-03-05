@@ -7,6 +7,12 @@ async function loadQuestions() {
     try {
         let response = await fetch("questions.json");
         let questionsData = await response.json();
+        
+        if (!questionsData || Object.keys(questionsData).length === 0) {
+            console.error("Error: questions.json is empty or malformed.");
+            return;
+        }
+        
         generateForm(questionsData);
     } catch (error) {
         console.error("Error loading questions.json", error);
@@ -18,9 +24,14 @@ document.addEventListener("DOMContentLoaded", loadQuestions);
 function generateForm(questionsData) {
     let formContainer = document.getElementById("dynamic-form");
     formContainer.innerHTML = "";
-
+    
     Object.keys(questionsData).forEach(step => {
         let stepData = questionsData[step];
+        if (!stepData || !stepData.questions) {
+            console.warn(`Skipping step ${step} - No questions found.`);
+            return;
+        }
+        
         let stepDiv = document.createElement("div");
         stepDiv.classList.add("step", "hidden");
         stepDiv.id = step;
@@ -30,6 +41,11 @@ function generateForm(questionsData) {
         stepDiv.appendChild(title);
         
         stepData.questions.forEach(question => {
+            if (!question.id || !question.type || !question.label) {
+                console.warn(`Skipping question - Missing fields in`, question);
+                return;
+            }
+            
             let label = document.createElement("label");
             label.setAttribute("for", question.id);
             label.textContent = question.label;
@@ -60,6 +76,7 @@ function generateForm(questionsData) {
                     input.appendChild(checkboxLabel);
                 });
             }
+            
             input.id = question.id;
             if (question.required) input.required = true;
             stepDiv.appendChild(input);
