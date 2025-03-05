@@ -8,7 +8,7 @@ let currentStep = 1;
 function showStep(step) {
     let stepElement = document.getElementById(`step-${step}`);
     if (!stepElement) {
-        console.error(`Step ${step} not found in DOM. Skipping step transition.`);
+        console.error(`Step ${step} not found in DOM.`);
         return;
     }
     
@@ -64,6 +64,10 @@ window.toggleServiceQuestions = function() {
     let audioSection = document.getElementById("step-2-audio");
     let stageCheckbox = document.getElementById("service_stage");
     let audioCheckbox = document.getElementById("service_audio");
+
+    if (stageCheckbox.checked || audioCheckbox.checked) {
+        document.getElementById("step-2").classList.remove("hidden");
+    }
     
     if (stageSection) {
         stageSection.classList.toggle("hidden", !stageCheckbox.checked);
