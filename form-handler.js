@@ -60,21 +60,20 @@ window.validateAndNextStep = function() {
 };
 
 window.toggleServiceQuestions = function() {
+    let step2Container = document.getElementById("step-2");
     let stageSection = document.getElementById("step-2-stage");
     let audioSection = document.getElementById("step-2-audio");
     let stageCheckbox = document.getElementById("service_stage");
     let audioCheckbox = document.getElementById("service_audio");
 
-    if (stageCheckbox.checked || audioCheckbox.checked) {
-        document.getElementById("step-2").classList.remove("hidden");
+    if (!step2Container || !stageSection || !audioSection) {
+        console.error("One or more step-2 elements are missing.");
+        return;
     }
     
-    if (stageSection) {
-        stageSection.classList.toggle("hidden", !stageCheckbox.checked);
-    }
-    if (audioSection) {
-        audioSection.classList.toggle("hidden", !audioCheckbox.checked);
-    }
+    step2Container.classList.toggle("hidden", !(stageCheckbox.checked || audioCheckbox.checked));
+    stageSection.classList.toggle("hidden", !stageCheckbox.checked);
+    audioSection.classList.toggle("hidden", !audioCheckbox.checked);
 };
 
 document.addEventListener("DOMContentLoaded", () => {
