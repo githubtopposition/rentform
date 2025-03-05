@@ -8,11 +8,12 @@ let currentStep = 1;
 function showStep(step) {
     let stepElement = document.getElementById(`step-${step}`);
     if (!stepElement) {
-        console.error(`Step ${step} not found in DOM.`);
+        console.error(`Step ${step} not found in DOM. Skipping step transition.`);
         return;
     }
     
     document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+    stepElement.classList.remove("hidden");
     stepElement.classList.add('active');
     currentStep = step;
 }
@@ -74,8 +75,15 @@ window.toggleServiceQuestions = function() {
 
 document.addEventListener("DOMContentLoaded", () => {
     toggleServiceQuestions();
-    document.getElementById("service_stage").addEventListener("change", toggleServiceQuestions);
-    document.getElementById("service_audio").addEventListener("change", toggleServiceQuestions);
+    let stageCheckbox = document.getElementById("service_stage");
+    let audioCheckbox = document.getElementById("service_audio");
+    
+    if (stageCheckbox) {
+        stageCheckbox.addEventListener("change", toggleServiceQuestions);
+    }
+    if (audioCheckbox) {
+        audioCheckbox.addEventListener("change", toggleServiceQuestions);
+    }
 });
 
 window.submitForm = async function () {
