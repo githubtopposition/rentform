@@ -3,6 +3,10 @@
 import { db } from "./firebase-config.js";
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
+document.addEventListener("DOMContentLoaded", () => {
+    toggleServiceQuestions();
+});
+
 let currentStep = 1;
 
 function showStep(step) {
@@ -76,18 +80,8 @@ window.toggleServiceQuestions = function() {
     audioSection.classList.toggle("hidden", !audioCheckbox.checked);
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-    toggleServiceQuestions();
-    let stageCheckbox = document.getElementById("service_stage");
-    let audioCheckbox = document.getElementById("service_audio");
-    
-    if (stageCheckbox) {
-        stageCheckbox.addEventListener("change", toggleServiceQuestions);
-    }
-    if (audioCheckbox) {
-        audioCheckbox.addEventListener("change", toggleServiceQuestions);
-    }
-});
+document.getElementById("service_stage").addEventListener("change", toggleServiceQuestions);
+    document.getElementById("service_audio").addEventListener("change", toggleServiceQuestions);
 
 window.submitForm = async function () {
     const formData = {
