@@ -1,6 +1,4 @@
-import React from 'react';
-
-function ExpInput({ label, placeholder, type, value, onChange, name, style }) {
+function ExpInput({ label, placeholder, type, value, onChange, name, style, ...props }) {
   return (
     <div className="expInput" style={style}>
       <label htmlFor={name}>{label}</label>
@@ -11,9 +9,8 @@ function ExpInput({ label, placeholder, type, value, onChange, name, style }) {
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        {...props}
       />
     </div>
   );
 }
-
-export default ExpInput;
