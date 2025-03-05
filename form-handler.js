@@ -27,7 +27,7 @@ function generateForm(questionsData) {
     
     Object.keys(questionsData).forEach(step => {
         let stepData = questionsData[step];
-        if (!stepData || !stepData.questions) {
+        if (!stepData || !stepData.questions || stepData.questions.length === 0) {
             console.warn(`Skipping step ${step} - No questions found.`);
             return;
         }
