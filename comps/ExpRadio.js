@@ -1,11 +1,9 @@
-import React from 'react';
-
 function ExpRadio({ label, options, onChange, name, selectedValue }) {
   return (
     <fieldset className="expRadio">
       <legend>{label}</legend>
-      {options.map((option, index) => (
-        <div key={index}>
+      {options.map((option, idx) => (
+        <div key={idx}>
           <input
             id={`${name}-${option.value}`}
             type="radio"
@@ -14,13 +12,9 @@ function ExpRadio({ label, options, onChange, name, selectedValue }) {
             checked={selectedValue === option.value}
             onChange={onChange}
           />
-          <label htmlFor={`${name}-${option.value}`}>
-            {option.label}
-          </label>
+          <label htmlFor={`${name}-${option.value}`}>{option.label}</label>
         </div>
       ))}
     </fieldset>
   );
 }
-
-export default ExpRadio;
