@@ -1,8 +1,9 @@
 function ExpTextarea({ label, name, onChange, value, placeholder, style, ...props }) {
   return (
     <div className="expTextarea" style={style}>
-      <label>{label}</label>
+      <label htmlFor={name}>{label}</label>
       <textarea
+        id={name}
         name={name}
         value={value}
         onChange={onChange}
