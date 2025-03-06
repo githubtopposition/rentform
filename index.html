@@ -1,21 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rent For Event - Qualification & Sales</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+  <meta charset="UTF-8" />
+  <title>RentForm Survey</title>
+  <!-- Подключаем стили, если нужны (style.css) -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <form id="event-form" onsubmit="event.preventDefault(); submitForm();">
-        <div id="dynamic-form"></div>
-        <div class="btn-container">
-            <button type="button" class="btn" onclick="validateAndNextStep()">Next</button>
-            <button type="submit" class="btn">Submit</button>
-        </div>
-    </form>
-    
-    <script type="module" src="firebase-config.js"></script>
-    <script type="module" src="form-handler.js"></script>
+
+  <!-- Контейнер, куда будем динамически рендерить вопросы -->
+  <div id="formContainer"></div>
+
+  <!-- Кнопки для переключения шагов -->
+  <button id="nextBtn">Next</button>
+  <button id="submitBtn" style="display: none;">Submit</button>
+
+  <!-- Кнопка для сохранения PDF (скрыта изначально) -->
+  <button id="downloadPdfBtn" style="display: none;">Download PDF</button>
+
+  <!-- Если используешь Firebase, оставь эту строчку; иначе убери -->
+  <script defer src="firebase-config.js"></script>
+
+  <!-- Скрипт с логикой рендера вопросов -->
+  <script defer src="form-handler.js"></script>
 </body>
 </html>
