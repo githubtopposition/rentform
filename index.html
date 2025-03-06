@@ -3,25 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <title>RentForm Survey</title>
-  <!-- Подключаем стили, если нужны (style.css) -->
+  <!-- Подключаем стили -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Контейнер, куда будем динамически рендерить вопросы -->
-  <div id="formContainer"></div>
+  <!-- Общий контейнер формы -->
+  <div id="formBlock">
+    <!-- Заголовок формы (можно менять текст) -->
+    <h2 id="formTitle">Qualification Form</h2>
 
-  <!-- Кнопки для переключения шагов -->
-  <button id="nextBtn">Next</button>
-  <button id="submitBtn" style="display: none;">Submit</button>
+    <!-- Контейнер, куда рендерятся вопросы из form-handler.js -->
+    <div id="formContainer"></div>
 
-  <!-- Кнопка для сохранения PDF (скрыта изначально) -->
-  <button id="downloadPdfBtn" style="display: none;">Download PDF</button>
+    <!-- Блок с кнопками -->
+    <div class="form-actions">
+      <button id="nextBtn">Next</button>
+      <button id="submitBtn" style="display: none;">Submit</button>
+      <button id="downloadPdfBtn" style="display: none;">Download PDF</button>
+    </div>
+  </div>
 
-  <!-- Если используешь Firebase, оставь эту строчку; иначе убери -->
+  <!-- Если не используешь Firebase — можешь убрать -->
   <script defer src="firebase-config.js"></script>
-
-  <!-- Скрипт с логикой рендера вопросов -->
+  <!-- Подключение основной логики -->
   <script defer src="form-handler.js"></script>
+
 </body>
 </html>
