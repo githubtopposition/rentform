@@ -1,13 +1,5 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  background: #f9f9f9;
-  color: #333;
-}
-
-/* Контейнер формы */
-#formContainer {
+/* Весь блок формы */
+#formBlock {
   max-width: 600px;
   margin: 40px auto;
   padding: 20px;
@@ -16,41 +8,29 @@ body {
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-/* Обёртка под каждый вопрос */
-.question-item {
-  margin-bottom: 16px;
+/* Заголовок формы */
+#formTitle {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  text-align: center; /* можно убрать, если не нужно по центру */
 }
 
-/* Стили для label */
-.question-item label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
+/* Блок вопросов (уже был) */
+#formContainer {
+  /* Можно убрать стили "фон / отступы", если уже есть */
+  margin-bottom: 20px;
 }
 
-/* Стили для текстовых полей, селектов, textarea */
-.question-item input[type="text"],
-.question-item input[type="checkbox"],
-.question-item input[type="radio"],
-.question-item select,
-.question-item textarea {
-  font-size: 14px;
-  padding: 8px;
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+/* Кнопки внизу */
+.form-actions {
+  display: flex;
+  justify-content: flex-end; /* кнопки прижаты к правому краю */
+  gap: 8px;
 }
 
-/* Для чекбоксов и радиокнопок убираем ширину 100% */
-.question-item input[type="checkbox"],
-.question-item input[type="radio"] {
-  width: auto;
-  margin-right: 6px;
-}
-
-/* Кнопки */
-button {
+/* Стили самих кнопок (можно оставить те же) */
+.form-actions button {
   padding: 10px 16px;
   border: none;
   border-radius: 4px;
@@ -58,9 +38,8 @@ button {
   color: #fff;
   font-size: 14px;
   cursor: pointer;
-  margin: 4px;
 }
 
-button:hover {
+.form-actions button:hover {
   background: #0056b3;
 }
