@@ -32,6 +32,7 @@ body {
   font-weight: 600;
 }
 
+/* Общие стили для input/textarea/select */
 .question-item input[type="text"],
 .question-item select,
 .question-item textarea {
