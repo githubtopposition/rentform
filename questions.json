@@ -1,76 +1,36 @@
 {
-  "step_1": {
-    "title": "Qualification Questions",
-    "questions": [
-      {
-        "id": "client_name",
-        "type": "text",
-        "label": "Client Name (Required) *",
-        "required": true
-      },
-      {
-        "id": "event_type",
-        "type": "select",
-        "label": "Event Type *",
-        "required": true,
-        "options": ["Corporate", "Wedding", "Concert", "Trade Show", "Other"]
-      },
-      {
-        "id": "services",
-        "type": "checkbox",
-        "label": "Requested Services *",
-        "required": true,
-        "options": ["Stage Rental", "Audio Rental", "LED Screen Rental", "Live Streaming", "Karaoke"]
-      }
-    ]
-  },
-  "step_2": {
-    "title": "Service Selection Questions",
-    "categories": {
-      "stage_rental": {
-        "title": "Stage Rental Questionnaire",
-        "questions": [
-          {
-            "id": "stage_purpose",
-            "type": "select",
-            "label": "What is the purpose of the stage rental?",
-            "options": ["Presentation", "Live Band", "DJ Performance", "Fashion Show", "Product Launch", "Award Ceremony", "Other"]
-          },
-          {
-            "id": "stage_type",
-            "type": "select",
-            "label": "What type of stage do you need?",
-            "options": ["Portable", "Mobile", "Truss-Based"]
-          }
-        ]
-      },
-      "audio_rental": {
-        "title": "Audio Rental Questionnaire",
-        "questions": [
-          {
-            "id": "audio_purpose",
-            "type": "select",
-            "label": "What is the purpose of audio at your event?",
-            "options": ["Corporate Presentation", "DJ Performance", "Live Band Performance", "Marketing Event", "Other"]
-          }
-        ]
-      }
+  "part1": [
+    {
+      "type": "text",
+      "label": "Full Name",
+      "name": "fullName",
+      "placeholder": "Enter client name"
+    },
+    {
+      "type": "text",
+      "label": "Phone Number",
+      "name": "phoneNumber",
+      "placeholder": "XXX-XXX-XXXX"
+    },
+    {
+      "type": "textarea",
+      "label": "Describe the request",
+      "name": "requestDescription",
+      "placeholder": "Type a short description..."
     }
-  },
-  "step_3": {
-    "title": "Logistics & Loading Questions",
-    "questions": [
-      {
-        "id": "loading_path",
-        "type": "text",
-        "label": "Describe the loading path and venue access"
-      },
-      {
-        "id": "venue_type",
-        "type": "select",
-        "label": "What type of venue is this?",
-        "options": ["Hotel", "Outdoor", "Private Event", "Conference Center"]
-      }
-    ]
-  }
+  ],
+  "part2": [
+    {
+      "type": "select",
+      "label": "Lead Status",
+      "name": "leadStatus",
+      "options": ["New Lead", "In Progress", "Qualified", "Closed"]
+    },
+    {
+      "type": "textarea",
+      "label": "CELS Comments",
+      "name": "celsComments",
+      "placeholder": "Any internal remarks..."
+    }
+  ]
 }
