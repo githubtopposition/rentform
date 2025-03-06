@@ -1,39 +1,37 @@
 // form-handler.js
-// Логика: грузим questions.json, рендерим Part1 → Next → Part2 → Submit в Firestore → Показываем PDF
 
-// Импортируем db и методы Firestore, чтобы записать в коллекцию
+// Импортируем db и методы Firestore
 import { db } from "./firebase-config.js";
 import {
   collection,
   addDoc
 } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-// Находим элементы из index.html
 const formContainer = document.getElementById("formContainer");
+const formTitleEl = document.getElementById("formTitle");
 const nextBtn = document.getElementById("nextBtn");
 const submitBtn = document.getElementById("submitBtn");
 const downloadPdfBtn = document.getElementById("downloadPdfBtn");
-const formTitleEl = document.getElementById("formTitle");
 
-// Переменные
-let questionsData = null; // сюда загрузим questions.json
-let currentPart = 1;      // какой шаг показываем
-let answers = {};         // объект с ответами
+let questionsData = null;
+let currentPart = 1;
+let totalParts = 4; // у нас 4 части
+let answers = {};
 
-// 1) Грузим questions.json
+// 1) Загружаем questions.json
 fetch("./questions.json")
-  .then((res) => res.json())
-  .then((data) => {
+  .then(res => res.json())
+  .then(data => {
     questionsData = data;
     renderPart(currentPart);
   })
-  .catch((err) => {
+  .catch(err => {
     console.error("Error loading questions.json:", err);
   });
 
-// 2) Функция рендера нужной части (part1, part2, ...)
+// 2) Функция рендера
 function renderPart(partNumber) {
-  formContainer.innerHTML = ""; // очищаем
+  formContainer.innerHTML = "";
 
   const partKey = `part${partNumber}`;
   const questions = questionsData[partKey];
@@ -42,13 +40,13 @@ function renderPart(partNumber) {
     return;
   }
 
-  // Обновляем заголовок, если надо
+  // Заголовок: "Step X of 4"
   if (formTitleEl) {
-    formTitleEl.textContent = `Step ${partNumber} of 2`;
+    formTitleEl.textContent = `Step ${partNumber} of ${totalParts}`;
   }
 
   // Рендерим каждый вопрос
-  questions.forEach((q) => {
+  questions.forEach(q => {
     const wrapper = document.createElement("div");
     wrapper.className = "question-item";
 
@@ -67,29 +65,26 @@ function renderPart(partNumber) {
         fieldEl.name = q.name;
         fieldEl.placeholder = q.placeholder || "";
         break;
-
       case "textarea":
         fieldEl = document.createElement("textarea");
         fieldEl.id = q.name;
         fieldEl.name = q.name;
         fieldEl.placeholder = q.placeholder || "";
         break;
-
       case "select":
         fieldEl = document.createElement("select");
         fieldEl.id = q.name;
         fieldEl.name = q.name;
-        q.options.forEach((opt) => {
+        q.options.forEach(opt => {
           const optEl = document.createElement("option");
           optEl.value = opt;
           optEl.textContent = opt;
           fieldEl.appendChild(optEl);
         });
         break;
-
       case "radio":
         const radioContainer = document.createElement("div");
-        q.options.forEach((optVal) => {
+        q.options.forEach(optVal => {
           const radioLabel = document.createElement("label");
           radioLabel.textContent = optVal;
 
@@ -103,14 +98,12 @@ function renderPart(partNumber) {
         });
         wrapper.appendChild(radioContainer);
         break;
-
       case "checkbox":
         fieldEl = document.createElement("input");
         fieldEl.type = "checkbox";
         fieldEl.id = q.name;
         fieldEl.name = q.name;
         break;
-
       default:
         console.warn("Unknown question type:", q.type);
     }
@@ -122,24 +115,26 @@ function renderPart(partNumber) {
     formContainer.appendChild(wrapper);
   });
 
-  // Меняем вид кнопок
-  if (partNumber === 1) {
+  // Управляем кнопками
+  if (partNumber < totalParts) {
+    // Если не последний шаг, показываем Next, прячем Submit
     nextBtn.style.display = "inline-block";
     submitBtn.style.display = "none";
     downloadPdfBtn.style.display = "none";
   } else {
+    // Если последний шаг (part4)
     nextBtn.style.display = "none";
     submitBtn.style.display = "inline-block";
   }
 }
 
-// 3) Сбор ответов для текущего part
+// 3) Собираем ответы для текущей части
 function collectAnswers(partNumber) {
   const partKey = `part${partNumber}`;
   const questions = questionsData[partKey];
   if (!questions) return;
 
-  questions.forEach((q) => {
+  questions.forEach(q => {
     if (q.type === "radio") {
       const selected = document.querySelector(
         `input[type="radio"][name="${q.name}"]:checked`
@@ -160,37 +155,36 @@ function collectAnswers(partNumber) {
 
 // 4) Кнопка "Next"
 nextBtn.addEventListener("click", () => {
-  collectAnswers(currentPart); // собираем ответы с part1
-  currentPart = 2;
+  collectAnswers(currentPart);
+  currentPart++;
   renderPart(currentPart);
 });
 
-// 5) Кнопка "Submit" → собираем ответы, пишем в Firestore, выводим результат
+// 5) Кнопка "Submit" → собрать ответы, отправить в Firestore, отобразить результат
 submitBtn.addEventListener("click", async () => {
-  collectAnswers(currentPart); // собираем ответы с part2
+  collectAnswers(currentPart);
   console.log("Final answers:", answers);
 
-  // Отправка в Firestore
+  // Сохраняем в Firestore
   try {
     const docRef = await addDoc(collection(db, "responses"), answers);
-    console.log("Data saved to Firestore with ID:", docRef.id);
+    console.log("Saved to Firestore, ID:", docRef.id);
   } catch (err) {
     console.error("Error saving to Firestore:", err);
   }
 
-  // Заменяем форму итоговой сводкой (чтобы PDF был текстовым)
+  // Выводим сводку вместо формы
   formContainer.innerHTML = `
     <h3>Submitted Data:</h3>
     <pre style="background:#f0f0f0; padding:10px;">${JSON.stringify(answers, null, 2)}</pre>
   `;
 
-  // Прячем кнопки Next/Submit, показываем PDF
   nextBtn.style.display = "none";
   submitBtn.style.display = "none";
   downloadPdfBtn.style.display = "inline-block";
 });
 
-// 6) Кнопка "Download PDF" → простая печать
+// 6) Кнопка "Download PDF" → печать страницы
 downloadPdfBtn.addEventListener("click", () => {
   window.print();
 });
