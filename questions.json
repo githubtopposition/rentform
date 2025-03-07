@@ -1,5 +1,13 @@
 {
-  "step1": [
+  "step0": [
+    {
+      "type": "select",
+      "label": "Is this Inbound or Outbound call?",
+      "name": "flow_type",
+      "options": ["Inbound","Outbound"]
+    }
+  ],
+  "step1_inbound": [
     {
       "type": "text",
       "label": "Client Name",
@@ -7,7 +15,7 @@
     },
     {
       "type": "select",
-      "label": "Which city/state is your event?",
+      "label": "Which city/state is the event?",
       "name": "company_location_ctm",
       "options": [
         "Orlando","San Francisco","Las Vegas","Atlanta",
@@ -16,30 +24,49 @@
     },
     {
       "type": "textarea",
-      "label": "Please describe the request (services needed)",
-      "name": "services_needed"
-    },
-    {
-      "type": "textarea",
-      "label": "Anything else?",
-      "name": "additional_comments"
+      "label": "Basic request / short description",
+      "name": "basic_req"
     },
     {
       "type": "select",
-      "label": "Call Type",
+      "label": "Call Type (Inbound)",
       "name": "call_type_ctm",
       "options": [
         "New Project","Existing Project","Vendor","Technician",
         "Complaint","Promotion/Spam","HR Inquiry","Unknown"
       ]
+    },
+    {
+      "type": "select",
+      "label": "Qualification now? (optional, or decide later)",
+      "name": "qualification_ctm",
+      "options": ["","Qualified","Not Qualified"]
     }
   ],
+  "step1_outbound": [
+    {
+      "type": "text",
+      "label": "Client Name",
+      "name": "outbound_client_name"
+    },
+    {
+      "type": "text",
+      "label": "Phone # or ID",
+      "name": "outbound_phone"
+    },
+    {
+      "type": "textarea",
+      "label": "Reason for outbound call? (Lead follow-up, etc.)",
+      "name": "outbound_reason"
+    }
+  ],
+
   "step2_newProject": [
     {
       "type": "select",
-      "label": "Pickup or Delivery? (multi)",
+      "label": "Delivery/Pickup?",
       "name": "delivery_setup_options_ctm",
-      "options": [ "Delivery","Setup","Operation","Pick Up Yourself" ],
+      "options": ["Delivery","Setup","Operation","Pick Up Yourself"],
       "multi": true
     },
     {
@@ -69,7 +96,7 @@
     },
     {
       "type": "select",
-      "label": "Venue Type",
+      "label": "Venue type?",
       "name": "venue_type_ctm",
       "options": [
         "Private Residence","Hotel","Event Venue","Outdoor","Corporate Office","Other"
@@ -82,7 +109,7 @@
     },
     {
       "type": "text",
-      "label": "Street Address",
+      "label": "Street",
       "name": "event_street_ctm"
     },
     {
@@ -102,12 +129,12 @@
     },
     {
       "type": "text",
-      "label": "Email to send quote",
+      "label": "Email for quote",
       "name": "client_email"
     },
     {
       "type": "select",
-      "label": "How many events per year?",
+      "label": "How many events/year?",
       "name": "events_per_year_ctm",
       "options": ["1-2","3-5","6-10","11-25","26+"]
     }
@@ -120,13 +147,13 @@
     },
     {
       "type": "select",
-      "label": "Active Project Status?",
+      "label": "Active project status?",
       "name": "active_project_status_ctm",
       "options": ["Yes","No"]
     },
     {
       "type": "textarea",
-      "label": "Notes about existing project",
+      "label": "Any notes for existing project?",
       "name": "existing_notes"
     }
   ],
@@ -138,7 +165,7 @@
     },
     {
       "type": "textarea",
-      "label": "Request details",
+      "label": "Vendor request details",
       "name": "vendor_request"
     }
   ],
@@ -169,7 +196,7 @@
   "step2_hr": [
     {
       "type": "textarea",
-      "label": "HR Notes",
+      "label": "HR notes",
       "name": "hr_notes"
     }
   ],
@@ -180,14 +207,29 @@
       "name": "unknown_notes"
     }
   ],
-  "step3": [
+
+  "step3_outbound": [
+    {
+      "type": "textarea",
+      "label": "More info from client? (Outbound follow-up)",
+      "name": "outbound_moreinfo"
+    }
+  ],
+
+  "stepPreview": [
+    {
+      "type": "text",
+      "label": "Preview summary (no inputs, just a placeholder here)",
+      "name": "_summary_"
+    }
+  ],
+
+  "stepFinal": [
     {
       "type": "select",
-      "label": "Qualification status",
+      "label": "Final Qualification (required)",
       "name": "qualification_ctm",
-      "options": [
-        "Qualified","Not Qualified"
-      ]
+      "options": ["Qualified","Not Qualified"]
     }
   ]
 }
