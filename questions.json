@@ -1,144 +1,193 @@
 {
-  "part1": [
+  "step1": [
     {
       "type": "text",
-      "label": "Client's Full Name",
-      "name": "clientName",
-      "placeholder": "Enter client name"
-    },
-    {
-      "type": "text",
-      "label": "Phone Number",
-      "name": "phoneNumber",
-      "placeholder": "XXX-XXX-XXXX"
-    },
-    {
-      "type": "text",
-      "label": "Email",
-      "name": "email",
-      "placeholder": "client@example.com"
-    },
-    {
-      "type": "text",
-      "label": "Service / Product Interested In",
-      "name": "serviceInterested",
-      "placeholder": "e.g. Car rental, Boat rental, etc."
-    },
-    {
-      "type": "textarea",
-      "label": "Describe the Request",
-      "name": "requestDescription",
-      "placeholder": "Short summary of what the client needs"
-    },
-    {
-      "type": "radio",
-      "label": "Is this a first-time client?",
-      "name": "isFirstTime",
-      "options": ["Yes", "No"]
-    },
-    {
-      "type": "text",
-      "label": "Preferred Date / Time",
-      "name": "preferredDateTime",
-      "placeholder": "e.g. 03/10/2025 14:00"
-    }
-  ],
-
-  "part2": [
-    {
-      "type": "radio",
-      "label": "Do we have the budget range?",
-      "name": "hasBudget",
-      "options": ["Yes", "No"]
-    },
-    {
-      "type": "text",
-      "label": "Budget (if known)",
-      "name": "budgetValue",
-      "placeholder": "e.g. $1000-$2000"
-    },
-    {
-      "type": "radio",
-      "label": "Has Payment been confirmed?",
-      "name": "paymentConfirmed",
-      "options": ["Yes", "No"]
+      "label": "Client Name",
+      "name": "contact_name"
     },
     {
       "type": "select",
-      "label": "Lead Status",
-      "name": "leadStatus",
+      "label": "Which city/state is your event?",
+      "name": "company_location_ctm",
       "options": [
-        "New Lead",
-        "In Progress",
-        "Qualified",
-        "Follow-up Needed",
-        "Closed/Lost"
+        "Orlando","San Francisco","Las Vegas","Atlanta",
+        "New York","Los Angeles","Houston","Phoenix","Chicago","Miami"
       ]
     },
     {
       "type": "textarea",
-      "label": "Internal Comments (Qualification)",
-      "name": "qualificationComments",
-      "placeholder": "Any notes from the call center / qualifier?"
-    }
-  ],
-
-  "part3": [
+      "label": "Please describe the request (services needed)",
+      "name": "services_needed"
+    },
     {
       "type": "textarea",
-      "label": "Full Requirements / Details",
-      "name": "fullRequirements",
-      "placeholder": "List all details client provided"
+      "label": "Anything else?",
+      "name": "additional_comments"
     },
     {
       "type": "select",
-      "label": "Product/Service Category",
-      "name": "productCategory",
+      "label": "Call Type",
+      "name": "call_type_ctm",
       "options": [
-        "Car Rental",
-        "Yacht Rental",
-        "Beauty Appointment",
-        "Marketing Consulting",
-        "Other"
+        "New Project","Existing Project","Vendor","Technician",
+        "Complaint","Promotion/Spam","HR Inquiry","Unknown"
+      ]
+    }
+  ],
+  "step2_newProject": [
+    {
+      "type": "select",
+      "label": "Pickup or Delivery? (multi)",
+      "name": "delivery_setup_options_ctm",
+      "options": [ "Delivery","Setup","Operation","Pick Up Yourself" ],
+      "multi": true
+    },
+    {
+      "type": "date",
+      "label": "Event Date",
+      "name": "event_date_ctm"
+    },
+    {
+      "type": "select",
+      "label": "Event Type",
+      "name": "event_type_ctm",
+      "options": [
+        "Corporate Event","Wedding","Concert","Trade Show","Private Party","Other"
       ]
     },
     {
-      "type": "checkbox",
-      "label": "Client Agreed to Terms & Conditions?",
-      "name": "agreedToTerms"
+      "type": "select",
+      "label": "How many attendees?",
+      "name": "event_attendees_ctm",
+      "options": ["1-10","11-50","51-200","201-500","501-1000","1000+"]
     },
     {
-      "type": "radio",
-      "label": "Need Additional Documents?",
-      "name": "needDocs",
-      "options": ["Yes", "No"]
+      "type": "select",
+      "label": "Indoor or Outdoor?",
+      "name": "event_location_type_ctm",
+      "options": ["Indoor","Outdoor"]
     },
     {
-      "type": "textarea",
-      "label": "CELS Comments",
-      "name": "celsComments",
-      "placeholder": "Any internal remarks from CELS side"
-    }
-  ],
-
-  "part4": [
-    {
-      "type": "radio",
-      "label": "Is the client ready to finalize?",
-      "name": "readyToFinalize",
-      "options": ["Yes", "No"]
+      "type": "select",
+      "label": "Venue Type",
+      "name": "venue_type_ctm",
+      "options": [
+        "Private Residence","Hotel","Event Venue","Outdoor","Corporate Office","Other"
+      ]
     },
     {
       "type": "text",
-      "label": "Quoted Price",
-      "name": "quotedPrice",
-      "placeholder": "e.g. $2,500"
+      "label": "Event Name",
+      "name": "event_name_ctm"
+    },
+    {
+      "type": "text",
+      "label": "Street Address",
+      "name": "event_street_ctm"
+    },
+    {
+      "type": "text",
+      "label": "City",
+      "name": "event_city_ctm"
+    },
+    {
+      "type": "text",
+      "label": "State",
+      "name": "event_state_ctm"
+    },
+    {
+      "type": "text",
+      "label": "ZIP",
+      "name": "event_zip_ctm"
+    },
+    {
+      "type": "text",
+      "label": "Email to send quote",
+      "name": "client_email"
+    },
+    {
+      "type": "select",
+      "label": "How many events per year?",
+      "name": "events_per_year_ctm",
+      "options": ["1-2","3-5","6-10","11-25","26+"]
+    }
+  ],
+  "step2_existing": [
+    {
+      "type": "text",
+      "label": "Rental Order #",
+      "name": "rental_order_number_ctm"
+    },
+    {
+      "type": "select",
+      "label": "Active Project Status?",
+      "name": "active_project_status_ctm",
+      "options": ["Yes","No"]
     },
     {
       "type": "textarea",
-      "label": "Additional Follow-up Notes",
-      "name": "followUpNotes",
-      "placeholder": "Summarize next steps or final arrangement"
+      "label": "Notes about existing project",
+      "name": "existing_notes"
+    }
+  ],
+  "step2_vendor": [
+    {
+      "type": "text",
+      "label": "Vendor Company Name",
+      "name": "vendor_company_name_ctm"
+    },
+    {
+      "type": "textarea",
+      "label": "Request details",
+      "name": "vendor_request"
+    }
+  ],
+  "step2_technician": [
+    {
+      "type": "text",
+      "label": "Project #",
+      "name": "tech_order_number"
+    },
+    {
+      "type": "textarea",
+      "label": "Details",
+      "name": "tech_notes"
+    }
+  ],
+  "step2_complaint": [
+    {
+      "type": "text",
+      "label": "Project #",
+      "name": "complaint_order_number"
+    },
+    {
+      "type": "textarea",
+      "label": "Describe the issue",
+      "name": "complaint_desc"
+    }
+  ],
+  "step2_hr": [
+    {
+      "type": "textarea",
+      "label": "HR Notes",
+      "name": "hr_notes"
+    }
+  ],
+  "step2_unknown": [
+    {
+      "type": "textarea",
+      "label": "Unknown call details",
+      "name": "unknown_notes"
+    }
+  ],
+  "step3": [
+    {
+      "type": "select",
+      "label": "Qualification status",
+      "name": "qualification_ctm",
+      "options": [
+        "Qualified","Not Qualified"
+      ]
     }
   ]
 }
