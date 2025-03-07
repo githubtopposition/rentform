@@ -211,7 +211,7 @@
   "step3_outbound": [
     {
       "type": "textarea",
-      "label": "More info from client? (Outbound follow-up)",
+      "label": "Any more info from client? (Outbound follow-up)",
       "name": "outbound_moreinfo"
     }
   ],
@@ -219,7 +219,7 @@
   "stepPreview": [
     {
       "type": "text",
-      "label": "Preview summary (no inputs, just a placeholder here)",
+      "label": "Preview summary (no input, just placeholder)",
       "name": "_summary_"
     }
   ],
