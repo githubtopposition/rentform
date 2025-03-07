@@ -1,14 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-// Замените на ваши реальные ключи
+
 const firebaseConfig = {
-  apiKey: "AIzaSy...",
-  authDomain: "rent-form.firebaseapp.com",
-  projectId: "rent-form",
-  storageBucket: "rent-form.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abc123"
+    apiKey: "AIzaSyAt5epmObu48vITxwDaNnEbc1ni5_G8-YQ",
+    authDomain: "rent-form.firebaseapp.com",
+    projectId: "rent-form",
+    storageBucket: "rent-form.appspot.com",
+    messagingSenderId: "136805752728",
+    appId: "1:136805752728:web:0d9a1bdb1b65fda0aafded",
+    measurementId: "G-QKHCPHR9ZC"
 };
 
 const app = initializeApp(firebaseConfig);
