@@ -50,13 +50,6 @@ body {
 }
 
 /* Multi-step container */
-.step-block {
-  display: none;
-}
-.step-block.active {
-  display: block;
-}
-
 .question-block {
   margin-bottom: 16px;
 }
