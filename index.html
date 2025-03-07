@@ -2,18 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>RentForm - Multi-Step Survey</title>
+  <title>Rent For Event - Ultimate Multi-Step Form</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="app">
-    <h1>Rent For Event - Multi-step Form</h1>
-    <div id="multistep-form"></div>
+    <div id="formWrapper">
+      <div class="header">
+        <h1>Rent For Event</h1>
+        <div id="progressBar">
+          <!-- Прогресс-бар будет формироваться JS-ом -->
+        </div>
+      </div>
+
+      <div id="multiStepContainer"></div>
+
+      <div class="nav-buttons">
+        <button id="backBtn" style="display:none;">&lt; Back</button>
+        <button id="nextBtn">Next &gt;</button>
+        <button id="previewBtn" style="display:none;">Preview</button>
+        <button id="submitBtn" style="display:none;">Submit</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Подключаем Firebase конфиг -->
+  <!-- Firebase Config -->
   <script type="module" src="./firebase-config.js"></script>
-  <!-- Подключаем нашу логику формы -->
+  <!-- Main Logic -->
   <script type="module" src="./form-handler.js"></script>
 </body>
 </html>
