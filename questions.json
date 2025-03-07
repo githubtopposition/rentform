@@ -1,31 +1,9 @@
 {
-  "step0": [
-    {
-      "type": "select",
-      "label": "Is this Inbound or Outbound call?",
-      "name": "flow_type",
-      "options": ["Inbound","Outbound"]
-    }
-  ],
   "step1_inbound": [
     {
       "type": "text",
       "label": "Client Name",
       "name": "contact_name"
-    },
-    {
-      "type": "select",
-      "label": "Which city/state is the event?",
-      "name": "company_location_ctm",
-      "options": [
-        "Orlando","San Francisco","Las Vegas","Atlanta",
-        "New York","Los Angeles","Houston","Phoenix","Chicago","Miami"
-      ]
-    },
-    {
-      "type": "textarea",
-      "label": "Basic request / short description",
-      "name": "basic_req"
     },
     {
       "type": "select",
@@ -37,8 +15,13 @@
       ]
     },
     {
+      "type": "textarea",
+      "label": "Basic request/description",
+      "name": "basic_req"
+    },
+    {
       "type": "select",
-      "label": "Qualification now? (optional, or decide later)",
+      "label": "Qualification (optional for now)",
       "name": "qualification_ctm",
       "options": ["","Qualified","Not Qualified"]
     }
@@ -46,29 +29,21 @@
   "step1_outbound": [
     {
       "type": "text",
-      "label": "Client Name",
+      "label": "Outbound Client Name",
       "name": "outbound_client_name"
     },
     {
       "type": "text",
-      "label": "Phone # or ID",
+      "label": "Phone or ID",
       "name": "outbound_phone"
     },
     {
       "type": "textarea",
-      "label": "Reason for outbound call? (Lead follow-up, etc.)",
+      "label": "Reason for outbound call",
       "name": "outbound_reason"
     }
   ],
-
   "step2_newProject": [
-    {
-      "type": "select",
-      "label": "Delivery/Pickup?",
-      "name": "delivery_setup_options_ctm",
-      "options": ["Delivery","Setup","Operation","Pick Up Yourself"],
-      "multi": true
-    },
     {
       "type": "date",
       "label": "Event Date",
@@ -76,40 +51,14 @@
     },
     {
       "type": "select",
-      "label": "Event Type",
-      "name": "event_type_ctm",
-      "options": [
-        "Corporate Event","Wedding","Concert","Trade Show","Private Party","Other"
-      ]
-    },
-    {
-      "type": "select",
-      "label": "How many attendees?",
-      "name": "event_attendees_ctm",
-      "options": ["1-10","11-50","51-200","201-500","501-1000","1000+"]
-    },
-    {
-      "type": "select",
-      "label": "Indoor or Outdoor?",
-      "name": "event_location_type_ctm",
-      "options": ["Indoor","Outdoor"]
-    },
-    {
-      "type": "select",
-      "label": "Venue type?",
-      "name": "venue_type_ctm",
-      "options": [
-        "Private Residence","Hotel","Event Venue","Outdoor","Corporate Office","Other"
-      ]
+      "label": "Delivery Setup",
+      "name": "delivery_setup_options_ctm",
+      "options": ["Delivery","Setup","Operation","Pick Up Yourself"],
+      "multi": true
     },
     {
       "type": "text",
-      "label": "Event Name",
-      "name": "event_name_ctm"
-    },
-    {
-      "type": "text",
-      "label": "Street",
+      "label": "Street Address",
       "name": "event_street_ctm"
     },
     {
@@ -121,22 +70,6 @@
       "type": "text",
       "label": "State",
       "name": "event_state_ctm"
-    },
-    {
-      "type": "text",
-      "label": "ZIP",
-      "name": "event_zip_ctm"
-    },
-    {
-      "type": "text",
-      "label": "Email for quote",
-      "name": "client_email"
-    },
-    {
-      "type": "select",
-      "label": "How many events/year?",
-      "name": "events_per_year_ctm",
-      "options": ["1-2","3-5","6-10","11-25","26+"]
     }
   ],
   "step2_existing": [
@@ -144,17 +77,6 @@
       "type": "text",
       "label": "Rental Order #",
       "name": "rental_order_number_ctm"
-    },
-    {
-      "type": "select",
-      "label": "Active project status?",
-      "name": "active_project_status_ctm",
-      "options": ["Yes","No"]
-    },
-    {
-      "type": "textarea",
-      "label": "Any notes for existing project?",
-      "name": "existing_notes"
     }
   ],
   "step2_vendor": [
@@ -162,11 +84,6 @@
       "type": "text",
       "label": "Vendor Company Name",
       "name": "vendor_company_name_ctm"
-    },
-    {
-      "type": "textarea",
-      "label": "Vendor request details",
-      "name": "vendor_request"
     }
   ],
   "step2_technician": [
@@ -174,56 +91,45 @@
       "type": "text",
       "label": "Project #",
       "name": "tech_order_number"
-    },
-    {
-      "type": "textarea",
-      "label": "Details",
-      "name": "tech_notes"
     }
   ],
   "step2_complaint": [
     {
       "type": "text",
-      "label": "Project #",
+      "label": "Complaint Project #",
       "name": "complaint_order_number"
-    },
-    {
-      "type": "textarea",
-      "label": "Describe the issue",
-      "name": "complaint_desc"
     }
   ],
-  "step2_hr": [
-    {
-      "type": "textarea",
-      "label": "HR notes",
-      "name": "hr_notes"
-    }
-  ],
-  "step2_unknown": [
-    {
-      "type": "textarea",
-      "label": "Unknown call details",
-      "name": "unknown_notes"
-    }
-  ],
-
   "step3_outbound": [
     {
       "type": "textarea",
-      "label": "Any more info from client? (Outbound follow-up)",
+      "label": "Any additional notes? (Outbound follow-up)",
       "name": "outbound_moreinfo"
     }
   ],
-
+  "step2p5_salesAdvanced": [
+    {
+      "type": "select",
+      "label": "Budget Range?",
+      "name": "sales_budget",
+      "options": ["Under $2k","$2k-$5k","$5k-$10k","$10k-$20k","$20k+"]
+    },
+    {
+      "type": "select",
+      "label": "Event Type (detailed)?",
+      "name": "event_type_ctm",
+      "options": [
+        "Corporate Event","Wedding","Concert","Trade Show","Private Party","Other"
+      ]
+    }
+  ],
   "stepPreview": [
     {
       "type": "text",
-      "label": "Preview summary (no input, just placeholder)",
+      "label": "Preview summary",
       "name": "_summary_"
     }
   ],
-
   "stepFinal": [
     {
       "type": "select",
