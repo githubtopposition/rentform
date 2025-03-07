@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Rent For Event - Ultimate Multi-Step Form</title>
+  <title>Rent For Event - Multi-Step Form</title>
+  
+  <!-- Google Maps with your API key + Places library -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaGi8plb8PBaCyKHdmEDye5WamGrlLgg8&libraries=places" async defer></script>
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -26,9 +30,11 @@
     </div>
   </div>
 
-  <!-- Firebase Config -->
+  <!-- Firebase config -->
   <script type="module" src="./firebase-config.js"></script>
-  <!-- Main Logic -->
+  <!-- Google Maps config (initAutocompleteFor) -->
+  <script type="module" src="./maps-config.js"></script>
+  <!-- Main form logic -->
   <script type="module" src="./form-handler.js"></script>
 </body>
 </html>
