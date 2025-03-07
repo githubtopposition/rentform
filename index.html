@@ -2,23 +2,23 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>RentForm Survey</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>RentForm - Sales Script</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <div id="formBlock">
-    <h2 id="formTitle">Qualification Form</h2>
+    <h2 id="formTitle">Rent For Event - Multi-Step Form</h2>
 
+    <!-- Контейнер, куда будут рендериться наши шаги -->
     <div id="formContainer"></div>
 
     <div class="form-actions">
+      <button id="prevBtn" style="display:none;">&lt; Back</button>
       <button id="nextBtn">Next</button>
-      <button id="submitBtn" style="display: none;">Submit</button>
-      <button id="downloadPdfBtn" style="display: none;">Download PDF</button>
+      <button id="submitBtn" style="display:none;">Submit</button>
     </div>
   </div>
 
-  <!-- Подключаем как модули, чтобы работал import/export -->
   <script type="module" src="./firebase-config.js"></script>
   <script type="module" src="./form-handler.js"></script>
 </body>
