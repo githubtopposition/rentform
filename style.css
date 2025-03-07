@@ -1,91 +1,73 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
-  background: #f9f9f9;
-  color: #333;
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
 }
 
-#formBlock {
+#app {
   max-width: 700px;
   margin: 40px auto;
   padding: 20px;
   background: #fff;
   border-radius: 6px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
 }
 
-#formTitle {
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 1.6rem;
+h1 {
   text-align: center;
+  margin-top: 0;
 }
 
-.step-block {
+.step-container {
   display: none;
 }
 
-.step-block.active {
+.step-container.active {
   display: block;
 }
 
-.question-item {
-  margin-bottom: 16px;
+.question-block {
+  margin-bottom: 15px;
 }
 
-.question-item label {
+.question-block label {
+  font-weight: bold;
   display: block;
   margin-bottom: 6px;
-  font-weight: 600;
 }
 
-.question-item input[type="text"],
-.question-item input[type="date"],
-.question-item input[type="email"],
-.question-item input[type="number"],
-.question-item select,
-.question-item textarea {
-  font-size: 14px;
-  padding: 8px;
+.question-block input,
+.question-block select,
+.question-block textarea {
   width: 100%;
+  padding: 8px;
   box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
 }
 
-.question-item input[type="radio"],
-.question-item input[type="checkbox"] {
-  width: auto;
-  margin-right: 6px;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
+.nav-buttons {
   margin-top: 20px;
+  text-align: right;
 }
 
-.form-actions button {
-  padding: 10px 16px;
+.nav-buttons button {
+  padding: 8px 14px;
+  margin-left: 10px;
+  background: #007bff;
   border: none;
   border-radius: 4px;
-  background: #007bff;
   color: #fff;
-  font-size: 14px;
   cursor: pointer;
 }
-
-.form-actions button:hover {
+.nav-buttons button:hover {
   background: #0056b3;
 }
 
 .alert {
-  margin: 10px 0;
   padding: 10px;
-  background: #fdeaea;
-  border: 1px solid #f1c6c6;
-  color: #b95b5b;
+  background: #fee;
+  border: 1px solid #fbb;
   border-radius: 4px;
+  margin-top: 15px;
+  color: #b00;
 }
