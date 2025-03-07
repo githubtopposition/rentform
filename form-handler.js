@@ -1,205 +1,287 @@
 import { db } from "./firebase-config.js";
-import {
-  collection,
-  addDoc
-} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-let step = 1;       // текущий шаг (1..3)
-let totalSteps = 3; // всего шагов
-let questionsData = null; // из questions.json
-let answers = {};   // здесь храним все ответы
+const multiStepContainer = document.getElementById("multiStepContainer");
+const backBtn = document.getElementById("backBtn");
+const nextBtn = document.getElementById("nextBtn");
+const previewBtn = document.getElementById("previewBtn");
+const submitBtn = document.getElementById("submitBtn");
+const progressBarEl = document.querySelector("#progressBar .progress");
 
-const formEl = document.getElementById("multistep-form");
+let questionsData = null;
+let step = 0; // 0..4
+let answers = {};
 
-function renderStep(n) {
-  formEl.innerHTML = ""; // очистка
+// Общая структура
+// 0: inbound/outbound
+// 1: step1_inbound или step1_outbound
+// 2: step2 (newProject, existing, vendor, etc.) / or outbound follow up
+// 3: preview
+// 4: final -> qualification -> submit
 
-  if (!questionsData) {
-    formEl.innerHTML = "<p>Loading questions...</p>";
-    return;
-  }
+const totalSteps = 5; // 0..4 inclusive
+
+fetch("./questions.json")
+  .then(r => r.json())
+  .then(data => {
+    questionsData = data;
+    step = 0;
+    renderStep(0);
+  })
+  .catch(err => {
+    console.error("Error loading JSON", err);
+    multiStepContainer.innerHTML = "<p style='color:red;'>Failed to load questions.json</p>";
+  });
+
+function renderStep(stepIndex) {
+  multiStepContainer.innerHTML = "";
 
   // Управляем кнопками
-  let navHtml = `
-    <div class="nav-buttons">
-      ${n > 1 ? `<button id="prevBtn">&lt; Back</button>` : ""}
-      ${n < totalSteps ? `<button id="nextBtn">Next &gt;</button>` : ""}
-      ${n === totalSteps ? `<button id="submitBtn">Submit</button>` : ""}
-    </div>
-  `;
+  backBtn.style.display = (stepIndex>0) ? "inline-block" : "none";
+  nextBtn.style.display = (stepIndex<3) ? "inline-block" : "none";
+  previewBtn.style.display = (stepIndex===2) ? "inline-block" : "none";
+  submitBtn.style.display = (stepIndex===4) ? "inline-block" : "none";
 
-  // Рендерим поля (Step1 / Step2 / Step3)
-  let questionsArr = [];
-  if (n === 1) {
-    questionsArr = questionsData.step1;
-  } else if (n === 2) {
-    // смотрим, какой call_type_ctm выбрал юзер
-    const callType = answers["call_type_ctm"] || "";
-    switch(callType) {
-      case "New Project":
-        questionsArr = questionsData.step2_newProject;
-        break;
-      case "Existing Project":
-        questionsArr = questionsData.step2_existing;
-        break;
-      case "Vendor":
-        questionsArr = questionsData.step2_vendor;
-        break;
-      case "Technician":
-        questionsArr = questionsData.step2_technician;
-        break;
-      case "Complaint":
-        questionsArr = questionsData.step2_complaint;
-        break;
-      case "Promotion/Spam":
-        // можно выдать короткое сообщение
-        formEl.innerHTML = `<p>Marked as Promotion/Spam. No more data needed.</p>` + navHtml;
-        attachNavHandlers();
-        return;
-      case "HR Inquiry":
-        questionsArr = questionsData.step2_hr;
-        break;
-      case "Unknown":
-        questionsArr = questionsData.step2_unknown;
-        break;
-      default:
-        // пусто
-        formEl.innerHTML = `<p>Please go back and select call type.</p>` + navHtml;
-        attachNavHandlers();
-        return;
-    }
-  } else if (n === 3) {
-    questionsArr = questionsData.step3;
-  }
+  updateProgress(stepIndex);
 
-  // Собираем HTML для каждого вопроса
-  let html = ``;
-  questionsArr.forEach(q => {
-    html += renderQuestionHtml(q);
-  });
+  let toRender = [];
 
-  formEl.innerHTML = html + navHtml;
-  attachNavHandlers();
-}
-
-// Генерим html для одного вопроса
-function renderQuestionHtml(q) {
-  let out = `<div class="question-block">`;
-  if (q.label) {
-    out += `<label for="${q.name}">${q.label}</label>`;
-  }
-  switch(q.type) {
-    case "text":
-    case "email":
-    case "date":
-      out += `<input type="${q.type}" id="${q.name}" name="${q.name}" value="${answers[q.name]||""}" />`;
+  switch(stepIndex) {
+    case 0:
+      // step0 => inbound/outbound
+      toRender = questionsData.step0;
       break;
-    case "number":
-      out += `<input type="number" id="${q.name}" name="${q.name}" value="${answers[q.name]||""}" />`;
-      break;
-    case "textarea":
-      out += `<textarea id="${q.name}" name="${q.name}" rows="3">${answers[q.name]||""}</textarea>`;
-      break;
-    case "select":
-      out += `<select id="${q.name}" name="${q.name}" ${q.multi ? "multiple" : ""}>`;
-      if (!q.multi) {
-        out += `<option value="">-- select --</option>`;
+    case 1:
+      // если flow_type = inbound => step1_inbound
+      // если outbound => step1_outbound
+      if (answers.flow_type === "Inbound") {
+        toRender = questionsData.step1_inbound;
+      } else {
+        toRender = questionsData.step1_outbound;
       }
-      if (q.options) {
-        q.options.forEach(opt => {
-          let sel = "";
-          // если multi
-          if (q.multi && Array.isArray(answers[q.name]) && answers[q.name].includes(opt)) {
-            sel = "selected";
-          } else if (!q.multi && answers[q.name] === opt) {
-            sel = "selected";
-          }
-          out += `<option value="${opt}" ${sel}>${opt}</option>`;
-        });
+      break;
+    case 2:
+      // если inbound => разветвление call_type (new / existing / vendor..)
+      // если outbound => возможно step3_outbound
+      if (answers.flow_type==="Inbound") {
+        const ctype = answers.call_type_ctm || "";
+        switch(ctype) {
+          case "New Project":      toRender = questionsData.step2_newProject; break;
+          case "Existing Project": toRender = questionsData.step2_existing;   break;
+          case "Vendor":           toRender = questionsData.step2_vendor;     break;
+          case "Technician":       toRender = questionsData.step2_technician; break;
+          case "Complaint":        toRender = questionsData.step2_complaint;  break;
+          case "Promotion/Spam":
+            multiStepContainer.innerHTML = `<div class="alert">Marked as Spam. No more details needed.</div>`;
+            return;
+          case "HR Inquiry":       toRender = questionsData.step2_hr;         break;
+          case "Unknown":          toRender = questionsData.step2_unknown;    break;
+          default:
+            multiStepContainer.innerHTML = `<p>Please go back and select call type.</p>`;
+            return;
+        }
+      } else {
+        // outbound
+        toRender = questionsData.step3_outbound; // небольшие доп. вопросы
       }
-      out += `</select>`;
+      break;
+    case 3:
+      // Preview
+      toRender = questionsData.stepPreview;
+      break;
+    case 4:
+      // Final
+      toRender = questionsData.stepFinal;
       break;
     default:
-      out += `<p>Unsupported field type: ${q.type}</p>`;
+      toRender = [];
   }
 
-  out += `</div>`;
-  return out;
-}
-
-// Сохраняем ответы текущего шага
-function collectAnswers() {
-  const inputs = formEl.querySelectorAll("input, select, textarea");
-  inputs.forEach(el => {
-    let val = "";
-    if (el.type === "select-multiple" || el.hasAttribute("multiple")) {
-      // множественный выбор
-      val = Array.from(el.selectedOptions).map(o=>o.value);
-    } else {
-      val = el.value;
+  // Рендерим поля
+  toRender.forEach(q => {
+    const block = document.createElement("div");
+    block.className = "question-block";
+    if (q.label) {
+      const lab = document.createElement("label");
+      lab.textContent = q.label;
+      block.appendChild(lab);
     }
-    answers[el.name] = val;
+
+    if (q.name==="_summary_") {
+      // особый случай: preview
+      const summaryEl = document.createElement("div");
+      summaryEl.id="previewBlock";
+      summaryEl.innerHTML = generatePreviewHtml();
+      block.appendChild(summaryEl);
+      multiStepContainer.appendChild(block);
+      return;
+    }
+
+    let inputEl;
+    switch(q.type) {
+      case "text":
+      case "email":
+      case "date":
+        inputEl = document.createElement("input");
+        inputEl.type = q.type;
+        inputEl.name = q.name;
+        inputEl.value = answers[q.name] || "";
+        block.appendChild(inputEl);
+        break;
+      case "textarea":
+        inputEl = document.createElement("textarea");
+        inputEl.name = q.name;
+        inputEl.rows = 3;
+        inputEl.value = answers[q.name] || "";
+        block.appendChild(inputEl);
+        break;
+      case "select":
+        inputEl = document.createElement("select");
+        inputEl.name = q.name;
+        if (!q.multi) {
+          // добавим пустую опцию
+          const optEmpty = document.createElement("option");
+          optEmpty.value="";
+          optEmpty.textContent="-- select --";
+          inputEl.appendChild(optEmpty);
+        }
+        if (q.options) {
+          q.options.forEach(opt => {
+            const opEl = document.createElement("option");
+            opEl.value = opt;
+            opEl.textContent = opt;
+            if (q.multi && Array.isArray(answers[q.name]) && answers[q.name].includes(opt)) {
+              opEl.selected = true;
+            } else if (!q.multi && answers[q.name]===opt) {
+              opEl.selected = true;
+            }
+            inputEl.appendChild(opEl);
+          });
+        }
+        if (q.multi) {
+          inputEl.multiple = true;
+        }
+        block.appendChild(inputEl);
+        break;
+      default:
+        block.innerHTML += `<p style='color:red;'>Unsupported field type: ${q.type}</p>`;
+    }
+
+    multiStepContainer.appendChild(block);
   });
 }
 
-// Навесить события на кнопки
-function attachNavHandlers() {
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-  const submitBtn = document.getElementById("submitBtn");
-
-  if (prevBtn) {
-    prevBtn.addEventListener("click", () => {
-      collectAnswers();
-      step--;
-      if (step < 1) step=1;
-      renderStep(step);
-    });
+function generatePreviewHtml() {
+  // показать все answers
+  let html = `<ul>`;
+  for (let [k,v] of Object.entries(answers)) {
+    html += `<li><strong>${k}</strong>: ${ (Array.isArray(v))? v.join(",") : v }</li>`;
   }
-  if (nextBtn) {
-    nextBtn.addEventListener("click", () => {
-      collectAnswers();
-      step++;
-      if (step > totalSteps) step=totalSteps;
-      renderStep(step);
-    });
-  }
-  if (submitBtn) {
-    submitBtn.addEventListener("click", onSubmitHandler);
-  }
+  html += `</ul>`;
+  return html;
 }
 
-async function onSubmitHandler() {
+function collectAnswers() {
+  const inputs = multiStepContainer.querySelectorAll("input, select, textarea");
+  inputs.forEach(el => {
+    if (!el.name) return;
+    if (el.type==="select-multiple" || el.multiple) {
+      const vals = Array.from(el.selectedOptions).map(o=>o.value);
+      answers[el.name] = vals;
+    } else {
+      answers[el.name] = el.value;
+    }
+  });
+}
+
+function updateProgress(stepIndex) {
+  const percentage = Math.round(((stepIndex)/(totalSteps-1)) * 100);
+  progressBarEl.style.width = percentage + "%";
+}
+
+/* Navigation buttons */
+backBtn.addEventListener("click", () => {
   collectAnswers();
-  // проверяем qualification
-  if (!answers["qualification_ctm"] || answers["qualification_ctm"] === "") {
-    alert("Please select the qualification status!");
+  step--;
+  if (step<0) step=0;
+  renderStep(step);
+});
+
+nextBtn.addEventListener("click", () => {
+  // валидация
+  if (!validateStep(step)) return;
+  collectAnswers();
+  step++;
+  if (step>=totalSteps) step = totalSteps-1;
+  renderStep(step);
+});
+
+previewBtn.addEventListener("click", () => {
+  collectAnswers();
+  // Логика: после step2 → step3 (preview)
+  step=3;
+  renderStep(step);
+});
+
+submitBtn.addEventListener("click", async () => {
+  // финальная валидация
+  if (!validateStep(step)) return;
+  collectAnswers();
+  console.log("Submitting answers: ", answers);
+
+  // qualification_ctm обязателен
+  if (!answers["qualification_ctm"] || answers["qualification_ctm"]==="") {
+    alert("Please select final Qualification status!");
     return;
   }
-  console.log("Final answers =>", answers);
 
-  // Сохраняем в Firestore
+  // push to Firestore
   try {
-    const docRef = await addDoc(collection(db, "responses"), answers);
-    console.log("Saved to Firestore with ID:", docRef.id);
-    alert("Submitted successfully! ID: " + docRef.id);
+    await addDoc(collection(db,"responses"), answers);
+    alert("Submitted successfully!");
     // reset?
     // location.reload();
   } catch(e) {
-    console.error("Error saving:", e);
-    alert("Error saving to Firestore: "+ e);
+    console.error("Error saving to Firestore", e);
+    alert("Error saving: "+ e);
   }
+});
+
+function validateStep(stepIndex) {
+  // Пример: если step=0, поле flow_type обязательно
+  if (stepIndex===0) {
+    const ftype = getValue("flow_type");
+    if (!ftype) {
+      alert("Please select inbound/outbound!");
+      return false;
+    }
+  } else if (stepIndex===1) {
+    if (answers.flow_type==="Inbound") {
+      // пусть client_name нужен
+      const nm = getValue("contact_name");
+      if (!nm) {
+        alert("Client Name is required!");
+        return false;
+      }
+      // можно проверять call_type_ctm ...
+    } else {
+      // outbound
+      const nm = getValue("outbound_client_name");
+      if (!nm) {
+        alert("Outbound client name is required!");
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
-// 1) Грузим questions.json
-fetch("./questions.json")
-  .then(res=>res.json())
-  .then(data => {
-    questionsData = data;
-    // Рендерим Step1
-    renderStep(step);
-  })
-  .catch(err=>{
-    console.error("Error loading questions.json:", err);
-    formEl.innerHTML = "<p style='color:red;'>Failed to load questions.</p>";
-  });
+function getValue(fieldName) {
+  const el = multiStepContainer.querySelector(`[name='${fieldName}']`);
+  if (!el) return "";
+  if (el.type==="select-multiple" || el.multiple) {
+    return Array.from(el.selectedOptions).map(o=>o.value);
+  } else {
+    return el.value;
+  }
+}
