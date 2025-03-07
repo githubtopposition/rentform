@@ -1,190 +1,205 @@
-// form-handler.js
-
-// Импортируем db и методы Firestore
 import { db } from "./firebase-config.js";
 import {
   collection,
   addDoc
 } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-const formContainer = document.getElementById("formContainer");
-const formTitleEl = document.getElementById("formTitle");
-const nextBtn = document.getElementById("nextBtn");
-const submitBtn = document.getElementById("submitBtn");
-const downloadPdfBtn = document.getElementById("downloadPdfBtn");
+let step = 1;       // текущий шаг (1..3)
+let totalSteps = 3; // всего шагов
+let questionsData = null; // из questions.json
+let answers = {};   // здесь храним все ответы
 
-let questionsData = null;
-let currentPart = 1;
-let totalParts = 4; // у нас 4 части
-let answers = {};
+const formEl = document.getElementById("multistep-form");
 
-// 1) Загружаем questions.json
-fetch("./questions.json")
-  .then(res => res.json())
-  .then(data => {
-    questionsData = data;
-    renderPart(currentPart);
-  })
-  .catch(err => {
-    console.error("Error loading questions.json:", err);
-  });
+function renderStep(n) {
+  formEl.innerHTML = ""; // очистка
 
-// 2) Функция рендера
-function renderPart(partNumber) {
-  formContainer.innerHTML = "";
-
-  const partKey = `part${partNumber}`;
-  const questions = questionsData[partKey];
-  if (!questions) {
-    console.warn("No questions found for", partKey);
+  if (!questionsData) {
+    formEl.innerHTML = "<p>Loading questions...</p>";
     return;
   }
 
-  // Заголовок: "Step X of 4"
-  if (formTitleEl) {
-    formTitleEl.textContent = `Step ${partNumber} of ${totalParts}`;
-  }
+  // Управляем кнопками
+  let navHtml = `
+    <div class="nav-buttons">
+      ${n > 1 ? `<button id="prevBtn">&lt; Back</button>` : ""}
+      ${n < totalSteps ? `<button id="nextBtn">Next &gt;</button>` : ""}
+      ${n === totalSteps ? `<button id="submitBtn">Submit</button>` : ""}
+    </div>
+  `;
 
-  // Рендерим каждый вопрос
-  questions.forEach(q => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "question-item";
-
-    const labelEl = document.createElement("label");
-    labelEl.textContent = q.label;
-    labelEl.htmlFor = q.name;
-    wrapper.appendChild(labelEl);
-
-    let fieldEl = null;
-
-    switch (q.type) {
-      case "text":
-        fieldEl = document.createElement("input");
-        fieldEl.type = "text";
-        fieldEl.id = q.name;
-        fieldEl.name = q.name;
-        fieldEl.placeholder = q.placeholder || "";
+  // Рендерим поля (Step1 / Step2 / Step3)
+  let questionsArr = [];
+  if (n === 1) {
+    questionsArr = questionsData.step1;
+  } else if (n === 2) {
+    // смотрим, какой call_type_ctm выбрал юзер
+    const callType = answers["call_type_ctm"] || "";
+    switch(callType) {
+      case "New Project":
+        questionsArr = questionsData.step2_newProject;
         break;
-      case "textarea":
-        fieldEl = document.createElement("textarea");
-        fieldEl.id = q.name;
-        fieldEl.name = q.name;
-        fieldEl.placeholder = q.placeholder || "";
+      case "Existing Project":
+        questionsArr = questionsData.step2_existing;
         break;
-      case "select":
-        fieldEl = document.createElement("select");
-        fieldEl.id = q.name;
-        fieldEl.name = q.name;
-        q.options.forEach(opt => {
-          const optEl = document.createElement("option");
-          optEl.value = opt;
-          optEl.textContent = opt;
-          fieldEl.appendChild(optEl);
-        });
+      case "Vendor":
+        questionsArr = questionsData.step2_vendor;
         break;
-      case "radio":
-        const radioContainer = document.createElement("div");
-        q.options.forEach(optVal => {
-          const radioLabel = document.createElement("label");
-          radioLabel.textContent = optVal;
-
-          const radioInput = document.createElement("input");
-          radioInput.type = "radio";
-          radioInput.name = q.name;
-          radioInput.value = optVal;
-
-          radioLabel.prepend(radioInput);
-          radioContainer.appendChild(radioLabel);
-        });
-        wrapper.appendChild(radioContainer);
+      case "Technician":
+        questionsArr = questionsData.step2_technician;
         break;
-      case "checkbox":
-        fieldEl = document.createElement("input");
-        fieldEl.type = "checkbox";
-        fieldEl.id = q.name;
-        fieldEl.name = q.name;
+      case "Complaint":
+        questionsArr = questionsData.step2_complaint;
+        break;
+      case "Promotion/Spam":
+        // можно выдать короткое сообщение
+        formEl.innerHTML = `<p>Marked as Promotion/Spam. No more data needed.</p>` + navHtml;
+        attachNavHandlers();
+        return;
+      case "HR Inquiry":
+        questionsArr = questionsData.step2_hr;
+        break;
+      case "Unknown":
+        questionsArr = questionsData.step2_unknown;
         break;
       default:
-        console.warn("Unknown question type:", q.type);
+        // пусто
+        formEl.innerHTML = `<p>Please go back and select call type.</p>` + navHtml;
+        attachNavHandlers();
+        return;
     }
+  } else if (n === 3) {
+    questionsArr = questionsData.step3;
+  }
 
-    if (fieldEl) {
-      wrapper.appendChild(fieldEl);
-    }
-
-    formContainer.appendChild(wrapper);
+  // Собираем HTML для каждого вопроса
+  let html = ``;
+  questionsArr.forEach(q => {
+    html += renderQuestionHtml(q);
   });
 
-  // Управляем кнопками
-  if (partNumber < totalParts) {
-    // Если не последний шаг, показываем Next, прячем Submit
-    nextBtn.style.display = "inline-block";
-    submitBtn.style.display = "none";
-    downloadPdfBtn.style.display = "none";
-  } else {
-    // Если последний шаг (part4)
-    nextBtn.style.display = "none";
-    submitBtn.style.display = "inline-block";
+  formEl.innerHTML = html + navHtml;
+  attachNavHandlers();
+}
+
+// Генерим html для одного вопроса
+function renderQuestionHtml(q) {
+  let out = `<div class="question-block">`;
+  if (q.label) {
+    out += `<label for="${q.name}">${q.label}</label>`;
+  }
+  switch(q.type) {
+    case "text":
+    case "email":
+    case "date":
+      out += `<input type="${q.type}" id="${q.name}" name="${q.name}" value="${answers[q.name]||""}" />`;
+      break;
+    case "number":
+      out += `<input type="number" id="${q.name}" name="${q.name}" value="${answers[q.name]||""}" />`;
+      break;
+    case "textarea":
+      out += `<textarea id="${q.name}" name="${q.name}" rows="3">${answers[q.name]||""}</textarea>`;
+      break;
+    case "select":
+      out += `<select id="${q.name}" name="${q.name}" ${q.multi ? "multiple" : ""}>`;
+      if (!q.multi) {
+        out += `<option value="">-- select --</option>`;
+      }
+      if (q.options) {
+        q.options.forEach(opt => {
+          let sel = "";
+          // если multi
+          if (q.multi && Array.isArray(answers[q.name]) && answers[q.name].includes(opt)) {
+            sel = "selected";
+          } else if (!q.multi && answers[q.name] === opt) {
+            sel = "selected";
+          }
+          out += `<option value="${opt}" ${sel}>${opt}</option>`;
+        });
+      }
+      out += `</select>`;
+      break;
+    default:
+      out += `<p>Unsupported field type: ${q.type}</p>`;
+  }
+
+  out += `</div>`;
+  return out;
+}
+
+// Сохраняем ответы текущего шага
+function collectAnswers() {
+  const inputs = formEl.querySelectorAll("input, select, textarea");
+  inputs.forEach(el => {
+    let val = "";
+    if (el.type === "select-multiple" || el.hasAttribute("multiple")) {
+      // множественный выбор
+      val = Array.from(el.selectedOptions).map(o=>o.value);
+    } else {
+      val = el.value;
+    }
+    answers[el.name] = val;
+  });
+}
+
+// Навесить события на кнопки
+function attachNavHandlers() {
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const submitBtn = document.getElementById("submitBtn");
+
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      collectAnswers();
+      step--;
+      if (step < 1) step=1;
+      renderStep(step);
+    });
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      collectAnswers();
+      step++;
+      if (step > totalSteps) step=totalSteps;
+      renderStep(step);
+    });
+  }
+  if (submitBtn) {
+    submitBtn.addEventListener("click", onSubmitHandler);
   }
 }
 
-// 3) Собираем ответы для текущей части
-function collectAnswers(partNumber) {
-  const partKey = `part${partNumber}`;
-  const questions = questionsData[partKey];
-  if (!questions) return;
-
-  questions.forEach(q => {
-    if (q.type === "radio") {
-      const selected = document.querySelector(
-        `input[type="radio"][name="${q.name}"]:checked`
-      );
-      answers[q.name] = selected ? selected.value : null;
-    } else if (q.type === "checkbox") {
-      const cbEl = document.getElementById(q.name);
-      answers[q.name] = cbEl ? cbEl.checked : false;
-    } else if (q.type === "select") {
-      const selEl = document.getElementById(q.name);
-      answers[q.name] = selEl ? selEl.value : "";
-    } else if (q.type === "text" || q.type === "textarea") {
-      const inEl = document.getElementById(q.name);
-      answers[q.name] = inEl ? inEl.value : "";
-    }
-  });
-}
-
-// 4) Кнопка "Next"
-nextBtn.addEventListener("click", () => {
-  collectAnswers(currentPart);
-  currentPart++;
-  renderPart(currentPart);
-});
-
-// 5) Кнопка "Submit" → собрать ответы, отправить в Firestore, отобразить результат
-submitBtn.addEventListener("click", async () => {
-  collectAnswers(currentPart);
-  console.log("Final answers:", answers);
+async function onSubmitHandler() {
+  collectAnswers();
+  // проверяем qualification
+  if (!answers["qualification_ctm"] || answers["qualification_ctm"] === "") {
+    alert("Please select the qualification status!");
+    return;
+  }
+  console.log("Final answers =>", answers);
 
   // Сохраняем в Firestore
   try {
     const docRef = await addDoc(collection(db, "responses"), answers);
-    console.log("Saved to Firestore, ID:", docRef.id);
-  } catch (err) {
-    console.error("Error saving to Firestore:", err);
+    console.log("Saved to Firestore with ID:", docRef.id);
+    alert("Submitted successfully! ID: " + docRef.id);
+    // reset?
+    // location.reload();
+  } catch(e) {
+    console.error("Error saving:", e);
+    alert("Error saving to Firestore: "+ e);
   }
+}
 
-  // Выводим сводку вместо формы
-  formContainer.innerHTML = `
-    <h3>Submitted Data:</h3>
-    <pre style="background:#f0f0f0; padding:10px;">${JSON.stringify(answers, null, 2)}</pre>
-  `;
-
-  nextBtn.style.display = "none";
-  submitBtn.style.display = "none";
-  downloadPdfBtn.style.display = "inline-block";
-});
-
-// 6) Кнопка "Download PDF" → печать страницы
-downloadPdfBtn.addEventListener("click", () => {
-  window.print();
-});
+// 1) Грузим questions.json
+fetch("./questions.json")
+  .then(res=>res.json())
+  .then(data => {
+    questionsData = data;
+    // Рендерим Step1
+    renderStep(step);
+  })
+  .catch(err=>{
+    console.error("Error loading questions.json:", err);
+    formEl.innerHTML = "<p style='color:red;'>Failed to load questions.</p>";
+  });
