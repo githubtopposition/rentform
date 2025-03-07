@@ -7,7 +7,7 @@ body {
 }
 
 #formBlock {
-  max-width: 600px;
+  max-width: 700px;
   margin: 40px auto;
   padding: 20px;
   background: #fff;
@@ -18,8 +18,16 @@ body {
 #formTitle {
   margin-top: 0;
   margin-bottom: 20px;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   text-align: center;
+}
+
+.step-block {
+  display: none;
+}
+
+.step-block.active {
+  display: block;
 }
 
 .question-item {
@@ -32,8 +40,10 @@ body {
   font-weight: 600;
 }
 
-/* Общие стили для input/textarea/select */
 .question-item input[type="text"],
+.question-item input[type="date"],
+.question-item input[type="email"],
+.question-item input[type="number"],
 .question-item select,
 .question-item textarea {
   font-size: 14px;
@@ -54,6 +64,7 @@ body {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
+  margin-top: 20px;
 }
 
 .form-actions button {
@@ -68,4 +79,13 @@ body {
 
 .form-actions button:hover {
   background: #0056b3;
+}
+
+.alert {
+  margin: 10px 0;
+  padding: 10px;
+  background: #fdeaea;
+  border: 1px solid #f1c6c6;
+  color: #b95b5b;
+  border-radius: 4px;
 }
