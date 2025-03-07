@@ -1,25 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>RentForm - Sales Script</title>
-  <link rel="stylesheet" href="./style.css" />
+  <title>RentForm - Multi-Step Survey</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="formBlock">
-    <h2 id="formTitle">Rent For Event - Multi-Step Form</h2>
-
-    <!-- Контейнер, куда будут рендериться наши шаги -->
-    <div id="formContainer"></div>
-
-    <div class="form-actions">
-      <button id="prevBtn" style="display:none;">&lt; Back</button>
-      <button id="nextBtn">Next</button>
-      <button id="submitBtn" style="display:none;">Submit</button>
-    </div>
+  <div id="app">
+    <h1>Rent For Event - Multi-step Form</h1>
+    <div id="multistep-form"></div>
   </div>
 
+  <!-- Подключаем Firebase конфиг -->
   <script type="module" src="./firebase-config.js"></script>
+  <!-- Подключаем нашу логику формы -->
   <script type="module" src="./form-handler.js"></script>
 </body>
 </html>
