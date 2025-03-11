@@ -2,6 +2,155 @@
   {
     "id": "K.1",
     "type": "label",
-    "text": "Karaoke main questions go here..."
+    "text": "Q1. What is the main purpose of your event?"
+  },
+  {
+    "id": "K.2",
+    "type": "checkbox-multi",
+    "label": "Purpose",
+    "name": "karaoke_purpose",
+    "options": [
+      "Birthday Party",
+      "Wedding",
+      "Corporate Event",
+      "Pop-up Event",
+      "Experiential Marketing Event",
+      "Private House Party",
+      "Other (please specify)"
+    ]
+  },
+  {
+    "id": "K.3",
+    "type": "label",
+    "text": "Q2. What kind of experience are you looking for?"
+  },
+  {
+    "id": "K.4",
+    "type": "checkbox-multi",
+    "label": "Experience",
+    "name": "karaoke_experience",
+    "options": [
+      "Fun party entertainment with karaoke",
+      "Background music only (Spotify/YouTube)",
+      "Formal event with speeches/presentations",
+      "Custom setup (extra speakers/mics)",
+      "Not sure, need recommendations"
+    ]
+  },
+
+  {
+    "id": "K.5",
+    "type": "label",
+    "text": "Q3. Do you have a stable WiFi connection on-site?"
+  },
+  {
+    "id": "K.6",
+    "type": "checkbox",
+    "label": "Stable WiFi?",
+    "name": "karaoke_wifi",
+    "options": ["Yes","No","Not Sure"]
+  },
+
+  {
+    "id": "K.7",
+    "type": "label",
+    "text": "Q4. Do you want to connect your existing TV to our karaoke system?"
+  },
+  {
+    "id": "K.8",
+    "type": "checkbox",
+    "label": "Use your own TV?",
+    "name": "karaoke_ownTv",
+    "options": [ "Yes","No, need a screen" ]
+  },
+  {
+    "id": "K.9",
+    "type": "conditional",
+    "when": "karaoke_ownTv=Yes",
+    "blocks": [
+      {
+        "id": "K.9a",
+        "type": "text",
+        "label": "How far is the TV from the karaoke system? (feet)",
+        "name": "karaoke_tvDistance"
+      },
+      {
+        "id": "K.9b",
+        "type": "checkbox",
+        "label": "Does your TV have an HDMI input?",
+        "name": "karaoke_tvHdmi",
+        "options": ["Yes","No (please specify input type)"]
+      }
+    ]
+  },
+
+  {
+    "id": "K.10",
+    "type": "label",
+    "text": "Q5. Our karaoke system is a 3-in-1 (built-in iPad, etc.). Do you want add-ons?"
+  },
+  {
+    "id": "K.11",
+    "type": "checkbox",
+    "label": "Would you like extra microphones or speakers?",
+    "name": "karaoke_extraEquip",
+    "options": ["Yes, extra microphones","Yes, extra speakers","No, included is fine"]
+  },
+
+  {
+    "id": "K.12",
+    "type": "label",
+    "text": "Q7. Special Promotion: 50% off uplighting if you book now!"
+  },
+  {
+    "id": "K.13",
+    "type": "checkbox",
+    "label": "Add uplighting?",
+    "name": "karaoke_uplighting",
+    "options": ["Yes, I'd like uplighting","No, thanks"]
+  },
+
+  {
+    "id": "K.14",
+    "type": "label",
+    "text": "🚚 Logistics & Delivery"
+  },
+  {
+    "id": "K.15",
+    "type": "text",
+    "label": "Event Location (address)",
+    "name": "karaoke_location"
+  },
+  {
+    "id": "K.16",
+    "type": "select",
+    "label": "Earliest time we can drop off?",
+    "name": "karaoke_dropoffTime",
+    "options": [ "Morning (8-11 AM)","Afternoon (12-3 PM)","Evening (4-7 PM)" ]
+  },
+  {
+    "id": "K.17",
+    "type": "checkbox",
+    "label": "Is this a private residence or a venue?",
+    "name": "karaoke_venueType",
+    "options": [ "Private Residence","Venue (please specify)"]
+  },
+  {
+    "id": "K.18",
+    "type": "text",
+    "label": "Security gates or access codes? (if yes, specify)",
+    "name": "karaoke_security"
+  },
+  {
+    "id": "K.19",
+    "type": "text",
+    "label": "Who is the point of contact for delivery?",
+    "name": "karaoke_poc"
+  },
+  {
+    "id": "K.20",
+    "type": "textarea",
+    "label": "Any specific requests or notes?",
+    "name": "karaoke_notes"
   }
 ]
