@@ -2,6 +2,315 @@
   {
     "id": "LED.1",
     "type": "label",
-    "text": "LED Screen questions go here..."
+    "text": "Q1. What is the purpose of the LED wall rental?"
+  },
+  {
+    "id": "LED.2",
+    "type": "checkbox-multi",
+    "label": "Purpose",
+    "name": "led_purpose",
+    "options": [
+      "Presentation",
+      "Concert / Live Performance",
+      "Conference / Trade Show",
+      "Sporting Event",
+      "Advertising / Branding",
+      "Wedding / Private Event",
+      "Movie Screening",
+      "Other (Please specify)"
+    ]
+  },
+  {
+    "id": "LED.3",
+    "type": "label",
+    "text": "Q2. What is the required LED wall size?"
+  },
+  {
+    "id": "LED.4",
+    "type": "select",
+    "label": "LED size",
+    "name": "led_size",
+    "options": [
+      "8x4 ft",
+      "10x6 ft",
+      "12x7 ft",
+      "16x9 ft",
+      "20x10 ft",
+      "24x13 ft",
+      "Custom size (free text)"
+    ]
+  },
+  {
+    "id": "LED.5",
+    "type": "label",
+    "text": "Q3. Will the LED wall be used indoors or outdoors?"
+  },
+  {
+    "id": "LED.6",
+    "type": "checkbox",
+    "label": "Indoors/Outdoors?",
+    "name": "led_indoorOutdoor",
+    "options": [ "Indoor","Outdoor","Both" ]
+  },
+
+  {
+    "id": "LED.7",
+    "type": "label",
+    "text": "Q4. How should the LED wall be set up?"
+  },
+  {
+    "id": "LED.8",
+    "type": "checkbox",
+    "label": "Mounting Options?",
+    "name": "led_mounting",
+    "options": [
+      "Ground-standing",
+      "Mounted on truss",
+      "Flown (rigged from ceiling)",
+      "Other (Please specify)"
+    ]
+  },
+
+  {
+    "id": "LED.9",
+    "type": "label",
+    "text": "Q5. If ground-standing, what elevation from the ground is required?"
+  },
+  {
+    "id": "LED.10",
+    "type": "select",
+    "label": "Elevation",
+    "name": "led_ground_elevation",
+    "options": [
+      "Directly on the ground",
+      "Elevated on stage (1ft, 2ft, etc.)",
+      "Custom height"
+    ]
+  },
+
+  {
+    "id": "LED.11",
+    "type": "label",
+    "text": "Q6. What content will be displayed?"
+  },
+  {
+    "id": "LED.12",
+    "type": "checkbox-multi",
+    "label": "Content Type",
+    "name": "led_content",
+    "options": [
+      "Live Video Feed",
+      "Presentation Slides",
+      "Logos / Branding / Ads",
+      "Pre-recorded Video",
+      "Social Media Feeds",
+      "Other (Please specify)"
+    ]
+  },
+
+  {
+    "id": "LED.13",
+    "type": "label",
+    "text": "Q7. What source will be used for the content?"
+  },
+  {
+    "id": "LED.14",
+    "type": "checkbox",
+    "label": "Content Source",
+    "name": "led_contentSource",
+    "options": [
+      "Client’s Laptop",
+      "Our Media Player",
+      "Live Camera Feed",
+      "Other (Please specify)"
+    ]
+  },
+
+  {
+    "id": "LED.15",
+    "type": "label",
+    "text": "Q8. What type of connection does the content source require?"
+  },
+  {
+    "id": "LED.16",
+    "type": "checkbox-multi",
+    "label": "Connection Type",
+    "name": "led_connection",
+    "options": [
+      "HDMI",
+      "DisplayPort",
+      "USB-C",
+      "SDI",
+      "VGA",
+      "Wireless Streaming",
+      "Not sure"
+    ]
+  },
+
+  {
+    "id": "LED.17",
+    "type": "label",
+    "text": "Q9. How long is the rental period?"
+  },
+  {
+    "id": "LED.18",
+    "type": "select",
+    "label": "Rental Duration",
+    "name": "led_duration",
+    "options": [
+      "1 day",
+      "3 days",
+      "7 days",
+      "More than a week"
+    ]
+  },
+
+  {
+    "id": "LED.19",
+    "type": "label",
+    "text": "Q10. Will you need a technician on-site?"
+  },
+  {
+    "id": "LED.20",
+    "type": "checkbox",
+    "label": "Technician?",
+    "name": "led_tech",
+    "options": [
+      "Yes, full-time",
+      "Yes, only during setup",
+      "No, I will manage"
+    ]
+  },
+
+  {
+    "id": "LED.21",
+    "type": "label",
+    "text": "Q11. Will you need audio support?"
+  },
+  {
+    "id": "LED.22",
+    "type": "checkbox",
+    "label": "Audio?",
+    "name": "led_audio",
+    "options": [ 
+      "Yes, I need speakers", 
+      "No, I don’t need sound", 
+      "Not sure, please advise" 
+    ]
+  },
+
+  {
+    "id": "LED.23",
+    "type": "label",
+    "text": "Q12. Setup and teardown time constraints?"
+  },
+  {
+    "id": "LED.24",
+    "type": "text",
+    "label": "Setup Start Time",
+    "name": "led_setupStart"
+  },
+  {
+    "id": "LED.25",
+    "type": "text",
+    "label": "Setup End Time",
+    "name": "led_setupEnd"
+  },
+  {
+    "id": "LED.26",
+    "type": "text",
+    "label": "Teardown Start Time",
+    "name": "led_teardownStart"
+  },
+
+  {
+    "id": "LED.27",
+    "type": "label",
+    "text": "Q13. Where will the event take place? (Venue Name/Address)"
+  },
+  {
+    "id": "LED.28",
+    "type": "text",
+    "label": "Venue Name",
+    "name": "led_venueName"
+  },
+  {
+    "id": "LED.29",
+    "type": "text",
+    "label": "Address",
+    "name": "led_venueAddress"
+  },
+
+  {
+    "id": "LED.30",
+    "type": "label",
+    "text": "Q14. Is there easy access for loading/unloading?"
+  },
+  {
+    "id": "LED.31",
+    "type": "checkbox",
+    "label": "Loading/Unloading Access",
+    "name": "led_access",
+    "options": [ "Yes","No (please specify)" ]
+  },
+
+  {
+    "id": "LED.32",
+    "type": "label",
+    "text": "Q15. What are the power requirements for the LED wall?"
+  },
+  {
+    "id": "LED.33",
+    "type": "checkbox",
+    "label": "Power Setup",
+    "name": "led_power",
+    "options": [
+      "Standard 110V outlets",
+      "220V available",
+      "Generator needed",
+      "Not sure"
+    ]
+  },
+
+  {
+    "id": "LED.34",
+    "type": "label",
+    "text": "Q16. Additional services needed?"
+  },
+  {
+    "id": "LED.35",
+    "type": "checkbox-multi",
+    "label": "Additional Services",
+    "name": "led_additional",
+    "options": [
+      "Pipe & Drape",
+      "Stage",
+      "Audio",
+      "TVs",
+      "Projection & Screens",
+      "LED Wall",
+      "Live Stream",
+      "Step & Repeat",
+      "Lighting",
+      "Karaoke",
+      "Trussing",
+      "Red Carpet",
+      "Video Production",
+      "Post Production",
+      "Special Effects",
+      "None"
+    ]
+  },
+
+  {
+    "id": "LED.36",
+    "type": "label",
+    "text": "Final notes?"
+  },
+  {
+    "id": "LED.37",
+    "type": "textarea",
+    "label": "Anything else we should know?",
+    "name": "led_notes"
   }
 ]
