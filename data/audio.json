@@ -1,0 +1,225 @@
+[
+  {
+    "id": "A.1",
+    "type": "label",
+    "text": "SECTION 1: PURPOSE & SCOPE IDENTIFICATION"
+  },
+  {
+    "id": "A.2",
+    "type": "checkbox",
+    "label": "What is the purpose of audio at your event?",
+    "name": "audio_purpose",
+    "options": [
+      "Corporate Presentation / Panel Discussion",
+      "DJ Performance / Wedding / Private Party",
+      "Live Band Performance / Concert",
+      "Experiential Marketing / Large Public Event",
+      "Other (please specify)"
+    ]
+  },
+  {
+    "id": "A.3",
+    "type": "label",
+    "text": "Q2. How many attendees are expected?"
+  },
+  {
+    "id": "A.4",
+    "type": "checkbox",
+    "label": "Attendee Range",
+    "name": "audio_attendees",
+    "options": [
+      "0-100 (Small – Standard PA)",
+      "100-500 (Medium – Customizable)",
+      "500-3000 (Large – L-Acoustics line array)",
+      "3000+ (Full-scale production)"
+    ]
+  },
+
+  {
+    "id": "A.5",
+    "type": "label",
+    "text": "SECTION 2: SMALL EVENT PACKAGE SELECTION"
+  },
+  {
+    "id": "A.6",
+    "type": "checkbox",
+    "label": "Do you want a pre-set sound package or custom setup?",
+    "name": "audio_smallPackage",
+    "options": [ 
+      "Pre-Set Package",
+      "Custom Setup"
+    ]
+  },
+  {
+    "id": "A.7",
+    "type": "checkbox",
+    "label": "Do you need microphones?",
+    "name": "audio_needMics",
+    "options": ["Yes","No"]
+  },
+  {
+    "id": "A.8",
+    "type": "text",
+    "label": "If yes, how many handheld, lavalier, etc.?",
+    "name": "audio_micCount"
+  },
+  {
+    "id": "A.9",
+    "type": "checkbox",
+    "label": "Do you need an AV technician on-site?",
+    "name": "audio_tech",
+    "options": [
+      "No, we'll operate ourselves",
+      "Yes, need a technician"
+    ]
+  },
+  {
+    "id": "A.10",
+    "type": "label",
+    "text": "If yes, what time should they be ready/finish? (Add to notes)."
+  },
+
+  {
+    "id": "A.11",
+    "type": "checkbox-multi",
+    "label": "Additional needs? (small event)",
+    "name": "audio_smallAddons",
+    "options": [
+      "Audio Recording",
+      "Additional Speakers",
+      "Subwoofers for DJ"
+    ]
+  },
+
+  {
+    "id": "A.12",
+    "type": "label",
+    "text": "SECTION 3: MEDIUM/LARGE EVENT REQUIREMENTS"
+  },
+  {
+    "id": "A.13",
+    "type": "checkbox",
+    "label": "What type of sound system do you need?",
+    "name": "audio_largeSystem",
+    "options": [
+      "Standard PA System",
+      "L-Acoustics Line Array",
+      "Custom Sound Design"
+    ]
+  },
+  {
+    "id": "A.14",
+    "type": "label",
+    "text": "Q8. Will there be a DJ or live band?"
+  },
+  {
+    "id": "A.15",
+    "type": "checkbox",
+    "label": "DJ/Band/No Performers",
+    "name": "audio_djBand",
+    "options": ["DJ Performance","Live Band","No Performers"]
+  },
+  {
+    "id": "A.16",
+    "type": "label",
+    "text": "If DJ is selected, do you have a DJ technical rider?"
+  },
+  {
+    "id": "A.17",
+    "type": "checkbox",
+    "label": "DJ Rider?",
+    "name": "audio_djRider",
+    "options": [ "Yes","No" ]
+  },
+  {
+    "id": "A.18",
+    "type": "label",
+    "text": "If Live Band is selected, do you have a band rider? (We can contact them)."
+  },
+  {
+    "id": "A.19",
+    "type": "checkbox",
+    "label": "Band Rider?",
+    "name": "audio_bandRider",
+    "options": [ "Yes","No" ]
+  },
+  {
+    "id": "A.20",
+    "type": "label",
+    "text": "Q11. Where will the FOH setup be? (Near stage, middle of audience...)"
+  },
+  {
+    "id": "A.21",
+    "type": "text",
+    "label": "FOH position",
+    "name": "audio_fohPosition"
+  },
+  {
+    "id": "A.22",
+    "type": "checkbox",
+    "label": "What type of power is available?",
+    "name": "audio_power",
+    "options": [
+      "Standard 110V",
+      "220V",
+      "Generator needed",
+      "Not sure"
+    ]
+  },
+  {
+    "id": "A.23",
+    "type": "label",
+    "text": "Q13. Have you visited the venue or can you connect us with the venue contact?"
+  },
+  {
+    "id": "A.24",
+    "type": "checkbox",
+    "label": "Venue details",
+    "name": "audio_venueContact",
+    "options": [
+      "Yes, I have measurements",
+      "No, but I can provide contact",
+      "I need help"
+    ]
+  },
+  {
+    "id": "A.25",
+    "type": "label",
+    "text": "Q14. How much time can we have for setup?"
+  },
+  {
+    "id": "A.26",
+    "type": "select",
+    "label": "Setup Time",
+    "name": "audio_setupTime",
+    "options": [
+      "Less than 1 hour",
+      "1-2 hours",
+      "3+ hours",
+      "Not sure"
+    ]
+  },
+  {
+    "id": "A.27",
+    "type": "checkbox-multi",
+    "label": "Additional needs for the event?",
+    "name": "audio_largeAddons",
+    "options": [
+      "Audio Recording",
+      "Extra Subwoofers",
+      "Wireless In-Ear Monitors",
+      "Custom Sound Design"
+    ]
+  },
+  {
+    "id": "A.28",
+    "type": "label",
+    "text": "FINAL NOTES & SPECIAL REQUESTS"
+  },
+  {
+    "id": "A.29",
+    "type": "textarea",
+    "label": "Any additional requests or details?",
+    "name": "audio_notes"
+  }
+]
