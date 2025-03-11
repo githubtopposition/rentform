@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Rent For Event - Multi-Step Form</title>
-  
-  <!-- Google Maps with your API key + Places library -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaGi8plb8PBaCyKHdmEDye5WamGrlLgg8&libraries=places" async defer></script>
-
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>RentForm - Multi-Step</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
   <div id="app">
@@ -23,7 +19,7 @@
 
       <div class="nav-buttons">
         <button id="backBtn" style="display:none;">&lt; Back</button>
-        <button id="nextBtn">Next &gt;</button>
+        <button id="nextBtn" style="display:none;">Next &gt;</button>
         <button id="previewBtn" style="display:none;">Preview</button>
         <button id="submitBtn" style="display:none;">Submit</button>
       </div>
@@ -32,7 +28,7 @@
 
   <!-- Firebase config -->
   <script type="module" src="./firebase-config.js"></script>
-  <!-- Google Maps config (initAutocompleteFor) -->
+  <!-- Maps config -->
   <script type="module" src="./maps-config.js"></script>
   <!-- Main form logic -->
   <script type="module" src="./form-handler.js"></script>
