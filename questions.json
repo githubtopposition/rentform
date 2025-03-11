@@ -1,127 +1,30 @@
-{
-  "step1_inbound": [
-    {
-      "type": "text",
-      "label": "Client Name",
-      "name": "contact_name"
-    },
-    {
-      "type": "select",
-      "label": "Call Type (Inbound)",
-      "name": "call_type_ctm",
-      "options": [
-        "New Project","Existing Project","Vendor","Technician","Complaint","Promotion/Spam","HR Inquiry","Unknown"
-      ]
-    },
-    {
-      "type": "textarea",
-      "label": "Basic request/description",
-      "name": "basic_req"
-    },
-    {
-      "type": "select",
-      "label": "Qualification (optional for now)",
-      "name": "qualification_ctm",
-      "options": ["","Qualified","Not Qualified"]
-    }
-  ],
-
-  "step1_outbound": [
-    {
-      "type": "text",
-      "label": "Outbound Client Name",
-      "name": "outbound_client_name"
-    },
-    {
-      "type": "text",
-      "label": "Phone or ID",
-      "name": "outbound_phone"
-    },
-    {
-      "type": "textarea",
-      "label": "Reason for outbound call",
-      "name": "outbound_reason"
-    }
-  ],
-
-  "step2_existing": [
-    {
-      "type": "text",
-      "label": "Rental Order #",
-      "name": "rental_order_number_ctm"
-    },
-    {
-      "type": "select",
-      "label": "Active project status?",
-      "name": "active_project_status_ctm",
-      "options": ["Yes","No"]
-    },
-    {
-      "type": "textarea",
-      "label": "Any notes for existing project?",
-      "name": "existing_notes"
-    }
-  ],
-
-  "step2_vendor": [
-    {
-      "type": "text",
-      "label": "Vendor Company Name",
-      "name": "vendor_company_name_ctm"
-    },
-    {
-      "type": "textarea",
-      "label": "Vendor request details",
-      "name": "vendor_request"
-    }
-  ],
-
-  "step2_technician": [
-    {
-      "type": "text",
-      "label": "Project #",
-      "name": "tech_order_number"
-    }
-  ],
-
-  "step2_complaint": [
-    {
-      "type": "text",
-      "label": "Complaint Project #",
-      "name": "complaint_order_number"
-    }
-  ],
-
-  "step3_outbound": [
-    {
-      "type": "textarea",
-      "label": "Any additional notes? (Outbound follow-up)",
-      "name": "outbound_moreinfo"
-    }
-  ],
-
-  "step2p5_salesAdvanced": [
-    {
-      "type": "select",
-      "label": "Budget Range?",
-      "name": "sales_budget",
-      "options": ["Under $2k","$2k-$5k","$5k-$10k","$10k-$20k","$20k+"]
-    }
-  ],
-
-  "stepPreview": [
-    {
-      "type": "text",
-      "label": "Preview summary",
-      "name": "_summary_"
-    }
-  ],
-  "stepFinal": [
-    {
-      "type": "select",
-      "label": "Final Qualification (required)",
-      "name": "qualification_ctm",
-      "options": ["Qualified","Not Qualified"]
-    }
-  ]
-}
+"step2_newProject": [
+  {
+    "type": "date",
+    "label": "Event Date",
+    "name": "event_date_ctm"
+  },
+  {
+    "type": "text",
+    "label": "Street Address",
+    "name": "event_street_ctm"
+  },
+  {
+    "type": "text",
+    "label": "City",
+    "name": "event_city_ctm"
+  },
+  {
+    "type": "text",
+    "label": "State",
+    "name": "event_state_ctm"
+  },
+  {
+    "type": "select",
+    "label": "Delivery Setup",
+    "name": "delivery_setup_options_ctm",
+    "options": ["Delivery","Setup","Operation","Pick Up Yourself"],
+    "multi": true
+  }
+  // Можно добавить Earliest Setup Time, End Time, etc.
+]
