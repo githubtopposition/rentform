@@ -1,0 +1,12 @@
+{
+  // Мапа: название ключа => путь к файлу
+  "liveBand": "./data/live-band.json",
+  "stageRental": "./data/stage-rental.json",
+  "karaoke": "./data/karaoke.json",
+  "ledScreen": "./data/led-screen.json",
+  "audio": "./data/audio.json",
+  "tvRental": "./data/tv-rental.json",
+  "stepRepeat": "./data/step-repeat.json",
+  "trussRental": "./data/truss-rental.json",
+  "pipeDrape": "./data/pipe-drape.json"
+}
