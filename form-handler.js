@@ -9,8 +9,8 @@ const previewBtn = document.getElementById("previewBtn");
 const submitBtn = document.getElementById("submitBtn");
 const progressBarEl = document.querySelector("#progressBar .progress");
 
-let questionsData = null;   // from questions.json
-let servicesIndex = null;   // from data/services-index.json
+let questionsData = null;   
+let servicesIndex = null;   
 let step = 1;
 let answers = {};
 const totalSteps = 5;
@@ -50,7 +50,7 @@ function renderStep(stepIndex) {
     if (answers.flow_type==="Inbound") {
       renderQuestionArray(questionsData.step1_inbound, multiStepContainer);
 
-      // Switch button
+      // Switch to Outbound
       var switchBtn = document.createElement("button");
       switchBtn.textContent = "Switch to Outbound?";
       switchBtn.style.marginTop = "20px";
@@ -75,7 +75,7 @@ function renderStep(stepIndex) {
       }
       switch(ctype) {
         case "New Project":
-          // render step2_newProject
+          // step2_newProject => event date, address, times
           renderNewProjectBase();
           return;
         case "Existing Project":
@@ -132,13 +132,16 @@ function renderStep(stepIndex) {
     renderQuestionArray(questionsData.stepFinal, multiStepContainer);
   }
 
+  // init Google Maps for "event_street_ctm" if present
   var streetInput = multiStepContainer.querySelector("[name='event_street_ctm']");
   if (streetInput) {
     initAutocompleteFor(streetInput);
   }
 }
 
+// RENDER step2_newProject
 function renderNewProjectBase(){
+  // event date, address, times, delivery setup
   renderQuestionArray(questionsData.step2_newProject, multiStepContainer);
 
   var btn = document.createElement("button");
@@ -151,6 +154,7 @@ function renderNewProjectBase(){
   multiStepContainer.appendChild(btn);
 }
 
+// Step2 -> choose services
 function renderNewProjectServiceChoice(){
   multiStepContainer.innerHTML = 
     "<h3>New Project - Services</h3>" +
@@ -176,6 +180,7 @@ function renderNewProjectServiceChoice(){
   });
 }
 
+// Render multiple chosen services
 async function renderServicesQuestions(){
   multiStepContainer.innerHTML = 
     "<h3>Service Details</h3>" +
@@ -215,25 +220,24 @@ async function renderServicesQuestions(){
   var goBtn = document.getElementById("goToStep3Btn");
   goBtn.addEventListener("click", function(){
     collectAnswers();
-    step=3;
+    step=3; // go preview or advanced, your choice
     renderStep(step);
   });
 }
 
+// Render single question from service JSON (liveBand.json etc.)
 function renderServiceQ(q, parentEl){
   var block = document.createElement("div");
   block.className = "question-block";
 
   if (q.type==="label"){
     var p = document.createElement("p");
-    var txt = (q.id||"") + ": " + q.text;
-    p.textContent = txt;
+    p.textContent = (q.id||"") + ": " + q.text;
     block.appendChild(p);
   }
   else if (["text","date","email","number"].indexOf(q.type)>=0){
     var lbl = document.createElement("label");
-    var lblTxt = (q.id||"") + " " + (q.label||"");
-    lbl.textContent = lblTxt;
+    lbl.textContent = (q.id||"") + " " + (q.label||"");
     block.appendChild(lbl);
     var inp = document.createElement("input");
     inp.type = q.type;
@@ -242,8 +246,7 @@ function renderServiceQ(q, parentEl){
   }
   else if (q.type==="checkbox"){
     var p2 = document.createElement("p");
-    var p2txt = (q.id||"") + ": " + (q.label||"");
-    p2.textContent = p2txt;
+    p2.textContent = (q.id||"") + ": " + (q.label||"");
     block.appendChild(p2);
 
     q.options.forEach(function(opt){
@@ -260,8 +263,7 @@ function renderServiceQ(q, parentEl){
   }
   else if (q.type==="checkbox-multi"){
     var p3 = document.createElement("p");
-    var p3txt = (q.id||"") + ": " + (q.label||"");
-    p3.textContent = p3txt;
+    p3.textContent = (q.id||"") + ": " + (q.label||"");
     block.appendChild(p3);
 
     q.options.forEach(function(opt){
@@ -278,8 +280,7 @@ function renderServiceQ(q, parentEl){
   }
   else if (q.type==="select"){
     var p4 = document.createElement("p");
-    var p4txt = (q.id||"") + ": " + (q.label||"");
-    p4.textContent = p4txt;
+    p4.textContent = (q.id||"") + ": " + (q.label||"");
     block.appendChild(p4);
 
     var sel = document.createElement("select");
@@ -315,7 +316,7 @@ function renderServiceQ(q, parentEl){
   parentEl.appendChild(block);
 }
 
-// ----- RENDER STANDARD questions (inbound/outbound) from questions.json -----
+// ----- RENDER standard inbound/outbound questions from questions.json -----
 function renderQuestionArray(arr, parentEl){
   arr.forEach(function(q){
     var block = document.createElement("div");
@@ -327,6 +328,7 @@ function renderQuestionArray(arr, parentEl){
       block.appendChild(lab);
     }
 
+    // If preview
     if (q.name==="_summary_"){
       block.innerHTML += generatePreviewHtml();
       parentEl.appendChild(block);
@@ -362,14 +364,15 @@ function renderQuestionArray(arr, parentEl){
           var opEl = document.createElement("option");
           opEl.value=opt;
           opEl.textContent=opt;
-          if (q.multi && Array.isArray(answers[q.name]) && answers[q.name].indexOf(opt)>=0){
+          if(q.multi && Array.isArray(answers[q.name]) && answers[q.name].indexOf(opt)>=0){
             opEl.selected = true;
-          } else if(!q.multi && answers[q.name]===opt){
+          }
+          else if(!q.multi && answers[q.name]===opt){
             opEl.selected = true;
           }
           el.appendChild(opEl);
         });
-        if (q.multi) el.multiple = true;
+        if(q.multi) el.multiple = true;
         break;
       default:
         block.innerHTML += "<p style='color:red;'>Unsupported type: " + q.type + "</p>";
@@ -384,13 +387,13 @@ function renderQuestionArray(arr, parentEl){
 function collectAnswers(){
   var els = multiStepContainer.querySelectorAll("input, select, textarea");
   els.forEach(function(el){
-    if (!el.name) return;
-    if (el.name.endsWith("[]")){
+    if(!el.name) return;
+    if(el.name.endsWith("[]")){
       var base = el.name.slice(0, -2);
       if(!answers[base]) answers[base] = [];
       if(el.checked) answers[base].push(el.value);
     }
-    else if (el.type==="checkbox"){
+    else if(el.type==="checkbox"){
       if(el.checked){
         if(!answers[el.name]) answers[el.name] = [];
         answers[el.name].push(el.value);
