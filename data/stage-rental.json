@@ -2,6 +2,261 @@
   {
     "id": "SR.1",
     "type": "label",
-    "text": "Stage Rental main questions go here..."
+    "text": "Q1: What is the purpose of the stage rental?"
+  },
+  {
+    "id": "SR.2",
+    "type": "checkbox-multi",
+    "label": "Purpose of stage rental",
+    "name": "stage_purpose",
+    "options": [
+      "Presentation/Speech",
+      "Live Band",
+      "DJ Performance",
+      "Fashion Show",
+      "Product Launch",
+      "Award Ceremony",
+      "Other (Free-text)"
+    ]
+  },
+  {
+    "id": "SR.3",
+    "type": "label",
+    "text": "Q2: How do you see us helping you in the best way possible?"
+  },
+  {
+    "id": "SR.4",
+    "type": "textarea",
+    "label": "Your answer",
+    "name": "stage_howWeHelp"
+  },
+  {
+    "id": "SR.5",
+    "type": "label",
+    "text": "Q3: What type of stage do you need? (Portable, Mobile, or Truss-Based?)"
+  },
+  {
+    "id": "SR.6",
+    "type": "select",
+    "label": "Stage Type",
+    "name": "stage_type_main",
+    "options": [
+      "Portable Stage",
+      "Mobile Stage",
+      "Truss-Based Stage",
+      "Not sure"
+    ]
+  },
+
+  {
+    "id": "SR.7",
+    "type": "label",
+    "text": "3A. If Portable Stage is selected (Modular, flexible sizing and height)."
+  },
+  {
+    "id": "SR.8",
+    "type": "select",
+    "label": "What is the desired stage size? (Portable)",
+    "name": "stage_portable_size",
+    "options": [
+      "8x8 ft",
+      "12x16 ft",
+      "16x20 ft",
+      "20x24 ft",
+      "Custom (specify in notes)"
+    ]
+  },
+  {
+    "id": "SR.9",
+    "type": "select",
+    "label": "What stage height do you need? (Portable)",
+    "name": "stage_portable_height",
+    "options": [
+      "8 inches",
+      "16 inches",
+      "24 inches",
+      "36 inches",
+      "48 inches",
+      "Custom (specify in notes)"
+    ]
+  },
+
+  {
+    "id": "SR.10",
+    "type": "label",
+    "text": "3B. If Mobile Stage is selected (Trailer-mounted)."
+  },
+  {
+    "id": "SR.11",
+    "type": "select",
+    "label": "What size mobile stage do you need?",
+    "name": "stage_mobile_size",
+    "options": [
+      "20x16 ft",
+      "24x20 ft",
+      "32x24 ft",
+      "40x24 ft",
+      "Other (specify in notes)"
+    ]
+  },
+  {
+    "id": "SR.12",
+    "type": "checkbox",
+    "label": "Will you need side wings for banners or additional space?",
+    "name": "stage_mobile_sideWings",
+    "options": [ "Yes","No" ]
+  },
+  {
+    "id": "SR.13",
+    "type": "checkbox",
+    "label": "Will you need a roof system for weather protection? (Mobile)",
+    "name": "stage_mobile_roof",
+    "options": [ "Yes","No" ]
+  },
+
+  {
+    "id": "SR.14",
+    "type": "label",
+    "text": "3C. If Truss-Based Stage is selected (Large events, rigging)."
+  },
+  {
+    "id": "SR.15",
+    "type": "select",
+    "label": "Required stage size (Truss)",
+    "name": "stage_truss_size",
+    "options": [
+      "20x16 ft",
+      "24x20 ft",
+      "32x24 ft",
+      "40x24 ft",
+      "Custom (specify in notes)"
+    ]
+  },
+  {
+    "id": "SR.16",
+    "type": "checkbox-multi",
+    "label": "Will you need rigging for lighting, screens, banners?",
+    "name": "stage_truss_rigging",
+    "options": [
+      "Lighting",
+      "LED Screens",
+      "Banners/Signage",
+      "No"
+    ]
+  },
+  {
+    "id": "SR.17",
+    "type": "checkbox",
+    "label": "Do you require a covered roof structure? (Truss)",
+    "name": "stage_truss_roof",
+    "options": [ "Yes","No" ]
+  },
+
+  {
+    "id": "SR.18",
+    "type": "label",
+    "text": "4. Outdoor Staging Considerations"
+  },
+  {
+    "id": "SR.19",
+    "type": "checkbox",
+    "label": "Will the stage be outdoors?",
+    "name": "stage_outdoor",
+    "options": [ "Yes","No" ]
+  },
+  {
+    "id": "SR.20",
+    "type": "select",
+    "label": "Ground surface? (If outdoors)",
+    "name": "stage_outdoor_surface",
+    "options": [
+      "Concrete",
+      "Grass",
+      "Asphalt",
+      "Sand",
+      "Other (specify)"
+    ]
+  },
+  {
+    "id": "SR.21",
+    "type": "checkbox-multi",
+    "label": "Do you need a backdrop for the stage?",
+    "name": "stage_outdoor_backdrop",
+    "options": [
+      "Yes, Pipe & Drape",
+      "Yes, LED Wall",
+      "No"
+    ]
+  },
+
+  {
+    "id": "SR.22",
+    "type": "label",
+    "text": "5. Access & Load-in Details"
+  },
+  {
+    "id": "SR.23",
+    "type": "checkbox-multi",
+    "label": "How easy is the access to the setup location?",
+    "name": "stage_access",
+    "options": [
+      "Loading dock <50 ft away",
+      "Street-level load-in (no stairs)",
+      "Stairs/Elevator access",
+      "Long push >100 ft",
+      "Other (specify in notes)"
+    ]
+  },
+
+  {
+    "id": "SR.24",
+    "type": "label",
+    "text": "6. Stairs & Safety Considerations"
+  },
+  {
+    "id": "SR.25",
+    "type": "checkbox",
+    "label": "Will you need stairs for the stage?",
+    "name": "stage_stairs",
+    "options": [ "No stairs","One side","Both sides" ]
+  },
+  {
+    "id": "SR.26",
+    "type": "checkbox",
+    "label": "Do you need safety railings?",
+    "name": "stage_railings",
+    "options": [ "Yes","No" ]
+  },
+
+  {
+    "id": "SR.27",
+    "type": "label",
+    "text": "7. Additional Needs & Final Recommendations"
+  },
+  {
+    "id": "SR.28",
+    "type": "checkbox-multi",
+    "label": "Do you need additional equipment with your stage rental?",
+    "name": "stage_additional",
+    "options": [
+      "Stage Skirt",
+      "Stage Roof (weather protection)",
+      "LED Screens",
+      "Lighting",
+      "Sound System",
+      "Other (specify in notes)"
+    ]
+  },
+
+  {
+    "id": "SR.29",
+    "type": "label",
+    "text": "8. Final Review & Custom Requests"
+  },
+  {
+    "id": "SR.30",
+    "type": "textarea",
+    "label": "Anything else we should know?",
+    "name": "stage_notes"
   }
 ]
