@@ -1,0 +1,122 @@
+[
+  {
+    "id": "TR.1",
+    "type": "label",
+    "text": "What structure do you need to build with the trusses?"
+  },
+  {
+    "id": "TR.2",
+    "type": "text",
+    "label": "Description of Structure (e.g., stage frame, lighting grid)",
+    "name": "truss_structureDesc"
+  },
+  {
+    "id": "TR.3",
+    "type": "label",
+    "text": "What are the exact measurements for the structure?"
+  },
+  {
+    "id": "TR.4",
+    "type": "text",
+    "label": "Height (ft)",
+    "name": "truss_height"
+  },
+  {
+    "id": "TR.5",
+    "type": "text",
+    "label": "Width (ft)",
+    "name": "truss_width"
+  },
+  {
+    "id": "TR.6",
+    "type": "text",
+    "label": "Depth (ft)",
+    "name": "truss_depth"
+  },
+  {
+    "id": "TR.7",
+    "type": "checkbox",
+    "label": "Do you have a design or diagram for the structure?",
+    "name": "truss_diagram",
+    "options": ["Yes (upload if available)","No"]
+  },
+  {
+    "id": "TR.8",
+    "type": "label",
+    "text": "What is the purpose of the truss structure? (lighting, scenery support...)"
+  },
+  {
+    "id": "TR.9",
+    "type": "text",
+    "label": "Purpose",
+    "name": "truss_purpose"
+  },
+  {
+    "id": "TR.10",
+    "type": "checkbox",
+    "label": "What type of truss material do you prefer?",
+    "name": "truss_material",
+    "options": [ "Aluminum","Steel","Other" ]
+  },
+  {
+    "id": "TR.11",
+    "type": "number",
+    "label": "What load capacity is required for the truss structure? (lbs)",
+    "name": "truss_loadCapacity"
+  },
+  {
+    "id": "TR.12",
+    "type": "text",
+    "label": "Any specific weight requirements for items hung from the truss?",
+    "name": "truss_weightSpecs"
+  },
+  {
+    "id": "TR.13",
+    "type": "checkbox",
+    "label": "Will you need rigging points for the trusses?",
+    "name": "truss_rigging",
+    "options": [ "Yes","No" ]
+  },
+  {
+    "id": "TR.14",
+    "type": "checkbox",
+    "label": "What type of installation service do you require?",
+    "name": "truss_installService",
+    "options": [
+      "Full Installation",
+      "Supervision Only",
+      "Client to Install"
+    ]
+  },
+  {
+    "id": "TR.15",
+    "type": "number",
+    "label": "What is the expected setup time (hours)?",
+    "name": "truss_setupTime"
+  },
+  {
+    "id": "TR.16",
+    "type": "textarea",
+    "label": "Any special requests or considerations for the truss setup?",
+    "name": "truss_specialRequests"
+  },
+  {
+    "id": "TR.17",
+    "type": "text",
+    "label": "Who will be the on-site contact for the truss setup? (Name & Phone)",
+    "name": "truss_onSiteContact"
+  },
+  {
+    "id": "TR.18",
+    "type": "text",
+    "label": "Venue's ceiling height & rigging restrictions?",
+    "name": "truss_ceilingRestrictions"
+  },
+  {
+    "id": "TR.19",
+    "type": "checkbox",
+    "label": "Do you require any safety measures (safety cables, padding)?",
+    "name": "truss_safety",
+    "options": [ "Yes","No" ]
+  }
+]
