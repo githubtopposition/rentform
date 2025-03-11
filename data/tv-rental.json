@@ -1,0 +1,287 @@
+[
+  {
+    "id": "TV.1",
+    "type": "label",
+    "text": "1. Event & Purpose Details"
+  },
+  {
+    "id": "TV.2",
+    "type": "select",
+    "label": "Q1. What is the event type?",
+    "name": "tv_eventType",
+    "options": [
+      "Trade Show / Expo Booth",
+      "Corporate Presentation / Conference",
+      "Sports Viewing / Watch Party",
+      "Product Launch / Demonstration",
+      "Digital Signage / Advertising",
+      "Wedding / Private Event",
+      "Other"
+    ]
+  },
+  {
+    "id": "TV.3",
+    "type": "checkbox",
+    "label": "Q2. Final outcome with the TV rental?",
+    "name": "tv_outcome",
+    "options": [
+      "High visibility for branding",
+      "Audience engagement",
+      "Sales or product promotion",
+      "Informational display",
+      "Other (specify)"
+    ]
+  },
+
+  {
+    "id": "TV.4",
+    "type": "label",
+    "text": "2. TV Quantity & Sizing"
+  },
+  {
+    "id": "TV.5",
+    "type": "label",
+    "text": "Q3. How many TVs do you need, and what sizes?"
+  },
+  {
+    "id": "TV.6",
+    "type": "checkbox-multi",
+    "label": "Select sizes (per quantity in notes)",
+    "name": "tv_sizes",
+    "options": [
+      "43\"",
+      "55\"",
+      "60\"",
+      "65\"",
+      "70\"",
+      "82\"",
+      "85\""
+    ]
+  },
+
+  {
+    "id": "TV.7",
+    "type": "label",
+    "text": "3. Viewing Distance & Setup Preferences"
+  },
+  {
+    "id": "TV.8",
+    "type": "select",
+    "label": "Q4. How far will audience be from TVs?",
+    "name": "tv_distance",
+    "options": [
+      "3-5 feet",
+      "5-10 feet",
+      "10-15 feet",
+      "15+ feet"
+    ]
+  },
+  {
+    "id": "TV.9",
+    "type": "checkbox",
+    "label": "Q5. How do you want the TVs set up?",
+    "name": "tv_setup",
+    "options": [
+      "On a Premier Stand",
+      "On a Truss Stand",
+      "Wall-Mounted",
+      "On own legs",
+      "Other (specify)"
+    ]
+  },
+  {
+    "id": "TV.10",
+    "type": "text",
+    "label": "Q6. How high from ground to bottom of screen?",
+    "name": "tv_mountHeight"
+  },
+
+  {
+    "id": "TV.11",
+    "type": "label",
+    "text": "4. Content & Media Source"
+  },
+  {
+    "id": "TV.12",
+    "type": "checkbox-multi",
+    "label": "Q7. What type of content?",
+    "name": "tv_contentType",
+    "options": [
+      "PowerPoint / Presentation",
+      "Slideshow / Image Rotation",
+      "Video Loop (MP4, MOV)",
+      "Live Streaming / Broadcast",
+      "Digital Signage / Ads",
+      "Other"
+    ]
+  },
+  {
+    "id": "TV.13",
+    "type": "checkbox",
+    "label": "Q8. How should content flow across multiple TVs?",
+    "name": "tv_sync",
+    "options": [
+      "Same content, synchronized",
+      "Same content, not synchronized",
+      "Different content each TV",
+      "Other"
+    ]
+  },
+  {
+    "id": "TV.14",
+    "type": "checkbox",
+    "label": "Q9. Video source for the TVs?",
+    "name": "tv_videoSource",
+    "options": [
+      "Client's laptop (HDMI)",
+      "USB Drive",
+      "Media Player (Apple TV, Roku, etc.)",
+      "Live Streaming (specify)",
+      "Other"
+    ]
+  },
+  {
+    "id": "TV.15",
+    "type": "checkbox",
+    "label": "Q10. If using a laptop, do you have an HDMI adapter?",
+    "name": "tv_laptopHdmi",
+    "options": [
+      "I have one",
+      "I need one (provide laptop model)",
+    ]
+  },
+  {
+    "id": "TV.16",
+    "type": "checkbox",
+    "label": "Q11. How will content be delivered to us?",
+    "name": "tv_delivery",
+    "options": [
+      "Client will bring on USB",
+      "Client will send in advance",
+      "Cloud-based link",
+      "Other"
+    ]
+  },
+
+  {
+    "id": "TV.17",
+    "type": "label",
+    "text": "5. Logistics & Power Needs"
+  },
+  {
+    "id": "TV.18",
+    "type": "select",
+    "label": "Q12. Venue type?",
+    "name": "tv_venueType",
+    "options": [
+      "Hotel / Conference Center",
+      "Convention Center",
+      "Outdoor Event",
+      "Private Residence",
+      "Other"
+    ]
+  },
+  {
+    "id": "TV.19",
+    "type": "checkbox",
+    "label": "Q13. Power availability?",
+    "name": "tv_power",
+    "options": [
+      "Standard 110V",
+      "Limited power",
+      "Need generator"
+    ]
+  },
+  {
+    "id": "TV.20",
+    "type": "text",
+    "label": "Q14. Where is FOH control? Distance from FOH to TV?",
+    "name": "tv_fohDistance"
+  },
+  {
+    "id": "TV.21",
+    "type": "checkbox",
+    "label": "Q15. Are all TVs in one room or multiple?",
+    "name": "tv_rooms",
+    "options": [
+      "All in one room",
+      "Multiple rooms (provide layout details)"
+    ]
+  },
+  {
+    "id": "TV.22",
+    "type": "checkbox",
+    "label": "Q16. Do you need cable ramps?",
+    "name": "tv_cableRamps",
+    "options": [
+      "Yes, include ramps",
+      "No, cables will be secured"
+    ]
+  },
+
+  {
+    "id": "TV.23",
+    "type": "label",
+    "text": "6. Sound & Audio"
+  },
+  {
+    "id": "TV.24",
+    "type": "checkbox",
+    "label": "Q17. Does your TV content include sound?",
+    "name": "tv_sound",
+    "options": [
+      "No, no external sound",
+      "Yes, built-in speakers are enough",
+      "Yes, need external speakers"
+    ]
+  },
+  {
+    "id": "TV.25",
+    "type": "label",
+    "text": "Q18. Estimated audience size?"
+  },
+  {
+    "id": "TV.26",
+    "type": "select",
+    "label": "Audience size",
+    "name": "tv_audienceSize",
+    "options": [ "0-50","50-100","100-200","200+" ]
+  },
+
+  {
+    "id": "TV.27",
+    "type": "label",
+    "text": "7. Technical Support & Walkthrough"
+  },
+  {
+    "id": "TV.28",
+    "type": "checkbox",
+    "label": "Q19. Do you need a technician on-site?",
+    "name": "tv_techOnsite",
+    "options": [
+      "No, we'll handle setup",
+      "Yes, for setup only",
+      "Yes, full event support"
+    ]
+  },
+  {
+    "id": "TV.29",
+    "type": "checkbox",
+    "label": "Q20. Connect existing venue TVs?",
+    "name": "tv_existingVenue",
+    "options": [
+      "No, only using rented TVs",
+      "Yes, need to connect existing ones"
+    ]
+  },
+  {
+    "id": "TV.30",
+    "type": "checkbox",
+    "label": "Q21. Site walkthrough needed before finalizing?",
+    "name": "tv_walkthrough",
+    "options": [
+      "No, will provide dimensions/photos",
+      "Yes, a site visit is needed"
+    ]
+  }
+]
