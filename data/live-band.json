@@ -44,13 +44,26 @@
     "label": "Number of Band Members",
     "name": "liveBand_bandMembers"
   },
+
   {
     "id": "LB.7",
+    "type": "label",
+    "text": "“What instruments will the band use?”"
+  },
+  {
+    "id": "LB.8",
+    "type": "text",
+    "label": "List instruments",
+    "name": "liveBand_instruments"
+  },
+
+  {
+    "id": "LB.9",
     "type": "label",
     "text": "“Do you need microphones for the band members and/or instruments?”"
   },
   {
-    "id": "LB.8",
+    "id": "LB.10",
     "type": "checkbox",
     "label": "Need microphones?",
     "name": "liveBand_needMics",
@@ -59,13 +72,14 @@
       "No"
     ]
   },
+
   {
-    "id": "LB.9",
+    "id": "LB.11",
     "type": "label",
-    "text": "“Will the band require specific microphone types (e.g., handheld, lavaliers, headsets, instrument mics)?”"
+    "text": "“Will the band require specific microphone types (handheld, lavaliers, headsets, etc.)?”"
   },
   {
-    "id": "LB.10",
+    "id": "LB.12",
     "type": "checkbox-multi",
     "label": "Microphone Types",
     "name": "liveBand_micTypes",
@@ -76,7 +90,293 @@
       "Instrument Microphones",
       "Other (Please specify)"
     ]
+  },
+
+  {
+    "id": "LB.13",
+    "type": "label",
+    "text": "“Do you need any stage monitors or IEM systems?”"
+  },
+  {
+    "id": "LB.14",
+    "type": "checkbox",
+    "label": "Stage Monitors / IEM?",
+    "name": "liveBand_monitorsIEM",
+    "options": [
+      "Yes",
+      "No"
+    ]
+  },
+  {
+    "id": "LB.15",
+    "type": "conditional",
+    "when": "liveBand_monitorsIEM=Yes",
+    "blocks": [
+      {
+        "id": "LB.15a",
+        "type": "text",
+        "label": "How many stage monitors / IEM?",
+        "name": "liveBand_monitorsCount"
+      }
+    ]
+  },
+
+  {
+    "id": "LB.16",
+    "type": "label",
+    "text": "“Will the band need DI boxes for instruments such as electric guitars, keyboards, etc.?”"
+  },
+  {
+    "id": "LB.17",
+    "type": "checkbox",
+    "label": "DI Boxes?",
+    "name": "liveBand_diBoxes",
+    "options": ["Yes","No"]
+  },
+
+  {
+    "id": "LB.18",
+    "type": "label",
+    "text": "“What is the preferred sound system setup for the live band?”"
+  },
+  {
+    "id": "LB.19",
+    "type": "checkbox",
+    "label": "Sound System Setup",
+    "name": "liveBand_soundSetup",
+    "options": ["PA System","Line Array System","Other (Please specify)"]
+  },
+
+  {
+    "id": "LB.20",
+    "type": "label",
+    "text": "“Do you need lighting for the live band performance?”"
+  },
+  {
+    "id": "LB.21",
+    "type": "checkbox",
+    "label": "Lighting?",
+    "name": "liveBand_needLighting",
+    "options": ["Yes","No"]
+  },
+  {
+    "id": "LB.22",
+    "type": "conditional",
+    "when": "liveBand_needLighting=Yes",
+    "blocks": [
+      {
+        "id": "LB.22a",
+        "type": "checkbox-multi",
+        "label": "What type of lighting?",
+        "name": "liveBand_lightingOptions",
+        "options": [
+          "Stage Lighting",
+          "Uplighting",
+          "Spotlights",
+          "Moving Lights",
+          "Other (Please specify)"
+        ]
+      }
+    ]
+  },
+
+  {
+    "id": "LB.23",
+    "type": "label",
+    "text": "“Does the band need any special effects (fog machines, lasers, confetti, etc.)?”"
+  },
+  {
+    "id": "LB.24",
+    "type": "checkbox",
+    "label": "Special Effects?",
+    "name": "liveBand_specialFx",
+    "options": ["Yes","No"]
+  },
+  {
+    "id": "LB.25",
+    "type": "conditional",
+    "when": "liveBand_specialFx=Yes",
+    "blocks": [
+      {
+        "id": "LB.25a",
+        "type": "checkbox-multi",
+        "label": "What type of special effects?",
+        "name": "liveBand_specialFxOptions",
+        "options": [
+          "Fog Machines",
+          "Lasers",
+          "Confetti",
+          "Cold Sparks",
+          "Other (Please specify)"
+        ]
+      }
+    ]
+  },
+
+  {
+    "id": "LB.26",
+    "type": "label",
+    "text": "“How many speakers will the band require for the event?”"
+  },
+  {
+    "id": "LB.27",
+    "type": "number",
+    "label": "Number of Speakers",
+    "name": "liveBand_speakersCount"
+  },
+
+  {
+    "id": "LB.28",
+    "type": "label",
+    "text": "“Will you need any visual equipment (projectors/screens) for the band’s performance?”"
+  },
+  {
+    "id": "LB.29",
+    "type": "checkbox",
+    "label": "Visual Equipment?",
+    "name": "liveBand_visualEquip",
+    "options": ["Yes","No"]
+  },
+  {
+    "id": "LB.30",
+    "type": "conditional",
+    "when": "liveBand_visualEquip=Yes",
+    "blocks": [
+      {
+        "id": "LB.30a",
+        "type": "checkbox-multi",
+        "label": "What kind of visual equipment?",
+        "name": "liveBand_visualEquipOptions",
+        "options": [
+          "Projectors",
+          "Screens",
+          "LED Walls",
+          "Video Recording",
+          "Other (Please specify)"
+        ]
+      }
+    ]
+  },
+
+  {
+    "id": "LB.31",
+    "type": "label",
+    "text": "“Do you require any audio or video recording of the band’s performance?”"
+  },
+  {
+    "id": "LB.32",
+    "type": "checkbox",
+    "label": "Recording?",
+    "name": "liveBand_needRecording",
+    "options": ["Yes","No"]
+  },
+  {
+    "id": "LB.33",
+    "type": "conditional",
+    "when": "liveBand_needRecording=Yes",
+    "blocks": [
+      {
+        "id": "LB.33a",
+        "type": "checkbox",
+        "label": "Would you like a video of the performance to be produced and edited?",
+        "name": "liveBand_videoProduction",
+        "options": ["Yes","No"]
+      }
+    ]
+  },
+
+  {
+    "id": "LB.34",
+    "type": "label",
+    "text": "“Would you like any live streaming for the band’s performance?”"
+  },
+  {
+    "id": "LB.35",
+    "type": "checkbox",
+    "label": "Live Streaming?",
+    "name": "liveBand_needStreaming",
+    "options": ["Yes","No"]
+  },
+  {
+    "id": "LB.36",
+    "type": "conditional",
+    "when": "liveBand_needStreaming=Yes",
+    "blocks": [
+      {
+        "id": "LB.36a",
+        "type": "select",
+        "label": "Which platform to stream?",
+        "name": "liveBand_streamPlatform",
+        "options": [
+          "Zoom",
+          "YouTube",
+          "Facebook",
+          "Other (Please specify)"
+        ]
+      }
+    ]
+  },
+
+  {
+    "id": "LB.37",
+    "type": "label",
+    "text": "“Is there a stage or performance area where the band will perform?”"
+  },
+  {
+    "id": "LB.38",
+    "type": "checkbox",
+    "label": "Stage/Performance area?",
+    "name": "liveBand_stageArea",
+    "options": ["Yes","No"]
+  },
+  {
+    "id": "LB.39",
+    "type": "conditional",
+    "when": "liveBand_stageArea=Yes",
+    "blocks": [
+      {
+        "id": "LB.39a",
+        "type": "label",
+        "text": "“Do you need a stage built? If yes, what are the stage dimensions?”"
+      },
+      {
+        "id": "LB.39b",
+        "type": "text",
+        "label": "Stage Dimensions (Length x Width x Height)",
+        "name": "liveBand_stageDims"
+      }
+    ]
+  },
+
+  {
+    "id": "LB.40",
+    "type": "label",
+    "text": "“Would you like us to provide a technician to operate the audio equipment during the performance?”"
+  },
+  {
+    "id": "LB.41",
+    "type": "checkbox",
+    "label": "Technician needed?",
+    "name": "liveBand_techNeeded",
+    "options": ["Yes","No"]
+  },
+  {
+    "id": "LB.42",
+    "type": "conditional",
+    "when": "liveBand_techNeeded=Yes",
+    "blocks": [
+      {
+        "id": "LB.42a",
+        "type": "text",
+        "label": "What time should the technician arrive?",
+        "name": "liveBand_techStart"
+      },
+      {
+        "id": "LB.42b",
+        "type": "text",
+        "label": "What time should the technician finish?",
+        "name": "liveBand_techEnd"
+      }
+    ]
   }
-  // Продолжайте вставлять остальные вопросы Live Band...
-  // Можете дописать LB.11, LB.12... 
 ]
