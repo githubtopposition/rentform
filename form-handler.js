@@ -9,23 +9,20 @@ const previewBtn = document.getElementById("previewBtn");
 const submitBtn = document.getElementById("submitBtn");
 const progressBarEl = document.querySelector("#progressBar .progress");
 
-// Data from old questions + services
-let questionsData = null;  // from questions.json
-let servicesIndex = null;  // from data/services-index.json
-
+let questionsData = null;   // from questions.json
+let servicesIndex = null;   // from data/services-index.json
 let step = 1; 
 let answers = {};
-const totalSteps = 5; 
+const totalSteps = 5;
 
-// Services chosen for "New Project"
 let chosenServices = [];
 
-// 1) load questions + services index
+// 1) Load questions + services index
 fetch("./questions.json")
-  .then(r => r.json())
+  .then(r=>r.json())
   .then(data => {
     questionsData = data;
-    answers.flow_type = "Inbound";
+    answers.flow_type = "Inbound"; 
     return fetch("./data/services-index.json");
   })
   .then(r => r.json())
@@ -39,27 +36,25 @@ fetch("./questions.json")
     multiStepContainer.innerHTML = "<p class='alert'>Failed to load JSON</p>";
   });
 
-// Render step
 function renderStep(stepIndex) {
   multiStepContainer.innerHTML = "";
   backBtn.style.display    = (stepIndex>1) ? "inline-block":"none";
-  nextBtn.style.display    = (stepIndex<3) ? "inline-block":"none"; 
+  nextBtn.style.display    = (stepIndex<3) ? "inline-block":"none";
   previewBtn.style.display = (stepIndex===3) ? "inline-block":"none";
   submitBtn.style.display  = (stepIndex===4) ? "inline-block":"none";
 
   updateProgress(stepIndex);
 
   if (stepIndex===1) {
-    // Inbound/outbound
+    // Step1 inbound/outbound
     if (answers.flow_type==="Inbound") {
-      // show inbound Q
       renderQuestionArray(questionsData.step1_inbound, multiStepContainer);
-      // Switch to Outbound
+      // Switch button
       const switchBtn = document.createElement("button");
       switchBtn.textContent = "Switch to Outbound?";
       switchBtn.style.marginTop="20px";
       switchBtn.onclick = () => {
-        answers.flow_type="Outbound";
+        answers.flow_type = "Outbound";
         renderStep(1);
       };
       multiStepContainer.appendChild(switchBtn);
@@ -69,17 +64,18 @@ function renderStep(stepIndex) {
     }
 
   } else if (stepIndex===2) {
-    // inbound => check call_type
+    // Step2 inbound => depends on call_type
     if (answers.flow_type==="Inbound") {
       const ctype = answers.call_type_ctm || "";
       if (!ctype) {
-        multiStepContainer.innerHTML = "<div class='alert'>Please select call type (New Project, Existing, etc.)</div>";
+        multiStepContainer.innerHTML = "<div class='alert'>Please select call type (New Project, etc.) in step1</div>";
         return;
       }
       switch(ctype) {
         case "New Project":
-          renderNewProjectServiceChoice();
-          return;
+          // Show old step2_newProject (date, address, etc.), THEN a button => renderNewProjectServiceChoice
+          renderNewProjectBase();
+          return;  // done
         case "Existing Project":
           renderQuestionArray(questionsData.step2_existing, multiStepContainer);
           break;
@@ -93,7 +89,7 @@ function renderStep(stepIndex) {
           renderQuestionArray(questionsData.step2_complaint, multiStepContainer);
           break;
         case "Promotion/Spam":
-          multiStepContainer.innerHTML = `<div class='alert'>Marked as Spam. No more details needed.</div>`;
+          multiStepContainer.innerHTML = "<div class='alert'>Marked as spam. No more details needed.</div>";
           return;
         case "HR Inquiry":
           renderQuestionArray(questionsData.step2_hr, multiStepContainer);
@@ -102,7 +98,7 @@ function renderStep(stepIndex) {
           renderQuestionArray(questionsData.step2_unknown, multiStepContainer);
           break;
         default:
-          multiStepContainer.innerHTML = "<p>Please select call type in step1.</p>";
+          multiStepContainer.innerHTML = "<p>No such call type. Please pick in Step1.</p>";
           return;
       }
 
@@ -111,18 +107,18 @@ function renderStep(stepIndex) {
       renderQuestionArray(questionsData.step3_outbound, multiStepContainer);
     }
 
-    // Пример: кнопка "Qualify Now"
-    const qualifyBtn = document.createElement("button");
-    qualifyBtn.textContent = "Qualify Now";
-    qualifyBtn.style.marginTop = "20px";
-    qualifyBtn.onclick = () => {
+    // Example: "Qualify Now" button
+    const qBtn = document.createElement("button");
+    qBtn.textContent = "Qualify Now";
+    qBtn.style.marginTop = "20px";
+    qBtn.onclick = () => {
       answers["qualification_ctm"] = "Qualified";
-      alert("Lead marked as Qualified. You can still proceed further if needed.");
+      alert("Marked as Qualified!");
     };
-    multiStepContainer.appendChild(qualifyBtn);
+    multiStepContainer.appendChild(qBtn);
 
   } else if (stepIndex===25) {
-    // advanced
+    // advanced sales
     renderQuestionArray(questionsData.step2p5_salesAdvanced||[], multiStepContainer);
 
   } else if (stepIndex===3) {
@@ -132,86 +128,30 @@ function renderStep(stepIndex) {
   } else if (stepIndex===4) {
     // final
     renderQuestionArray(questionsData.stepFinal, multiStepContainer);
-
   }
 
-  // google maps
   const streetInput = multiStepContainer.querySelector("[name='event_street_ctm']");
   if (streetInput) initAutocompleteFor(streetInput);
 }
 
-// Render basic question array (old logic)
-function renderQuestionArray(arr, parentEl) {
-  arr.forEach(q => {
-    const block = document.createElement("div");
-    block.className = "question-block";
+// ---------- NEW PROJECT BASE (Event Date, Address, etc.) -----------
+function renderNewProjectBase() {
+  // Render old "step2_newProject" from questionsData
+  renderQuestionArray(questionsData.step2_newProject, multiStepContainer);
 
-    if (q.label) {
-      const lab = document.createElement("label");
-      lab.textContent = q.label;
-      block.appendChild(lab);
-      // Пример help-icon (если хотим)
-      if (q.help) {
-        const helpEl = renderHelpIcon(q.help);
-        lab.appendChild(helpEl);
-      }
-    }
-
-    if (q.name==="_summary_") {
-      block.innerHTML += generatePreviewHtml();
-      parentEl.appendChild(block);
-      return;
-    }
-
-    let el=null;
-    switch(q.type){
-      case "text":
-      case "date":
-      case "email":
-        el = document.createElement("input");
-        el.type = q.type;
-        el.name = q.name;
-        el.value = answers[q.name]||"";
-        break;
-      case "textarea":
-        el = document.createElement("textarea");
-        el.name = q.name;
-        el.rows=3;
-        el.value = answers[q.name]||"";
-        break;
-      case "select":
-        el = document.createElement("select");
-        el.name = q.name;
-        if (!q.multi) {
-          const optEmpty = document.createElement("option");
-          optEmpty.value="";
-          optEmpty.textContent="-- select --";
-          el.appendChild(optEmpty);
-        }
-        q.options.forEach(opt=>{
-          const opEl = document.createElement("option");
-          opEl.value=opt;
-          opEl.textContent=opt;
-          // restore
-          if (q.multi && Array.isArray(answers[q.name]) && answers[q.name].includes(opt)) {
-            opEl.selected=true;
-          } else if(!q.multi && answers[q.name]===opt){
-            opEl.selected=true;
-          }
-          el.appendChild(opEl);
-        });
-        if (q.multi) el.multiple=true;
-        break;
-      default:
-        block.innerHTML += `<p style='color:red;'>Unsupported type: ${q.type}</p>`;
-    }
-
-    if (el) block.appendChild(el);
-    parentEl.appendChild(block);
-  });
+  // Then add a button "Proceed to Select Services"
+  const btn = document.createElement("button");
+  btn.textContent = "Next step → Select Services";
+  btn.style.marginTop = "20px";
+  btn.onclick = () => {
+    collectAnswers();
+    // now show services
+    renderNewProjectServiceChoice();
+  };
+  multiStepContainer.appendChild(btn);
 }
 
-// New Project => choose services
+// ---------- AFTER THAT, show multi-check services -----------
 function renderNewProjectServiceChoice() {
   multiStepContainer.innerHTML = `
     <h3>New Project - Services</h3>
@@ -229,20 +169,20 @@ function renderNewProjectServiceChoice() {
     </div>
     <button id="svcNextBtn">Load Service Questions</button>
   `;
-  const btn = document.getElementById("svcNextBtn");
-  btn.addEventListener("click", () => {
+  const b = document.getElementById("svcNextBtn");
+  b.addEventListener("click", () => {
     const checks = multiStepContainer.querySelectorAll("input[name='svc']:checked");
     chosenServices = Array.from(checks).map(c=>c.value);
     renderServicesQuestions();
   });
 }
 
-// Render multiple service Q
+// ---------- RENDER the chosen service JSONs -----------
 async function renderServicesQuestions() {
   multiStepContainer.innerHTML = `
     <h3>Service Details</h3>
     <div id="servicesContainer"></div>
-    <button id="goToStep3Btn">Next (Logistics)</button>
+    <button id="goToStep3Btn">Next (Logistics / Step3)</button>
   `;
   const svcParent = document.getElementById("servicesContainer");
 
@@ -250,41 +190,42 @@ async function renderServicesQuestions() {
     const url = servicesIndex[svc];
     if (!url) {
       const p = document.createElement("p");
-      p.style.color="red";
+      p.style.color = "red";
       p.textContent = `No JSON for service: ${svc}`;
       svcParent.appendChild(p);
       continue;
     }
     try {
       const resp = await fetch(url);
-      const serviceQ = await resp.json();
+      const arr = await resp.json();
       const h4 = document.createElement("h4");
       h4.textContent = `=== ${svc} ===`;
       svcParent.appendChild(h4);
 
-      serviceQ.forEach(q => {
+      arr.forEach(q => {
         renderServiceQ(q, svcParent);
       });
     } catch(e) {
       console.error("Error loading", url, e);
-      const errp = document.createElement("p");
-      errp.textContent = `Error loading: ${svc}`;
-      errp.style.color="red";
-      svcParent.appendChild(errp);
+      const p = document.createElement("p");
+      p.style.color="red";
+      p.textContent = `Error loading ${svc}`;
+      svcParent.appendChild(p);
     }
   }
 
   document.getElementById("goToStep3Btn").addEventListener("click", () => {
     collectAnswers();
-    step=3;
+    step=3; // go to preview or logistics
     renderStep(step);
   });
 }
 
-// Render single question from a service JSON
+// ---------- RENDER a single question from service JSON -----------
 function renderServiceQ(q, parentEl) {
   const block = document.createElement("div");
   block.className = "question-block";
+
   if (q.type==="label") {
     const p = document.createElement("p");
     p.innerHTML = `<strong>${q.id||""}:</strong> ${q.text}`;
@@ -345,13 +286,14 @@ function renderServiceQ(q, parentEl) {
     }
     q.options.forEach(opt => {
       const oEl = document.createElement("option");
-      oEl.value = opt;
-      oEl.textContent = opt;
+      oEl.value=opt;
+      oEl.textContent=opt;
       sel.appendChild(oEl);
     });
     block.appendChild(sel);
   }
   else if (q.type==="conditional") {
+    // if there's sub-blocks
     if (q.blocks) {
       q.blocks.forEach(subQ => {
         renderServiceQ(subQ, block);
@@ -359,16 +301,16 @@ function renderServiceQ(q, parentEl) {
     }
   }
   else {
-    const w = document.createElement("p");
-    w.style.color="red";
-    w.textContent = `Unsupported type: ${q.type}`;
-    block.appendChild(w);
+    const warn = document.createElement("p");
+    warn.style.color="red";
+    warn.textContent = `Unsupported type: ${q.type}`;
+    block.appendChild(warn);
   }
 
   parentEl.appendChild(block);
 }
 
-// Collect answers
+// ---------- COLLECT / VALIDATE ----------
 function collectAnswers() {
   const els = multiStepContainer.querySelectorAll("input, select, textarea");
   els.forEach(el => {
@@ -400,6 +342,7 @@ function validateStep(st) {
   }
   return true;
 }
+
 function getValue(n) {
   const el = multiStepContainer.querySelector(`[name='${n}']`);
   if (!el) return "";
@@ -408,6 +351,7 @@ function getValue(n) {
   }
   return el.value;
 }
+
 function generatePreviewHtml() {
   let html = "<ul>";
   for (let [k,v] of Object.entries(answers)) {
@@ -421,21 +365,14 @@ function generatePreviewHtml() {
   return html;
 }
 
-// help icon + tooltip
-function renderHelpIcon(helpText) {
-  const span = document.createElement("span");
-  span.className = "help-icon";
-  span.textContent = "?";
-
-  const t = document.createElement("div");
-  t.className = "help-text";
-  t.innerHTML = helpText; // be careful if you allow HTML
-  span.appendChild(t);
-
-  return span;
+function updateProgress(st) {
+  const pct = Math.round(((st-1)/(4-1))*100);
+  if (progressBarEl) {
+    progressBarEl.style.width = pct + "%";
+  }
 }
 
-// nav events
+// nav
 backBtn.addEventListener("click", () => {
   collectAnswers();
   if (step===25) {
@@ -450,6 +387,7 @@ nextBtn.addEventListener("click", () => {
   if (!validateStep(step)) return;
   collectAnswers();
   if (step===2 && answers.flow_type==="Inbound" && answers.call_type_ctm==="New Project") {
+    // after finishing base Q => advanced
     step=25;
     renderStep(step);
     return;
@@ -464,6 +402,7 @@ previewBtn.addEventListener("click", () => {
   renderStep(step);
 });
 submitBtn.addEventListener("click", onSubmit);
+
 function onSubmit() {
   if (!validateStep(step)) return;
   collectAnswers();
@@ -481,11 +420,4 @@ function onSubmit() {
     .catch(err => {
       alert("Error saving: "+ err);
     });
-}
-
-function updateProgress(st) {
-  const pct = Math.round(((st-1)/(4-1))*100);
-  if (progressBarEl) {
-    progressBarEl.style.width = pct + "%";
-  }
 }
