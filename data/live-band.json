@@ -1,0 +1,82 @@
+[
+  {
+    "id": "LB.1",
+    "type": "label",
+    "text": "“Do you have a technical rider for the band, or would you like us to suggest equipment?”"
+  },
+  {
+    "id": "LB.2",
+    "type": "checkbox",
+    "label": "Rider or Suggest?",
+    "name": "liveBand_rider",
+    "options": [
+      "Yes, I have a technical rider",
+      "No, please suggest equipment"
+    ]
+  },
+  {
+    "id": "LB.3",
+    "type": "label",
+    "text": "“What type of audio setup does the band need?”"
+  },
+  {
+    "id": "LB.4",
+    "type": "checkbox-multi",
+    "label": "Audio Setup Options",
+    "name": "liveBand_audioSetup",
+    "options": [
+      "Full Band Sound System",
+      "Microphones (specify number)",
+      "Instruments (please specify which)",
+      "Speakers (specify size)",
+      "Monitors for the band (stage monitors)",
+      "Other (please specify)"
+    ]
+  },
+  {
+    "id": "LB.5",
+    "type": "label",
+    "text": "“How many people are in the band?”"
+  },
+  {
+    "id": "LB.6",
+    "type": "number",
+    "label": "Number of Band Members",
+    "name": "liveBand_bandMembers"
+  },
+  {
+    "id": "LB.7",
+    "type": "label",
+    "text": "“Do you need microphones for the band members and/or instruments?”"
+  },
+  {
+    "id": "LB.8",
+    "type": "checkbox",
+    "label": "Need microphones?",
+    "name": "liveBand_needMics",
+    "options": [
+      "Yes (Please specify how many)",
+      "No"
+    ]
+  },
+  {
+    "id": "LB.9",
+    "type": "label",
+    "text": "“Will the band require specific microphone types (e.g., handheld, lavaliers, headsets, instrument mics)?”"
+  },
+  {
+    "id": "LB.10",
+    "type": "checkbox-multi",
+    "label": "Microphone Types",
+    "name": "liveBand_micTypes",
+    "options": [
+      "Handheld Microphones",
+      "Lavalier Microphones",
+      "Headset Microphones",
+      "Instrument Microphones",
+      "Other (Please specify)"
+    ]
+  }
+  // Продолжайте вставлять остальные вопросы Live Band...
+  // Можете дописать LB.11, LB.12... 
+]
