@@ -1,0 +1,218 @@
+[
+  {
+    "id": "PD.1",
+    "type": "label",
+    "text": "Service-Specific Questions: Pipe and Drape Rental"
+  },
+  {
+    "id": "PD.2",
+    "type": "checkbox",
+    "label": "Q1. What is the purpose of the pipe and drape rental?",
+    "name": "pd_purpose",
+    "options": [
+      "Stage Backdrop",
+      "Room Divider",
+      "Trade Show Booth",
+      "Event Branding / Thematic Decor",
+      "Photography / Video Background",
+      "Private Sectioning",
+      "Other (specify)"
+    ]
+  },
+  {
+    "id": "PD.3",
+    "type": "checkbox",
+    "label": "Q2. What type of event is this for?",
+    "name": "pd_eventType",
+    "options": [
+      "Corporate Event",
+      "Experiential Marketing Activation",
+      "Wedding",
+      "Concert / Performance",
+      "Conference / Seminar",
+      "Trade Show / Expo",
+      "Private Party",
+      "Other (specify)"
+    ]
+  },
+  {
+    "id": "PD.4",
+    "type": "checkbox",
+    "label": "Q3. Do you have a layout or diagram of the setup?",
+    "name": "pd_layout",
+    "options": [ "Yes (upload)","No" ]
+  },
+  {
+    "id": "PD.5",
+    "type": "label",
+    "text": "Q4. How many walls or sections are needed?"
+  },
+  {
+    "id": "PD.6",
+    "type": "select",
+    "label": "Number of Walls",
+    "name": "pd_walls",
+    "options": ["1","2","3","4","Custom (enter in notes)"]
+  },
+  {
+    "id": "PD.7",
+    "type": "label",
+    "text": "Q5. Please enter dimensions for each wall..."
+  },
+  {
+    "id": "PD.8",
+    "type": "text",
+    "label": "Wall1: length x height",
+    "name": "pd_wall1"
+  },
+  {
+    "id": "PD.9",
+    "type": "text",
+    "label": "Wall2: length x height (if applicable)",
+    "name": "pd_wall2"
+  },
+  {
+    "id": "PD.10",
+    "type": "text",
+    "label": "Wall3: length x height",
+    "name": "pd_wall3"
+  },
+  {
+    "id": "PD.11",
+    "type": "text",
+    "label": "Wall4: length x height",
+    "name": "pd_wall4"
+  },
+
+  {
+    "id": "PD.12",
+    "type": "label",
+    "text": "Q6. What color of drapes do you need?"
+  },
+  {
+    "id": "PD.13",
+    "type": "checkbox",
+    "label": "Drape color",
+    "name": "pd_color",
+    "options": ["Black","White","Red","Custom (please specify)"]
+  },
+  {
+    "id": "PD.14",
+    "type": "checkbox",
+    "label": "Q7. What type of drapes do you need?",
+    "name": "pd_drapeType",
+    "options": [
+      "Full Blackout",
+      "Sheer / Decorative",
+      "Standard Drapes",
+      "Other (specify)"
+    ]
+  },
+
+  {
+    "id": "PD.15",
+    "type": "label",
+    "text": "Q8. Will the pipe & drape be set up indoors or outdoors?"
+  },
+  {
+    "id": "PD.16",
+    "type": "checkbox",
+    "label": "Indoor/Outdoor?",
+    "name": "pd_indoorOutdoor",
+    "options": ["Indoors","Outdoors"]
+  },
+  {
+    "id": "PD.17",
+    "type": "label",
+    "text": "Q9. If outdoors, do you need weighted bases or wind protection?"
+  },
+  {
+    "id": "PD.18",
+    "type": "checkbox",
+    "label": "Wind stability",
+    "name": "pd_windProtection",
+    "options": [
+      "Yes, need weighted bases",
+      "No, I understand the risks",
+      "I need recommendations"
+    ]
+  },
+
+  {
+    "id": "PD.19",
+    "type": "checkbox-multi",
+    "label": "Q10. Additional features? (uplighting, backdrops, branding...)",
+    "name": "pd_addFeatures",
+    "options": [
+      "Uplighting / Spotlights",
+      "Additional Backdrops",
+      "Custom Branding / Printed Graphics",
+      "Other (specify)"
+    ]
+  },
+
+  {
+    "id": "PD.20",
+    "type": "label",
+    "text": "Logistics & Venue Details"
+  },
+  {
+    "id": "PD.21",
+    "type": "text",
+    "label": "Venue Name",
+    "name": "pd_venueName"
+  },
+  {
+    "id": "PD.22",
+    "type": "text",
+    "label": "Venue Address",
+    "name": "pd_venueAddress"
+  },
+  {
+    "id": "PD.23",
+    "type": "text",
+    "label": "Setup Date & Time",
+    "name": "pd_setupDateTime"
+  },
+  {
+    "id": "PD.24",
+    "type": "text",
+    "label": "Breakdown Date & Time",
+    "name": "pd_breakdownDateTime"
+  },
+  {
+    "id": "PD.25",
+    "type": "checkbox",
+    "label": "Load-in access type?",
+    "name": "pd_loadinAccess",
+    "options": [
+      "Loading Dock",
+      "Street Entrance",
+      "Freight Elevator",
+      "Other"
+    ]
+  },
+  {
+    "id": "PD.26",
+    "type": "checkbox",
+    "label": "Is there a time restriction for load-in?",
+    "name": "pd_timeRestriction",
+    "options": [
+      "No",
+      "Yes (specify in notes)"
+    ]
+  },
+  {
+    "id": "PD.27",
+    "type": "checkbox",
+    "label": "Is power needed for any lighting or accessories?",
+    "name": "pd_needPower",
+    "options": ["Yes","No"]
+  },
+  {
+    "id": "PD.28",
+    "type": "textarea",
+    "label": "Any additional requirements or notes?",
+    "name": "pd_notes"
+  }
+]
