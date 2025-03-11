@@ -10,8 +10,7 @@
       "label": "Call Type (Inbound)",
       "name": "call_type_ctm",
       "options": [
-        "New Project","Existing Project","Vendor","Technician",
-        "Complaint","Promotion/Spam","HR Inquiry","Unknown"
+        "New Project","Existing Project","Vendor","Technician","Complaint","Promotion/Spam","HR Inquiry","Unknown"
       ]
     },
     {
@@ -26,6 +25,7 @@
       "options": ["","Qualified","Not Qualified"]
     }
   ],
+
   "step1_outbound": [
     {
       "type": "text",
@@ -43,49 +43,39 @@
       "name": "outbound_reason"
     }
   ],
-  "step2_newProject": [
-    {
-      "type": "date",
-      "label": "Event Date",
-      "name": "event_date_ctm"
-    },
-    {
-      "type": "select",
-      "label": "Delivery Setup",
-      "name": "delivery_setup_options_ctm",
-      "options": ["Delivery","Setup","Operation","Pick Up Yourself"],
-      "multi": true
-    },
-    {
-      "type": "text",
-      "label": "Street Address",
-      "name": "event_street_ctm"
-    },
-    {
-      "type": "text",
-      "label": "City",
-      "name": "event_city_ctm"
-    },
-    {
-      "type": "text",
-      "label": "State",
-      "name": "event_state_ctm"
-    }
-  ],
+
   "step2_existing": [
     {
       "type": "text",
       "label": "Rental Order #",
       "name": "rental_order_number_ctm"
+    },
+    {
+      "type": "select",
+      "label": "Active project status?",
+      "name": "active_project_status_ctm",
+      "options": ["Yes","No"]
+    },
+    {
+      "type": "textarea",
+      "label": "Any notes for existing project?",
+      "name": "existing_notes"
     }
   ],
+
   "step2_vendor": [
     {
       "type": "text",
       "label": "Vendor Company Name",
       "name": "vendor_company_name_ctm"
+    },
+    {
+      "type": "textarea",
+      "label": "Vendor request details",
+      "name": "vendor_request"
     }
   ],
+
   "step2_technician": [
     {
       "type": "text",
@@ -93,6 +83,7 @@
       "name": "tech_order_number"
     }
   ],
+
   "step2_complaint": [
     {
       "type": "text",
@@ -100,6 +91,7 @@
       "name": "complaint_order_number"
     }
   ],
+
   "step3_outbound": [
     {
       "type": "textarea",
@@ -107,22 +99,16 @@
       "name": "outbound_moreinfo"
     }
   ],
+
   "step2p5_salesAdvanced": [
     {
       "type": "select",
       "label": "Budget Range?",
       "name": "sales_budget",
       "options": ["Under $2k","$2k-$5k","$5k-$10k","$10k-$20k","$20k+"]
-    },
-    {
-      "type": "select",
-      "label": "Event Type (detailed)?",
-      "name": "event_type_ctm",
-      "options": [
-        "Corporate Event","Wedding","Concert","Trade Show","Private Party","Other"
-      ]
     }
   ],
+
   "stepPreview": [
     {
       "type": "text",
