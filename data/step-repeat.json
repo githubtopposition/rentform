@@ -1,0 +1,213 @@
+[
+  {
+    "id": "SRR.1",
+    "type": "label",
+    "text": "1. Purpose of the Rental"
+  },
+  {
+    "id": "SRR.2",
+    "type": "textarea",
+    "label": "What is the purpose of the step and repeat / red carpet rental?",
+    "name": "srp_purpose"
+  },
+  {
+    "id": "SRR.3",
+    "type": "label",
+    "text": "What is the final outcome you want to achieve? (Branding, photo ops, media coverage?)"
+  },
+  {
+    "id": "SRR.4",
+    "type": "textarea",
+    "label": "Outcome",
+    "name": "srp_outcome"
+  },
+
+  {
+    "id": "SRR.5",
+    "type": "label",
+    "text": "2. Red Carpet Details"
+  },
+  {
+    "id": "SRR.6",
+    "type": "checkbox",
+    "label": "Do you need a red carpet?",
+    "name": "srp_needCarpet",
+    "options": ["Yes","No"]
+  },
+  {
+    "id": "SRR.7",
+    "type": "text",
+    "label": "What size carpet do you need? (6x12 or custom?)",
+    "name": "srp_carpetSize"
+  },
+  {
+    "id": "SRR.8",
+    "type": "checkbox",
+    "label": "What carpet color do you prefer?",
+    "name": "srp_carpetColor",
+    "options": [
+      "Red (standard)",
+      "Black",
+      "White",
+      "Other (specify)"
+    ]
+  },
+  {
+    "id": "SRR.9",
+    "type": "select",
+    "label": "How many people do you expect to walk the carpet at the same time?",
+    "name": "srp_carpetFlow",
+    "options": [ "1-2","3-5","More than 5" ]
+  },
+
+  {
+    "id": "SRR.10",
+    "type": "label",
+    "text": "3. Step and Repeat Backdrop"
+  },
+  {
+    "id": "SRR.11",
+    "type": "select",
+    "label": "What size step and repeat backdrop do you need?",
+    "name": "srp_backdropSize",
+    "options": [
+      "8x8 (Standard)",
+      "8x10",
+      "8x12",
+      "8x20",
+      "8x30",
+      "Custom"
+    ]
+  },
+  {
+    "id": "SRR.12",
+    "type": "checkbox",
+    "label": "What material do you prefer?",
+    "name": "srp_material",
+    "options": [
+      "Vinyl",
+      "Fabric",
+      "Other"
+    ]
+  },
+  {
+    "id": "SRR.13",
+    "type": "checkbox",
+    "label": "Will you provide the artwork, or need design assistance?",
+    "name": "srp_artwork",
+    "options": [
+      "I will provide final artwork",
+      "I need design assistance"
+    ]
+  },
+  {
+    "id": "SRR.14",
+    "type": "text",
+    "label": "Any additional props/decor elements?",
+    "name": "srp_decor"
+  },
+
+  {
+    "id": "SRR.15",
+    "type": "label",
+    "text": "4. Step and Repeat Setup & Support"
+  },
+  {
+    "id": "SRR.16",
+    "type": "checkbox",
+    "label": "Do you need the backdrop to be freestanding with a frame?",
+    "name": "srp_needFrame",
+    "options": ["Yes","No"]
+  },
+  {
+    "id": "SRR.17",
+    "type": "checkbox",
+    "label": "Do you need lighting for the backdrop?",
+    "name": "srp_needLighting",
+    "options": ["Yes","No"]
+  },
+  {
+    "id": "SRR.18",
+    "type": "checkbox",
+    "label": "Do you need stanchions and velvet ropes for crowd control?",
+    "name": "srp_stanchions",
+    "options": ["Yes","No"]
+  },
+  {
+    "id": "SRR.19",
+    "type": "checkbox",
+    "label": "Preference for style of stanchions?",
+    "name": "srp_stanchionStyle",
+    "options": ["Chrome","Gold","Other"]
+  },
+
+  {
+    "id": "SRR.20",
+    "type": "label",
+    "text": "5. Event Logistics"
+  },
+  {
+    "id": "SRR.21",
+    "type": "text",
+    "label": "Date of the event?",
+    "name": "srp_eventDate"
+  },
+  {
+    "id": "SRR.22",
+    "type": "text",
+    "label": "Earliest setup time?",
+    "name": "srp_setupTime"
+  },
+  {
+    "id": "SRR.23",
+    "type": "text",
+    "label": "By what time must setup be completed?",
+    "name": "srp_completeTime"
+  },
+  {
+    "id": "SRR.24",
+    "type": "text",
+    "label": "Event location (address)?",
+    "name": "srp_location"
+  },
+  {
+    "id": "SRR.25",
+    "type": "checkbox",
+    "label": "Is event indoors, outdoors, or both?",
+    "name": "srp_indoorOutdoor",
+    "options": ["Indoors","Outdoors","Both"]
+  },
+  {
+    "id": "SRR.26",
+    "type": "checkbox",
+    "label": "Any venue restrictions we should be aware of?",
+    "name": "srp_venueRestrictions",
+    "options": [ "Yes (specify)","No" ]
+  },
+  {
+    "id": "SRR.27",
+    "type": "checkbox",
+    "label": "Will you need assistance with installation and teardown?",
+    "name": "srp_needInstall",
+    "options": ["Yes","No"]
+  },
+
+  {
+    "id": "SRR.28",
+    "type": "label",
+    "text": "6. Additional Services & Upgrades"
+  },
+  {
+    "id": "SRR.29",
+    "type": "checkbox-multi",
+    "label": "Would you like any additional branding, photographer, streaming, VIP needs?",
+    "name": "srp_extraServices",
+    "options": [
+      "Branding elements (podium wraps, signage)",
+      "Photographer for the event",
+      "Live streaming / video production",
+      "VIP guests / media coverage (special accom.)",
+      "No, thanks"
+    ]
+  }
+]
