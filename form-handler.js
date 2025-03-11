@@ -2,7 +2,6 @@ import { db } from "./firebase-config.js";
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { initAutocompleteFor } from "./maps-config.js";
 
-// ------------------ DOM ELEMENTS ------------------
 const multiStepContainer = document.getElementById("multiStepContainer");
 const backBtn = document.getElementById("backBtn");
 const nextBtn = document.getElementById("nextBtn");
@@ -10,25 +9,26 @@ const previewBtn = document.getElementById("previewBtn");
 const submitBtn = document.getElementById("submitBtn");
 const progressBarEl = document.querySelector("#progressBar .progress");
 
-// ------------------ STATE ------------------
-let questionsData = null;        // из questions.json (для inbound/outbound step1, existing, etc.)
-let servicesIndex = null;        // из data/services-index.json (для New Project сервисов)
-let step = 1;                    // step=1..4
-let answers = {};
-const totalSteps = 5;            // 1..4 + (step2.5)...
+// Data from old questions.json (inbound/outbound, existing, etc.)
+let questionsData = null;
+// Map of service -> JSON path
+let servicesIndex = null;
 
-// Вспомогательный массив: какие сервисы выбрал оператор (LiveBand, StageRental..)
+let step = 1;   // 1..4
+let answers = {};
+const totalSteps = 5; // step=1..4 + optional step2.5
+
+// Which services user selected for New Project
 let chosenServices = [];
 
-// ------------------ LOAD questions.json ------------------
+// 1) Load old questions + services index
 fetch("./questions.json")
-  .then(r => r.json())
+  .then(r=>r.json())
   .then(data => {
     questionsData = data;
-    console.log("Loaded questions.json");
-    // по умолчанию inbound
+    // default inbound
     answers.flow_type = "Inbound";
-    // Параллельно подгрузим services-index.json
+    // next load services-index
     return fetch("./data/services-index.json");
   })
   .then(r => r.json())
@@ -38,44 +38,52 @@ fetch("./questions.json")
     renderStep(step);
   })
   .catch(err=>{
-    console.error("Failed to load some JSON:", err);
-    multiStepContainer.innerHTML = "<p class='alert'>Failed to load required JSON files.</p>";
+    console.error("Failed to load JSONs:", err);
+    multiStepContainer.innerHTML = "<p class='alert'>Failed to load required JSON files</p>";
   });
 
-// ------------------ RENDER STEPS ------------------
 function renderStep(stepIndex) {
-  // очищаем контейнер
   multiStepContainer.innerHTML = "";
 
-  // Показывать / скрывать кнопки
   backBtn.style.display    = (stepIndex>1) ? "inline-block":"none";
-  nextBtn.style.display    = (stepIndex<3) ? "inline-block":"none";  // step1..2
+  nextBtn.style.display    = (stepIndex<3) ? "inline-block":"none"; 
   previewBtn.style.display = (stepIndex===3) ? "inline-block":"none"; 
   submitBtn.style.display  = (stepIndex===4) ? "inline-block":"none";
 
   updateProgress(stepIndex);
 
-  // Массив вопросов для рендера
   let toRender = [];
 
   if (stepIndex===1) {
-    // Step1 inbound/outbound
+    // inbound/outbound logic
     if (answers.flow_type==="Inbound") {
       toRender = questionsData.step1_inbound;
     } else {
       toRender = questionsData.step1_outbound;
     }
-  }
-  else if (stepIndex===2) {
-    // Step2 inbound: завиcит от call_type_ctm
+    renderQuestionArray(toRender, multiStepContainer);
+
+    // add Switch to Outbound if inbound
+    if (answers.flow_type==="Inbound") {
+      const switchBtn = document.createElement("button");
+      switchBtn.textContent = "Switch to Outbound?";
+      switchBtn.style.marginTop="20px";
+      switchBtn.onclick = () => {
+        answers.flow_type="Outbound";
+        renderStep(1);
+      };
+      multiStepContainer.appendChild(switchBtn);
+    }
+
+  } else if (stepIndex===2) {
+    // if inbound => check call_type
     if (answers.flow_type==="Inbound") {
       const ctype = answers.call_type_ctm || "";
       switch(ctype) {
         case "New Project":
-          // Здесь вместо старого step2_newProject — рендерим небольшой "choose services" 
-          // и/или partial Q, потом dynamic load
+          // Instead of old step2_newProject, we do dynamic services
           renderNewProjectServiceChoice();
-          return; // Выходим, т.к. renderNewProjectServiceChoice сам всё вывел
+          return;
         case "Existing Project":
           toRender = questionsData.step2_existing;
           break;
@@ -98,54 +106,106 @@ function renderStep(stepIndex) {
           toRender = questionsData.step2_unknown;
           break;
         default:
-          multiStepContainer.innerHTML = "<p>Please select call type.</p>";
+          multiStepContainer.innerHTML = "<p>Please select call type (in Step1).</p>";
           return;
       }
+      renderQuestionArray(toRender, multiStepContainer);
+
     } else {
       // Outbound => step3_outbound
       toRender = questionsData.step3_outbound;
+      renderQuestionArray(toRender, multiStepContainer);
     }
-  }
-  else if (stepIndex===25) {
-    // Step2.5 advanced
+
+  } else if (stepIndex===25) {
+    // advanced sales
     toRender = questionsData.step2p5_salesAdvanced || [];
-  }
-  else if (stepIndex===3) {
-    // Preview
+    renderQuestionArray(toRender, multiStepContainer);
+
+  } else if (stepIndex===3) {
+    // preview
     toRender = questionsData.stepPreview;
-  }
-  else if (stepIndex===4) {
+    renderQuestionArray(toRender, multiStepContainer);
+
+  } else if (stepIndex===4) {
+    // final
     toRender = questionsData.stepFinal;
+    renderQuestionArray(toRender, multiStepContainer);
   }
 
-  // Рендер массива вопросов
-  toRender.forEach(q => {
-    renderQuestionBlock(q, multiStepContainer);
-  });
-
-  // Специальная кнопка "Switch to Outbound?" (если step1 inbound)
-  if (stepIndex===1 && answers.flow_type==="Inbound") {
-    const switchBtn = document.createElement("button");
-    switchBtn.textContent = "Switch to Outbound?";
-    switchBtn.style.marginTop="20px";
-    switchBtn.onclick = () => {
-      answers.flow_type="Outbound";
-      renderStep(1);
-    };
-    multiStepContainer.appendChild(switchBtn);
-  }
-
-  // Подключим Google Maps (например, event_street_ctm)
+  // google maps for event_street_ctm?
   const streetInput = multiStepContainer.querySelector("[name='event_street_ctm']");
   if (streetInput) {
     initAutocompleteFor(streetInput);
   }
 }
 
-// ------------------ HELPER: renderNewProjectServiceChoice ------------------
+// -------------- RENDER QUESTIONS (old approach) --------------
+function renderQuestionArray(arr, parent) {
+  arr.forEach(q => {
+    const block = document.createElement("div");
+    block.className="question-block";
+
+    if (q.label) {
+      const lab = document.createElement("label");
+      lab.textContent = q.label;
+      block.appendChild(lab);
+    }
+    if (q.name==="_summary_") {
+      block.innerHTML += generatePreviewHtml();
+      parent.appendChild(block);
+      return;
+    }
+
+    let el=null;
+    switch(q.type){
+      case "text":
+      case "date":
+      case "email":
+        el = document.createElement("input");
+        el.type = q.type;
+        el.name = q.name;
+        el.value = answers[q.name]||"";
+        break;
+      case "textarea":
+        el = document.createElement("textarea");
+        el.name = q.name;
+        el.rows=3;
+        el.value = answers[q.name]||"";
+        break;
+      case "select":
+        el = document.createElement("select");
+        el.name = q.name;
+        if (!q.multi) {
+          const optEmpty = document.createElement("option");
+          optEmpty.value="";
+          optEmpty.textContent="-- select --";
+          el.appendChild(optEmpty);
+        }
+        q.options.forEach(opt=>{
+          const opEl = document.createElement("option");
+          opEl.value=opt;
+          opEl.textContent=opt;
+          if (q.multi && Array.isArray(answers[q.name]) && answers[q.name].includes(opt)) {
+            opEl.selected=true;
+          } else if(!q.multi && answers[q.name]===opt){
+            opEl.selected=true;
+          }
+          el.appendChild(opEl);
+        });
+        if (q.multi) el.multiple=true;
+        break;
+      default:
+        block.innerHTML += `<p style='color:red;'>Unsupported type: ${q.type}</p>`;
+    }
+
+    if (el) block.appendChild(el);
+    parent.appendChild(block);
+  });
+}
+
+// -------------- NEW PROJECT => CHOOSE SERVICES --------------
 function renderNewProjectServiceChoice() {
-  // Вместо старого step2_newProject (questionsData), 
-  // мы сделаем multi-select сервисов + кнопку "Load Service Questions"
   multiStepContainer.innerHTML = `
     <h3>New Project - Services</h3>
     <p>Please select which services the client wants:</p>
@@ -162,92 +222,86 @@ function renderNewProjectServiceChoice() {
     </div>
     <button id="svcNextBtn">Load Service Questions</button>
   `;
-
-  document.getElementById("svcNextBtn").addEventListener("click", () => {
-    // Собираем выбранные сервисы
+  const btn = document.getElementById("svcNextBtn");
+  btn.addEventListener("click", () => {
+    // gather checked
     const checks = multiStepContainer.querySelectorAll("input[name='svc']:checked");
-    chosenServices = Array.from(checks).map(c=> c.value);
-    // Теперь выводим вопросы
+    chosenServices = Array.from(checks).map(c=>c.value);
     renderServicesQuestions();
   });
 }
 
-// ------------------ HELPER: renderServicesQuestions ------------------
+// -------------- RENDER SELECTED SERVICES QUESTIONS --------------
 async function renderServicesQuestions() {
-  multiStepContainer.innerHTML = `<h3>Service Details</h3>
+  multiStepContainer.innerHTML = `
+    <h3>Service Details</h3>
     <div id="servicesContainer"></div>
-    <button id="goToStep3Btn">Next (Logistics)</button>`;
+    <button id="goToStep3Btn">Next (Logistics)</button>
+  `;
+  const svcParent = document.getElementById("servicesContainer");
 
-  const parent = document.getElementById("servicesContainer");
-
-  // Загружаем JSON для каждого выбранного сервиса
   for (let svc of chosenServices) {
-    const url = servicesIndex[svc]; 
+    const url = servicesIndex[svc];
     if (!url) {
-      const warn = document.createElement("p");
-      warn.textContent = `No JSON found for service: ${svc}`;
-      parent.appendChild(warn);
+      const p = document.createElement("p");
+      p.textContent = `No JSON for service: ${svc}`;
+      svcParent.appendChild(p);
       continue;
     }
     try {
       const resp = await fetch(url);
       const serviceQuestions = await resp.json();
-      const heading = document.createElement("h4");
-      heading.textContent = `=== ${svc} ===`;
-      parent.appendChild(heading);
+      const h4 = document.createElement("h4");
+      h4.textContent = `=== ${svc} ===`;
+      svcParent.appendChild(h4);
 
       serviceQuestions.forEach(q => {
-        renderQuestionBlock(q, parent);
+        renderServiceQ(q, svcParent);
       });
     } catch(e) {
       console.error("Error loading", url, e);
-      const errP = document.createElement("p");
-      errP.textContent = `Error loading service file: ${svc}`;
-      parent.appendChild(errP);
+      const ep = document.createElement("p");
+      ep.textContent = `Error loading service file for ${svc}`;
+      svcParent.appendChild(ep);
     }
   }
 
-  // кнопка -> go step3
   document.getElementById("goToStep3Btn").addEventListener("click", () => {
-    // collect answers from these service questions
     collectAnswers();
-    // Переходим на Step 3 (в вашей логике)
-    step=3;  // or step=2.5 if you want advanced sales? 
+    // Now go step3
+    step=3;
     renderStep(step);
   });
 }
 
-// ------------------ RENDER A SINGLE QUESTION BLOCK ------------------
-function renderQuestionBlock(q, parentEl) {
+// RENDER single question from a service JSON
+function renderServiceQ(q, parentEl) {
   const block = document.createElement("div");
-  block.className = "question-block";
-
+  block.className="question-block";
   if (q.type==="label") {
     const p = document.createElement("p");
-    p.innerHTML = `<strong>${q.id||""}</strong> ${q.text}`;
+    p.innerHTML = `<strong>${q.id||""}:</strong> ${q.text}`;
     block.appendChild(p);
   }
   else if (q.type==="text" || q.type==="date" || q.type==="email" || q.type==="number") {
     const lbl = document.createElement("label");
     lbl.innerHTML = `<strong>${q.id||""}</strong> ${q.label||""}`;
     block.appendChild(lbl);
-
     const inp = document.createElement("input");
     inp.type = q.type;
     inp.name = q.name;
     block.appendChild(inp);
   }
   else if (q.type==="checkbox") {
-    const lbl = document.createElement("p");
-    lbl.innerHTML = `<strong>${q.id||""}</strong> ${q.label||""}`;
-    block.appendChild(lbl);
-
+    const p = document.createElement("p");
+    p.innerHTML = `<strong>${q.id||""}:</strong> ${q.label||""}`;
+    block.appendChild(p);
     q.options.forEach(opt => {
       const l = document.createElement("label");
       const c = document.createElement("input");
-      c.type = "checkbox";
-      c.name = q.name; // single group
-      c.value = opt;
+      c.type="checkbox";
+      c.name=q.name; 
+      c.value=opt;
       l.appendChild(c);
       l.appendChild(document.createTextNode(opt));
       block.appendChild(l);
@@ -255,17 +309,15 @@ function renderQuestionBlock(q, parentEl) {
     });
   }
   else if (q.type==="checkbox-multi") {
-    // multiple check
-    const lbl = document.createElement("p");
-    lbl.innerHTML = `<strong>${q.id||""}</strong> ${q.label||""}`;
-    block.appendChild(lbl);
-
+    const p = document.createElement("p");
+    p.innerHTML = `<strong>${q.id||""}:</strong> ${q.label||""}`;
+    block.appendChild(p);
     q.options.forEach(opt => {
       const l = document.createElement("label");
       const c = document.createElement("input");
-      c.type = "checkbox";
-      c.name = q.name+"[]";  // array
-      c.value = opt;
+      c.type="checkbox";
+      c.name = q.name+"[]";
+      c.value=opt;
       l.appendChild(c);
       l.appendChild(document.createTextNode(opt));
       block.appendChild(l);
@@ -273,118 +325,60 @@ function renderQuestionBlock(q, parentEl) {
     });
   }
   else if (q.type==="select") {
-    const lbl = document.createElement("p");
-    lbl.innerHTML = `<strong>${q.id||""}</strong> ${q.label||""}`;
-    block.appendChild(lbl);
-
+    const p = document.createElement("p");
+    p.innerHTML = `<strong>${q.id||""}:</strong> ${q.label||""}`;
+    block.appendChild(p);
     const sel = document.createElement("select");
     sel.name = q.name;
     if (!q.multi) {
-      // add empty
-      const emptyOpt = document.createElement("option");
-      emptyOpt.value="";
-      emptyOpt.textContent="-- select --";
-      sel.appendChild(emptyOpt);
+      const emptyOp = document.createElement("option");
+      emptyOp.value="";
+      emptyOp.textContent="-- select --";
+      sel.appendChild(emptyOp);
     }
     q.options.forEach(opt => {
-      const op = document.createElement("option");
-      op.value = opt;
-      op.textContent = opt;
-      sel.appendChild(op);
+      const oEl = document.createElement("option");
+      oEl.value=opt;
+      oEl.textContent=opt;
+      sel.appendChild(oEl);
     });
     if (q.multi) sel.multiple=true;
     block.appendChild(sel);
   }
   else if (q.type==="conditional") {
-    // We'll just render sub-blocks always 
-    // (Real-time show/hide can be more advanced)
+    // we just render sub-blocks
     if (q.blocks) {
       q.blocks.forEach(subQ => {
-        renderQuestionBlock(subQ, block);
+        renderServiceQ(subQ, block);
       });
     }
   }
   else {
-    const p = document.createElement("p");
-    p.style.color="red";
-    p.textContent = `Unsupported type: ${q.type}`;
-    block.appendChild(p);
+    const warn = document.createElement("p");
+    warn.style.color="red";
+    warn.textContent = `Unsupported type: ${q.type}`;
+    block.appendChild(warn);
   }
-
   parentEl.appendChild(block);
 }
 
-// ------------------ EVENT: BACK / NEXT / PREVIEW / SUBMIT ------------------
-backBtn.addEventListener("click", () => {
-  collectAnswers();
-  if (step===25) { 
-    step=2; 
-  } else {
-    step--;
-    if (step<1) step=1;
-  }
-  renderStep(step);
-});
-
-nextBtn.addEventListener("click", () => {
-  if (!validateStep(step)) return;
-  collectAnswers();
-  // Special case: If step2 + call_type=New Project => step2.5 advanced
-  if (step===2 && answers.flow_type==="Inbound" && answers.call_type_ctm==="New Project") {
-    // go advanced?
-    step=25;
-    renderStep(step);
-    return;
-  }
-  step++;
-  if (step>4) step=4;
-  renderStep(step);
-});
-
-previewBtn.addEventListener("click", () => {
-  collectAnswers();
-  step=3;
-  renderStep(step);
-});
-
-submitBtn.addEventListener("click", onSubmit);
-
-function onSubmit() {
-  if (!validateStep(step)) return;
-  collectAnswers();
-  const q = answers["qualification_ctm"];
-  if (!q || q==="") {
-    alert("Please select final qualification!");
-    return;
-  }
-  console.log("FINAL =>", answers);
-  addDoc(collection(db,"responses"), answers)
-    .then(docRef=>{
-      alert("Saved with ID:"+docRef.id);
-      // location.reload();
-    })
-    .catch(err=>{
-      alert("Error saving: "+ err);
-    });
-}
-
-// ------------------ HELPER: collectAnswers ------------------
+// -------------- Utility --------------
 function collectAnswers() {
   const els = multiStepContainer.querySelectorAll("input, select, textarea");
   els.forEach(el => {
     if (!el.name) return;
-    // if name ends with []
     if (el.name.endsWith("[]")) {
+      // multi
       const baseName = el.name.slice(0, -2);
       answers[baseName] = answers[baseName] || [];
-      if (el.type==="checkbox" && el.checked) {
+      if (el.checked) {
         answers[baseName].push(el.value);
       }
     }
     else if (el.type==="checkbox") {
-      // single group
+      // single group approach
       if (el.checked) {
-        if (!answers[el.name]) answers[el.name] = [];
+        if (!answers[el.name]) answers[el.name]=[];
         answers[el.name].push(el.value);
       }
     }
@@ -394,11 +388,10 @@ function collectAnswers() {
   });
 }
 
-// ------------------ HELPER: validateStep ------------------
 function validateStep(stepIndex) {
   // minimal checks
   if (stepIndex===1 && answers.flow_type==="Inbound") {
-    const nm= getValue("contact_name");
+    const nm = getValue("contact_name");
     if (!nm) {
       alert("Client Name is required for inbound calls!");
       return false;
@@ -416,10 +409,22 @@ function getValue(nm) {
   return el.value;
 }
 
+function generatePreviewHtml() {
+  let html = "<ul>";
+  for (let [k,v] of Object.entries(answers)) {
+    if (Array.isArray(v)) {
+      html += `<li><strong>${k}</strong>: ${v.join(", ")}</li>`;
+    } else {
+      html += `<li><strong>${k}</strong>: ${v}</li>`;
+    }
+  }
+  html += "</ul>";
+  return html;
+}
+
 function updateProgress(st) {
-  // st from 1..4 => progress
   const pct = Math.round(((st-1)/(4-1))*100);
   if (progressBarEl) {
-    progressBarEl.style.width = pct+"%";
+    progressBarEl.style.width = pct + "%";
   }
 }
