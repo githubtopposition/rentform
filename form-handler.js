@@ -9,62 +9,52 @@ const previewBtn = document.getElementById("previewBtn");
 const submitBtn = document.getElementById("submitBtn");
 const progressBarEl = document.querySelector("#progressBar .progress");
 
-// Data from old questions.json (inbound/outbound, existing, etc.)
-let questionsData = null;
-// Map of service -> JSON path
-let servicesIndex = null;
+// Data from old questions + services
+let questionsData = null;  // from questions.json
+let servicesIndex = null;  // from data/services-index.json
 
-let step = 1;   // 1..4
+let step = 1; 
 let answers = {};
-const totalSteps = 5; // step=1..4 + optional step2.5
+const totalSteps = 5; 
 
-// Which services user selected for New Project
+// Services chosen for "New Project"
 let chosenServices = [];
 
-// 1) Load old questions + services index
+// 1) load questions + services index
 fetch("./questions.json")
-  .then(r=>r.json())
+  .then(r => r.json())
   .then(data => {
     questionsData = data;
-    // default inbound
     answers.flow_type = "Inbound";
-    // next load services-index
     return fetch("./data/services-index.json");
   })
   .then(r => r.json())
-  .then(indexData => {
-    servicesIndex = indexData;
+  .then(idx => {
+    servicesIndex = idx;
     console.log("Loaded servicesIndex:", servicesIndex);
     renderStep(step);
   })
-  .catch(err=>{
-    console.error("Failed to load JSONs:", err);
-    multiStepContainer.innerHTML = "<p class='alert'>Failed to load required JSON files</p>";
+  .catch(err => {
+    console.error("Error loading JSON:", err);
+    multiStepContainer.innerHTML = "<p class='alert'>Failed to load JSON</p>";
   });
 
+// Render step
 function renderStep(stepIndex) {
   multiStepContainer.innerHTML = "";
-
   backBtn.style.display    = (stepIndex>1) ? "inline-block":"none";
   nextBtn.style.display    = (stepIndex<3) ? "inline-block":"none"; 
-  previewBtn.style.display = (stepIndex===3) ? "inline-block":"none"; 
+  previewBtn.style.display = (stepIndex===3) ? "inline-block":"none";
   submitBtn.style.display  = (stepIndex===4) ? "inline-block":"none";
 
   updateProgress(stepIndex);
 
-  let toRender = [];
-
   if (stepIndex===1) {
-    // inbound/outbound logic
+    // Inbound/outbound
     if (answers.flow_type==="Inbound") {
-      toRender = questionsData.step1_inbound;
-    } else {
-      toRender = questionsData.step1_outbound;
-    }
-    renderQuestionArray(toRender, multiStepContainer);
-
-    // add Switch to Outbound if inbound
-    if (answers.flow_type==="Inbound") {
+      // show inbound Q
+      renderQuestionArray(questionsData.step1_inbound, multiStepContainer);
+      // Switch to Outbound
       const switchBtn = document.createElement("button");
       switchBtn.textContent = "Switch to Outbound?";
       switchBtn.style.marginTop="20px";
@@ -73,87 +63,103 @@ function renderStep(stepIndex) {
         renderStep(1);
       };
       multiStepContainer.appendChild(switchBtn);
+    } else {
+      // Outbound
+      renderQuestionArray(questionsData.step1_outbound, multiStepContainer);
     }
 
   } else if (stepIndex===2) {
-    // if inbound => check call_type
+    // inbound => check call_type
     if (answers.flow_type==="Inbound") {
       const ctype = answers.call_type_ctm || "";
+      if (!ctype) {
+        multiStepContainer.innerHTML = "<div class='alert'>Please select call type (New Project, Existing, etc.)</div>";
+        return;
+      }
       switch(ctype) {
         case "New Project":
-          // Instead of old step2_newProject, we do dynamic services
           renderNewProjectServiceChoice();
           return;
         case "Existing Project":
-          toRender = questionsData.step2_existing;
+          renderQuestionArray(questionsData.step2_existing, multiStepContainer);
           break;
         case "Vendor":
-          toRender = questionsData.step2_vendor;
+          renderQuestionArray(questionsData.step2_vendor, multiStepContainer);
           break;
         case "Technician":
-          toRender = questionsData.step2_technician;
+          renderQuestionArray(questionsData.step2_technician, multiStepContainer);
           break;
         case "Complaint":
-          toRender = questionsData.step2_complaint;
+          renderQuestionArray(questionsData.step2_complaint, multiStepContainer);
           break;
         case "Promotion/Spam":
-          multiStepContainer.innerHTML = `<div class="alert">Marked as Spam. No more details needed.</div>`;
+          multiStepContainer.innerHTML = `<div class='alert'>Marked as Spam. No more details needed.</div>`;
           return;
         case "HR Inquiry":
-          toRender = questionsData.step2_hr;
+          renderQuestionArray(questionsData.step2_hr, multiStepContainer);
           break;
         case "Unknown":
-          toRender = questionsData.step2_unknown;
+          renderQuestionArray(questionsData.step2_unknown, multiStepContainer);
           break;
         default:
-          multiStepContainer.innerHTML = "<p>Please select call type (in Step1).</p>";
+          multiStepContainer.innerHTML = "<p>Please select call type in step1.</p>";
           return;
       }
-      renderQuestionArray(toRender, multiStepContainer);
 
     } else {
-      // Outbound => step3_outbound
-      toRender = questionsData.step3_outbound;
-      renderQuestionArray(toRender, multiStepContainer);
+      // outbound => step3_outbound
+      renderQuestionArray(questionsData.step3_outbound, multiStepContainer);
     }
 
+    // Пример: кнопка "Qualify Now"
+    const qualifyBtn = document.createElement("button");
+    qualifyBtn.textContent = "Qualify Now";
+    qualifyBtn.style.marginTop = "20px";
+    qualifyBtn.onclick = () => {
+      answers["qualification_ctm"] = "Qualified";
+      alert("Lead marked as Qualified. You can still proceed further if needed.");
+    };
+    multiStepContainer.appendChild(qualifyBtn);
+
   } else if (stepIndex===25) {
-    // advanced sales
-    toRender = questionsData.step2p5_salesAdvanced || [];
-    renderQuestionArray(toRender, multiStepContainer);
+    // advanced
+    renderQuestionArray(questionsData.step2p5_salesAdvanced||[], multiStepContainer);
 
   } else if (stepIndex===3) {
     // preview
-    toRender = questionsData.stepPreview;
-    renderQuestionArray(toRender, multiStepContainer);
+    renderQuestionArray(questionsData.stepPreview, multiStepContainer);
 
   } else if (stepIndex===4) {
     // final
-    toRender = questionsData.stepFinal;
-    renderQuestionArray(toRender, multiStepContainer);
+    renderQuestionArray(questionsData.stepFinal, multiStepContainer);
+
   }
 
-  // google maps for event_street_ctm?
+  // google maps
   const streetInput = multiStepContainer.querySelector("[name='event_street_ctm']");
-  if (streetInput) {
-    initAutocompleteFor(streetInput);
-  }
+  if (streetInput) initAutocompleteFor(streetInput);
 }
 
-// -------------- RENDER QUESTIONS (old approach) --------------
-function renderQuestionArray(arr, parent) {
+// Render basic question array (old logic)
+function renderQuestionArray(arr, parentEl) {
   arr.forEach(q => {
     const block = document.createElement("div");
-    block.className="question-block";
+    block.className = "question-block";
 
     if (q.label) {
       const lab = document.createElement("label");
       lab.textContent = q.label;
       block.appendChild(lab);
+      // Пример help-icon (если хотим)
+      if (q.help) {
+        const helpEl = renderHelpIcon(q.help);
+        lab.appendChild(helpEl);
+      }
     }
+
     if (q.name==="_summary_") {
       block.innerHTML += generatePreviewHtml();
-      parent.appendChild(block);
+      parentEl.appendChild(block);
       return;
     }
 
@@ -186,6 +192,7 @@ function renderQuestionArray(arr, parent) {
           const opEl = document.createElement("option");
           opEl.value=opt;
           opEl.textContent=opt;
+          // restore
           if (q.multi && Array.isArray(answers[q.name]) && answers[q.name].includes(opt)) {
             opEl.selected=true;
           } else if(!q.multi && answers[q.name]===opt){
@@ -200,38 +207,37 @@ function renderQuestionArray(arr, parent) {
     }
 
     if (el) block.appendChild(el);
-    parent.appendChild(block);
+    parentEl.appendChild(block);
   });
 }
 
-// -------------- NEW PROJECT => CHOOSE SERVICES --------------
+// New Project => choose services
 function renderNewProjectServiceChoice() {
   multiStepContainer.innerHTML = `
     <h3>New Project - Services</h3>
-    <p>Please select which services the client wants:</p>
-    <div id="serviceChoices">
-      <label><input type="checkbox" name="svc" value="liveBand"> Live Band</label><br>
-      <label><input type="checkbox" name="svc" value="stageRental"> Stage Rental</label><br>
-      <label><input type="checkbox" name="svc" value="karaoke"> Karaoke</label><br>
-      <label><input type="checkbox" name="svc" value="ledScreen"> LED Screen</label><br>
-      <label><input type="checkbox" name="svc" value="audio"> Audio</label><br>
-      <label><input type="checkbox" name="svc" value="tvRental"> TV Rental</label><br>
-      <label><input type="checkbox" name="svc" value="stepRepeat"> Step & Repeat / Red Carpet</label><br>
-      <label><input type="checkbox" name="svc" value="trussRental"> Truss Rental</label><br>
-      <label><input type="checkbox" name="svc" value="pipeDrape"> Pipe & Drape</label><br>
+    <p>Select which services the client wants. Then click "Load Service Questions".</p>
+    <div class="question-block">
+      <label><input type="checkbox" name="svc" value="liveBand"> Live Band</label><br/>
+      <label><input type="checkbox" name="svc" value="stageRental"> Stage Rental</label><br/>
+      <label><input type="checkbox" name="svc" value="karaoke"> Karaoke</label><br/>
+      <label><input type="checkbox" name="svc" value="ledScreen"> LED Screen</label><br/>
+      <label><input type="checkbox" name="svc" value="audio"> Audio</label><br/>
+      <label><input type="checkbox" name="svc" value="tvRental"> TV Rental</label><br/>
+      <label><input type="checkbox" name="svc" value="stepRepeat"> Step & Repeat / Red Carpet</label><br/>
+      <label><input type="checkbox" name="svc" value="trussRental"> Truss Rental</label><br/>
+      <label><input type="checkbox" name="svc" value="pipeDrape"> Pipe & Drape</label><br/>
     </div>
     <button id="svcNextBtn">Load Service Questions</button>
   `;
   const btn = document.getElementById("svcNextBtn");
   btn.addEventListener("click", () => {
-    // gather checked
     const checks = multiStepContainer.querySelectorAll("input[name='svc']:checked");
     chosenServices = Array.from(checks).map(c=>c.value);
     renderServicesQuestions();
   });
 }
 
-// -------------- RENDER SELECTED SERVICES QUESTIONS --------------
+// Render multiple service Q
 async function renderServicesQuestions() {
   multiStepContainer.innerHTML = `
     <h3>Service Details</h3>
@@ -244,46 +250,47 @@ async function renderServicesQuestions() {
     const url = servicesIndex[svc];
     if (!url) {
       const p = document.createElement("p");
+      p.style.color="red";
       p.textContent = `No JSON for service: ${svc}`;
       svcParent.appendChild(p);
       continue;
     }
     try {
       const resp = await fetch(url);
-      const serviceQuestions = await resp.json();
+      const serviceQ = await resp.json();
       const h4 = document.createElement("h4");
       h4.textContent = `=== ${svc} ===`;
       svcParent.appendChild(h4);
 
-      serviceQuestions.forEach(q => {
+      serviceQ.forEach(q => {
         renderServiceQ(q, svcParent);
       });
     } catch(e) {
       console.error("Error loading", url, e);
-      const ep = document.createElement("p");
-      ep.textContent = `Error loading service file for ${svc}`;
-      svcParent.appendChild(ep);
+      const errp = document.createElement("p");
+      errp.textContent = `Error loading: ${svc}`;
+      errp.style.color="red";
+      svcParent.appendChild(errp);
     }
   }
 
   document.getElementById("goToStep3Btn").addEventListener("click", () => {
     collectAnswers();
-    // Now go step3
     step=3;
     renderStep(step);
   });
 }
 
-// RENDER single question from a service JSON
+// Render single question from a service JSON
 function renderServiceQ(q, parentEl) {
   const block = document.createElement("div");
-  block.className="question-block";
+  block.className = "question-block";
   if (q.type==="label") {
     const p = document.createElement("p");
     p.innerHTML = `<strong>${q.id||""}:</strong> ${q.text}`;
     block.appendChild(p);
   }
-  else if (q.type==="text" || q.type==="date" || q.type==="email" || q.type==="number") {
+  else if (["text","date","email","number"].includes(q.type)) {
     const lbl = document.createElement("label");
     lbl.innerHTML = `<strong>${q.id||""}</strong> ${q.label||""}`;
     block.appendChild(lbl);
@@ -300,7 +307,7 @@ function renderServiceQ(q, parentEl) {
       const l = document.createElement("label");
       const c = document.createElement("input");
       c.type="checkbox";
-      c.name=q.name; 
+      c.name=q.name;
       c.value=opt;
       l.appendChild(c);
       l.appendChild(document.createTextNode(opt));
@@ -338,15 +345,13 @@ function renderServiceQ(q, parentEl) {
     }
     q.options.forEach(opt => {
       const oEl = document.createElement("option");
-      oEl.value=opt;
-      oEl.textContent=opt;
+      oEl.value = opt;
+      oEl.textContent = opt;
       sel.appendChild(oEl);
     });
-    if (q.multi) sel.multiple=true;
     block.appendChild(sel);
   }
   else if (q.type==="conditional") {
-    // we just render sub-blocks
     if (q.blocks) {
       q.blocks.forEach(subQ => {
         renderServiceQ(subQ, block);
@@ -354,29 +359,26 @@ function renderServiceQ(q, parentEl) {
     }
   }
   else {
-    const warn = document.createElement("p");
-    warn.style.color="red";
-    warn.textContent = `Unsupported type: ${q.type}`;
-    block.appendChild(warn);
+    const w = document.createElement("p");
+    w.style.color="red";
+    w.textContent = `Unsupported type: ${q.type}`;
+    block.appendChild(w);
   }
+
   parentEl.appendChild(block);
 }
 
-// -------------- Utility --------------
+// Collect answers
 function collectAnswers() {
   const els = multiStepContainer.querySelectorAll("input, select, textarea");
   els.forEach(el => {
     if (!el.name) return;
     if (el.name.endsWith("[]")) {
-      // multi
-      const baseName = el.name.slice(0, -2);
-      answers[baseName] = answers[baseName] || [];
-      if (el.checked) {
-        answers[baseName].push(el.value);
-      }
+      const base = el.name.slice(0, -2);
+      answers[base] = answers[base]||[];
+      if (el.checked) answers[base].push(el.value);
     }
     else if (el.type==="checkbox") {
-      // single group approach
       if (el.checked) {
         if (!answers[el.name]) answers[el.name]=[];
         answers[el.name].push(el.value);
@@ -388,9 +390,8 @@ function collectAnswers() {
   });
 }
 
-function validateStep(stepIndex) {
-  // minimal checks
-  if (stepIndex===1 && answers.flow_type==="Inbound") {
+function validateStep(st) {
+  if (st===1 && answers.flow_type==="Inbound") {
     const nm = getValue("contact_name");
     if (!nm) {
       alert("Client Name is required for inbound calls!");
@@ -399,27 +400,87 @@ function validateStep(stepIndex) {
   }
   return true;
 }
-
-function getValue(nm) {
-  const el = multiStepContainer.querySelector(`[name='${nm}']`);
+function getValue(n) {
+  const el = multiStepContainer.querySelector(`[name='${n}']`);
   if (!el) return "";
   if (el.multiple) {
     return Array.from(el.selectedOptions).map(o=>o.value);
   }
   return el.value;
 }
-
 function generatePreviewHtml() {
   let html = "<ul>";
   for (let [k,v] of Object.entries(answers)) {
     if (Array.isArray(v)) {
-      html += `<li><strong>${k}</strong>: ${v.join(", ")}</li>`;
+      html += `<li><strong>${k}:</strong> ${v.join(", ")}</li>`;
     } else {
-      html += `<li><strong>${k}</strong>: ${v}</li>`;
+      html += `<li><strong>${k}:</strong> ${v}</li>`;
     }
   }
   html += "</ul>";
   return html;
+}
+
+// help icon + tooltip
+function renderHelpIcon(helpText) {
+  const span = document.createElement("span");
+  span.className = "help-icon";
+  span.textContent = "?";
+
+  const t = document.createElement("div");
+  t.className = "help-text";
+  t.innerHTML = helpText; // be careful if you allow HTML
+  span.appendChild(t);
+
+  return span;
+}
+
+// nav events
+backBtn.addEventListener("click", () => {
+  collectAnswers();
+  if (step===25) {
+    step=2;
+  } else {
+    step--;
+    if (step<1) step=1;
+  }
+  renderStep(step);
+});
+nextBtn.addEventListener("click", () => {
+  if (!validateStep(step)) return;
+  collectAnswers();
+  if (step===2 && answers.flow_type==="Inbound" && answers.call_type_ctm==="New Project") {
+    step=25;
+    renderStep(step);
+    return;
+  }
+  step++;
+  if (step>4) step=4;
+  renderStep(step);
+});
+previewBtn.addEventListener("click", () => {
+  collectAnswers();
+  step=3;
+  renderStep(step);
+});
+submitBtn.addEventListener("click", onSubmit);
+function onSubmit() {
+  if (!validateStep(step)) return;
+  collectAnswers();
+  const q = answers["qualification_ctm"];
+  if (!q || q==="") {
+    alert("Please select final qualification (or use 'Qualify Now').");
+    return;
+  }
+  console.log("FINAL =>", answers);
+  addDoc(collection(db, "responses"), answers)
+    .then(docRef => {
+      alert("Saved with ID: "+docRef.id);
+      // location.reload();
+    })
+    .catch(err => {
+      alert("Error saving: "+ err);
+    });
 }
 
 function updateProgress(st) {
