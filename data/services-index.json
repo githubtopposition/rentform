@@ -1,5 +1,4 @@
 {
-  // Мапа: название ключа => путь к файлу
   "liveBand": "./data/live-band.json",
   "stageRental": "./data/stage-rental.json",
   "karaoke": "./data/karaoke.json",
