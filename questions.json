@@ -27,7 +27,7 @@
     },
     {
       "type": "select",
-      "label": "Qualification (optional for now)",
+      "label": "Qualification (Optional for now)",
       "name": "qualification_ctm",
       "options": ["","Qualified","Not Qualified"]
     }
@@ -59,7 +59,7 @@
     },
     {
       "type": "text",
-      "label": "Street Address",
+      "label": "Event Address",
       "name": "event_street_ctm"
     },
     {
@@ -73,10 +73,25 @@
       "name": "event_state_ctm"
     },
     {
+      "type": "text",
+      "label": "Earliest Setup Time",
+      "name": "event_setup_time"
+    },
+    {
+      "type": "text",
+      "label": "End Time",
+      "name": "event_end_time"
+    },
+    {
       "type": "select",
-      "label": "Delivery Setup",
+      "label": "Delivery Setup (multi)",
       "name": "delivery_setup_options_ctm",
-      "options": ["Delivery","Setup","Operation","Pick Up Yourself"],
+      "options": [
+        "Delivery",
+        "Setup",
+        "Operation",
+        "Pick Up Yourself"
+      ],
       "multi": true
     }
   ],
@@ -168,7 +183,13 @@
       "type": "select",
       "label": "Budget Range?",
       "name": "sales_budget",
-      "options": ["Under $2k","$2k-$5k","$5k-$10k","$10k-$20k","$20k+"]
+      "options": [
+        "Under $2k",
+        "$2k-$5k",
+        "$5k-$10k",
+        "$10k-$20k",
+        "$20k+"
+      ]
     }
   ],
 
