@@ -11,7 +11,7 @@ const progressBarEl = document.querySelector("#progressBar .progress");
 
 let questionsData = null;   // from questions.json
 let servicesIndex = null;   // from data/services-index.json
-let step = 1; 
+let step = 1;
 let answers = {};
 const totalSteps = 5;
 
@@ -22,7 +22,7 @@ fetch("./questions.json")
   .then(r=>r.json())
   .then(data => {
     questionsData = data;
-    answers.flow_type = "Inbound"; 
+    answers.flow_type = "Inbound";
     return fetch("./data/services-index.json");
   })
   .then(r => r.json())
@@ -48,8 +48,10 @@ function renderStep(stepIndex) {
   if (stepIndex===1) {
     // Step1 inbound/outbound
     if (answers.flow_type==="Inbound") {
+      // Рендер вопросов из step1_inbound
       renderQuestionArray(questionsData.step1_inbound, multiStepContainer);
-      // Switch button
+
+      // Добавим кнопку Switch to Outbound
       const switchBtn = document.createElement("button");
       switchBtn.textContent = "Switch to Outbound?";
       switchBtn.style.marginTop="20px";
@@ -58,6 +60,7 @@ function renderStep(stepIndex) {
         renderStep(1);
       };
       multiStepContainer.appendChild(switchBtn);
+
     } else {
       // Outbound
       renderQuestionArray(questionsData.step1_outbound, multiStepContainer);
@@ -73,9 +76,9 @@ function renderStep(stepIndex) {
       }
       switch(ctype) {
         case "New Project":
-          // Show old step2_newProject (date, address, etc.), THEN a button => renderNewProjectServiceChoice
+          // показываем "step2_newProject" (дата, адрес...), затем переходим к выбору сервисов
           renderNewProjectBase();
-          return;  // done
+          return;  // прекращаем дальнейший рендер, так как renderNewProjectBase() уже заполнил контейнер
         case "Existing Project":
           renderQuestionArray(questionsData.step2_existing, multiStepContainer);
           break;
@@ -130,22 +133,25 @@ function renderStep(stepIndex) {
     renderQuestionArray(questionsData.stepFinal, multiStepContainer);
   }
 
+  // Инициируем Google Maps Autocomplete для поля "event_street_ctm", если оно есть
   const streetInput = multiStepContainer.querySelector("[name='event_street_ctm']");
-  if (streetInput) initAutocompleteFor(streetInput);
+  if (streetInput) {
+    initAutocompleteFor(streetInput);
+  }
 }
 
-// ---------- NEW PROJECT BASE (Event Date, Address, etc.) -----------
+// ---------- RENDER "step2_newProject" (Event Date, Address, etc.) -----------
 function renderNewProjectBase() {
-  // Render old "step2_newProject" from questionsData
+  // Рендерим блок вопросов step2_newProject
   renderQuestionArray(questionsData.step2_newProject, multiStepContainer);
 
-  // Then add a button "Proceed to Select Services"
+  // Кнопка "Proceed to Select Services"
   const btn = document.createElement("button");
   btn.textContent = "Next step → Select Services";
   btn.style.marginTop = "20px";
   btn.onclick = () => {
     collectAnswers();
-    // now show services
+    // теперь показываем мультиселект сервисов
     renderNewProjectServiceChoice();
   };
   multiStepContainer.appendChild(btn);
@@ -191,7 +197,7 @@ async function renderServicesQuestions() {
     if (!url) {
       const p = document.createElement("p");
       p.style.color = "red";
-      p.textContent = `No JSON for service: ${svc}`;
+      p.textContent = \`No JSON for service: \${svc}\`;
       svcParent.appendChild(p);
       continue;
     }
@@ -199,7 +205,7 @@ async function renderServicesQuestions() {
       const resp = await fetch(url);
       const arr = await resp.json();
       const h4 = document.createElement("h4");
-      h4.textContent = `=== ${svc} ===`;
+      h4.textContent = \`=== \${svc} ===\`;
       svcParent.appendChild(h4);
 
       arr.forEach(q => {
@@ -209,7 +215,7 @@ async function renderServicesQuestions() {
       console.error("Error loading", url, e);
       const p = document.createElement("p");
       p.style.color="red";
-      p.textContent = `Error loading ${svc}`;
+      p.textContent = \`Error loading \${svc}\`;
       svcParent.appendChild(p);
     }
   }
@@ -221,19 +227,19 @@ async function renderServicesQuestions() {
   });
 }
 
-// ---------- RENDER a single question from service JSON -----------
+// ---------- RENDER single service question -----------
 function renderServiceQ(q, parentEl) {
   const block = document.createElement("div");
   block.className = "question-block";
 
   if (q.type==="label") {
     const p = document.createElement("p");
-    p.innerHTML = `<strong>${q.id||""}:</strong> ${q.text}`;
+    p.innerHTML = \`<strong>\${q.id||""}:</strong> \${q.text}\`;
     block.appendChild(p);
   }
   else if (["text","date","email","number"].includes(q.type)) {
     const lbl = document.createElement("label");
-    lbl.innerHTML = `<strong>${q.id||""}</strong> ${q.label||""}`;
+    lbl.innerHTML = \`<strong>\${q.id||""}</strong> \${q.label||""}\`;
     block.appendChild(lbl);
     const inp = document.createElement("input");
     inp.type = q.type;
@@ -242,7 +248,7 @@ function renderServiceQ(q, parentEl) {
   }
   else if (q.type==="checkbox") {
     const p = document.createElement("p");
-    p.innerHTML = `<strong>${q.id||""}:</strong> ${q.label||""}`;
+    p.innerHTML = \`<strong>\${q.id||""}:</strong> \${q.label||""}\`;
     block.appendChild(p);
     q.options.forEach(opt => {
       const l = document.createElement("label");
@@ -258,7 +264,7 @@ function renderServiceQ(q, parentEl) {
   }
   else if (q.type==="checkbox-multi") {
     const p = document.createElement("p");
-    p.innerHTML = `<strong>${q.id||""}:</strong> ${q.label||""}`;
+    p.innerHTML = \`<strong>\${q.id||""}:</strong> \${q.label||""}\`;
     block.appendChild(p);
     q.options.forEach(opt => {
       const l = document.createElement("label");
@@ -274,7 +280,7 @@ function renderServiceQ(q, parentEl) {
   }
   else if (q.type==="select") {
     const p = document.createElement("p");
-    p.innerHTML = `<strong>${q.id||""}:</strong> ${q.label||""}`;
+    p.innerHTML = \`<strong>\${q.id||""}:</strong> \${q.label||""}\`;
     block.appendChild(p);
     const sel = document.createElement("select");
     sel.name = q.name;
@@ -293,7 +299,6 @@ function renderServiceQ(q, parentEl) {
     block.appendChild(sel);
   }
   else if (q.type==="conditional") {
-    // if there's sub-blocks
     if (q.blocks) {
       q.blocks.forEach(subQ => {
         renderServiceQ(subQ, block);
@@ -303,11 +308,78 @@ function renderServiceQ(q, parentEl) {
   else {
     const warn = document.createElement("p");
     warn.style.color="red";
-    warn.textContent = `Unsupported type: ${q.type}`;
+    warn.textContent = \`Unsupported type: \${q.type}\`;
     block.appendChild(warn);
   }
 
   parentEl.appendChild(block);
+}
+
+// ---------- RENDER standard inbound/outbound questions -----------
+function renderQuestionArray(arr, parentEl) {
+  arr.forEach(q => {
+    const block = document.createElement("div");
+    block.className = "question-block";
+
+    if (q.label) {
+      const lab = document.createElement("label");
+      lab.textContent = q.label;
+      block.appendChild(lab);
+    }
+
+    // special case: preview summary
+    if (q.name==="_summary_") {
+      block.innerHTML += generatePreviewHtml();
+      parentEl.appendChild(block);
+      return;
+    }
+
+    let el = null;
+    switch(q.type) {
+      case "text":
+      case "date":
+      case "email":
+        el = document.createElement("input");
+        el.type = q.type;
+        el.name = q.name;
+        el.value = answers[q.name] || "";
+        break;
+      case "textarea":
+        el = document.createElement("textarea");
+        el.name = q.name;
+        el.rows = 3;
+        el.value = answers[q.name] || "";
+        break;
+      case "select":
+        el = document.createElement("select");
+        el.name = q.name;
+        if (!q.multi) {
+          const optEmpty = document.createElement("option");
+          optEmpty.value="";
+          optEmpty.textContent="-- select --";
+          el.appendChild(optEmpty);
+        }
+        q.options.forEach(opt => {
+          const opEl = document.createElement("option");
+          opEl.value=opt;
+          opEl.textContent=opt;
+          // восстанавливаем выбор, если есть в answers
+          if (q.multi && Array.isArray(answers[q.name]) && answers[q.name].includes(opt)) {
+            opEl.selected = true;
+          } else if(!q.multi && answers[q.name]===opt){
+            opEl.selected = true;
+          }
+          el.appendChild(opEl);
+        });
+        if (q.multi) el.multiple = true;
+        break;
+      default:
+        block.innerHTML += `<p style='color:red;'>Unsupported type: ${q.type}</p>`;
+    }
+
+    if (el) block.appendChild(el);
+    parentEl.appendChild(block);
+  });
 }
 
 // ---------- COLLECT / VALIDATE ----------
@@ -317,12 +389,12 @@ function collectAnswers() {
     if (!el.name) return;
     if (el.name.endsWith("[]")) {
       const base = el.name.slice(0, -2);
-      answers[base] = answers[base]||[];
+      answers[base] = answers[base] || [];
       if (el.checked) answers[base].push(el.value);
     }
     else if (el.type==="checkbox") {
       if (el.checked) {
-        if (!answers[el.name]) answers[el.name]=[];
+        if (!answers[el.name]) answers[el.name] = [];
         answers[el.name].push(el.value);
       }
     }
