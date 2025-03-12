@@ -3,8 +3,7 @@
     {
       "type": "text",
       "label": "Client Name",
-      "name": "contact_name",
-      "scriptText": "Ask the caller for their name; confirm spelling if needed."
+      "name": "contact_name"
     },
     {
       "type": "select",
@@ -18,55 +17,33 @@
         "Complaint",
         "Promotion/Sales/Spam Calls",
         "HR Inquiry",
-        "Outbound Sales Calls"
-      ],
-      "scriptText": "Select the appropriate type of call: new lead, existing, vendor, etc."
+        "Unknown"
+      ]
     },
     {
       "type": "select",
       "label": "Which Company Location?",
       "name": "company_location_ctm",
       "options": [
-        "Orlando",
-        "San Francisco",
-        "Las Vegas",
-        "Atlanta",
-        "New York",
-        "Los Angeles",
-        "Houston",
-        "Phoenix",
-        "Chicago",
-        "Miami"
-      ],
-      "scriptText": "Which of our offices/locations is closest or relevant to the client?"
+        "Orlando","San Francisco","Las Vegas","Atlanta","New York",
+        "Los Angeles","Houston","Phoenix","Chicago","Miami"
+      ]
     },
     {
       "type": "checkbox-multi",
       "label": "Which Services?",
       "name": "requested_services_ctm",
       "options": [
-        "Stage",
-        "Audio",
-        "TVs",
-        "Projections & Screens",
-        "LED Wall",
-        "Live Stream",
-        "Step & Repeat",
-        "Lighting",
-        "Pipe & Drape",
-        "Karaoke",
-        "Outdoor Movie",
-        "Full Event Production",
-        "Other"
-      ],
-      "scriptText": "Check all services the client is interested in."
+        "Stage","Audio","TVs","Projections & Screens","LED Wall",
+        "Live Stream","Step & Repeat","Lighting","Pipe & Drape",
+        "Karaoke","Outdoor Movie","Full Event Production","Other"
+      ]
     },
     {
       "type": "select",
       "label": "Qualification (Optional)",
       "name": "qualification_ctm",
-      "options": ["","Qualified","Not Qualified"],
-      "scriptText": "If you already know this is a good lead, select 'Qualified'. Otherwise skip."
+      "options": ["","Qualified","Not Qualified"]
     }
   ],
 
@@ -75,6 +52,11 @@
       "type": "text",
       "label": "Outbound Client Name",
       "name": "outbound_client_name"
+    },
+    {
+      "type": "text",
+      "label": "Outbound Phone/ID",
+      "name": "outbound_phone"
     }
   ],
 
@@ -82,15 +64,7 @@
     {
       "type": "date",
       "label": "Event Date",
-      "name": "event_date_ctm",
-      "scriptText": "When is the event happening?"
-    },
-    {
-      "type": "select",
-      "label": "Number of Attendees",
-      "name": "event_attendees_ctm",
-      "options": ["1-10","11-50","51-200","201-500","501-1000","1000+"],
-      "scriptText": "Approx. how many guests or attendees?"
+      "name": "event_date_ctm"
     },
     {
       "type": "text",
@@ -113,26 +87,10 @@
       "name": "event_state"
     },
     {
-      "type": "text",
-      "label": "ZIP Code",
-      "name": "event_zip_ctm"
-    },
-    {
-      "type": "select",
-      "label": "Event Type",
-      "name": "event_type_ctm",
-      "options": ["Corporate Event","Wedding","Concert","Trade Show","Private Party","Other"]
-    },
-    {
       "type": "select",
       "label": "Delivery & Setup Options",
       "name": "delivery_setup_options_ctm",
-      "options": [
-        "Delivery",
-        "Setup",
-        "Operation",
-        "Pick Up Yourself"
-      ],
+      "options": ["Delivery","Setup","Operation","Pick Up Yourself"],
       "multi": true
     }
   ],
@@ -198,13 +156,7 @@
       "type": "select",
       "label": "Budget Range?",
       "name": "sales_budget",
-      "options": [
-        "Under $2k",
-        "$2k-$5k",
-        "$5k-$10k",
-        "$10k-$20k",
-        "$20k+"
-      ]
+      "options": ["Under $2k","$2k-$5k","$5k-$10k","$10k-$20k","$20k+"]
     }
   ],
 
