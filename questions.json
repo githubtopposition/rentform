@@ -3,7 +3,8 @@
     {
       "type": "text",
       "label": "Client Name",
-      "name": "contact_name"
+      "name": "contact_name",
+      "scriptText": "Ask the caller for their name; confirm spelling if needed."
     },
     {
       "type": "select",
@@ -18,7 +19,8 @@
         "Promotion/Sales/Spam Calls",
         "HR Inquiry",
         "Outbound Sales Calls"
-      ]
+      ],
+      "scriptText": "Select the appropriate type of call: new lead, existing, vendor, etc."
     },
     {
       "type": "select",
@@ -35,33 +37,36 @@
         "Phoenix",
         "Chicago",
         "Miami"
-      ]
+      ],
+      "scriptText": "Which of our offices/locations is closest or relevant to the client?"
     },
     {
       "type": "checkbox-multi",
-      "label": "Which Services? (requested_services_ctm)",
+      "label": "Which Services?",
       "name": "requested_services_ctm",
       "options": [
-        "1:Stage",
-        "2:Audio",
-        "3:TVs",
-        "4:Projections & Screens",
-        "5:LED Wall",
-        "6:Live Stream",
-        "7:Step & Repeat",
-        "8:Lighting",
-        "9:Pipe&drape",
-        "10:Karaoke",
-        "11:Outdoor movie",
-        "12:Full event production",
-        "13:Other"
-      ]
+        "Stage",
+        "Audio",
+        "TVs",
+        "Projections & Screens",
+        "LED Wall",
+        "Live Stream",
+        "Step & Repeat",
+        "Lighting",
+        "Pipe & Drape",
+        "Karaoke",
+        "Outdoor Movie",
+        "Full Event Production",
+        "Other"
+      ],
+      "scriptText": "Check all services the client is interested in."
     },
     {
       "type": "select",
       "label": "Qualification (Optional)",
       "name": "qualification_ctm",
-      "options": ["","Qualified","Not Qualified"]
+      "options": ["","Qualified","Not Qualified"],
+      "scriptText": "If you already know this is a good lead, select 'Qualified'. Otherwise skip."
     }
   ],
 
@@ -70,11 +75,6 @@
       "type": "text",
       "label": "Outbound Client Name",
       "name": "outbound_client_name"
-    },
-    {
-      "type": "text",
-      "label": "Phone or ID",
-      "name": "outbound_phone"
     }
   ],
 
@@ -82,13 +82,15 @@
     {
       "type": "date",
       "label": "Event Date",
-      "name": "event_date_ctm"
+      "name": "event_date_ctm",
+      "scriptText": "When is the event happening?"
     },
     {
       "type": "select",
       "label": "Number of Attendees",
       "name": "event_attendees_ctm",
-      "options": ["1-10","11-50","51-200","201-500","501-1000","1000+"]
+      "options": ["1-10","11-50","51-200","201-500","501-1000","1000+"],
+      "scriptText": "Approx. how many guests or attendees?"
     },
     {
       "type": "text",
@@ -126,10 +128,10 @@
       "label": "Delivery & Setup Options",
       "name": "delivery_setup_options_ctm",
       "options": [
-        "1:Delivery",
-        "2:Setup",
-        "3:Operation",
-        "4:Pick Up Yourself"
+        "Delivery",
+        "Setup",
+        "Operation",
+        "Pick Up Yourself"
       ],
       "multi": true
     }
