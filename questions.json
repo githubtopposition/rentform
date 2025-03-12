@@ -27,9 +27,13 @@
     },
     {
       "type": "select",
-      "label": "Qualification (Optional for now)",
+      "label": "Qualification (Optional)",
       "name": "qualification_ctm",
-      "options": ["","Qualified","Not Qualified"]
+      "options": [
+        "",
+        "Qualified",
+        "Not Qualified"
+      ]
     }
   ],
 
@@ -53,9 +57,42 @@
 
   "step2_newProject": [
     {
-      "type": "date",
-      "label": "Event Date",
-      "name": "event_date_ctm"
+      "type": "text",
+      "label": "Dates and Time of the Event",
+      "name": "event_dates_times"
+    },
+    {
+      "type": "text",
+      "label": "Approx. number of attendees",
+      "name": "event_attendees"
+    },
+    {
+      "type": "select",
+      "label": "Is the event indoor or outdoor?",
+      "name": "event_location_type_ctm",
+      "options": [
+        "Indoor",
+        "Outdoor",
+        "Both"
+      ]
+    },
+    {
+      "type": "select",
+      "label": "What type of venue?",
+      "name": "venue_type_ctm",
+      "options": [
+        "Private Residence",
+        "Hotel (Ballroom, etc.)",
+        "Event Venue (Banquet Hall, etc.)",
+        "Outdoor Venue",
+        "Corporate Office",
+        "Other (Explain in notes)"
+      ]
+    },
+    {
+      "type": "text",
+      "label": "Event Name",
+      "name": "event_name_ctm"
     },
     {
       "type": "text",
@@ -74,17 +111,29 @@
     },
     {
       "type": "text",
-      "label": "Earliest Setup Time",
-      "name": "event_setup_time"
+      "label": "ZIP Code",
+      "name": "event_zip_ctm"
     },
     {
       "type": "text",
-      "label": "End Time",
-      "name": "event_end_time"
+      "label": "What is the best email to send a quote?",
+      "name": "event_email"
     },
     {
       "type": "select",
-      "label": "Delivery Setup (multi)",
+      "label": "How many events do you do per year?",
+      "name": "events_per_year_ctm",
+      "options": [
+        "1-2",
+        "3-5",
+        "6-10",
+        "11-20",
+        "21+"
+      ]
+    },
+    {
+      "type": "select",
+      "label": "Delivery/Setup (multi)",
       "name": "delivery_setup_options_ctm",
       "options": [
         "Delivery",
