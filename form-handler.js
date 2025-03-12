@@ -15,8 +15,6 @@ let step = 1;
 let answers = {};
 const totalSteps = 5;
 
-let chosenServices = [];
-
 // 1) Load questions + services index
 fetch("./questions.json")
   .then(function(r){ return r.json(); })
@@ -36,7 +34,7 @@ fetch("./questions.json")
     multiStepContainer.innerHTML = "<p class='alert'>Failed to load JSON</p>";
   });
 
-function renderStep(stepIndex) {
+function renderStep(stepIndex){
   multiStepContainer.innerHTML = "";
   backBtn.style.display    = (stepIndex>1) ? "inline-block":"none";
   nextBtn.style.display    = (stepIndex<3) ? "inline-block":"none";
@@ -45,187 +43,180 @@ function renderStep(stepIndex) {
 
   updateProgress(stepIndex);
 
-  if (stepIndex===1) {
-    // Step1 inbound/outbound
-    if (answers.flow_type==="Inbound") {
+  if(stepIndex===1){
+    // Step1 inbound
+    if(answers.flow_type==="Inbound"){
       renderQuestionArray(questionsData.step1_inbound, multiStepContainer);
-
-      // Switch to Outbound
       var switchBtn = document.createElement("button");
       switchBtn.textContent = "Switch to Outbound?";
-      switchBtn.style.marginTop = "20px";
+      switchBtn.style.marginTop="20px";
       switchBtn.onclick = function(){
-        answers.flow_type = "Outbound";
+        answers.flow_type="Outbound";
         renderStep(1);
       };
       multiStepContainer.appendChild(switchBtn);
-
     } else {
       // Outbound
       renderQuestionArray(questionsData.step1_outbound, multiStepContainer);
     }
 
-  } else if (stepIndex===2) {
-    // Step2 inbound => depends on call_type
-    if (answers.flow_type==="Inbound") {
+  } else if(stepIndex===2){
+    // read call_type
+    if(answers.flow_type==="Inbound"){
       var ctype = answers.call_type_ctm || "";
-      if (!ctype) {
-        multiStepContainer.innerHTML = "<div class='alert'>Please select call type (New Project, etc.) in step1</div>";
+      if(!ctype){
+        multiStepContainer.innerHTML = "<div class='alert'>Please select call type on Step1.</div>";
         return;
       }
-      switch(ctype) {
-        case "New Project":
-          // Показать step2_newProject (все вопросы)
-          renderNewProjectBase();
-          return;
-        case "Existing Project":
-          renderQuestionArray(questionsData.step2_existing, multiStepContainer);
-          break;
-        case "Vendor":
-          renderQuestionArray(questionsData.step2_vendor, multiStepContainer);
-          break;
-        case "Technician":
-          renderQuestionArray(questionsData.step2_technician, multiStepContainer);
-          break;
-        case "Complaint":
-          renderQuestionArray(questionsData.step2_complaint, multiStepContainer);
-          break;
-        case "Promotion/Spam":
-          multiStepContainer.innerHTML = "<div class='alert'>Marked as spam. No more details needed.</div>";
-          return;
-        case "HR Inquiry":
-          renderQuestionArray(questionsData.step2_hr, multiStepContainer);
-          break;
-        case "Unknown":
-          renderQuestionArray(questionsData.step2_unknown, multiStepContainer);
-          break;
-        default:
-          multiStepContainer.innerHTML = "<p>No such call type. Please pick in Step1.</p>";
-          return;
+      if(ctype==="New Project"){
+        // Step2 for new project => unify event info + service details
+        renderNewProjectAll();
+        return;
+      } else if(ctype==="Existing Project"){
+        renderQuestionArray(questionsData.step2_existing, multiStepContainer);
+      } else if(ctype==="Vendor"){
+        renderQuestionArray(questionsData.step2_vendor, multiStepContainer);
+      } else if(ctype==="Technician"){
+        renderQuestionArray(questionsData.step2_technician, multiStepContainer);
+      } else if(ctype==="Complaint"){
+        renderQuestionArray(questionsData.step2_complaint, multiStepContainer);
+      } else if(ctype==="Promotion/Spam"){
+        multiStepContainer.innerHTML = "<div class='alert'>Marked as spam. No more details needed.</div>";
+        return;
+      } else if(ctype==="HR Inquiry"){
+        renderQuestionArray(questionsData.step2_hr, multiStepContainer);
+      } else if(ctype==="Unknown"){
+        renderQuestionArray(questionsData.step2_unknown, multiStepContainer);
+      } else {
+        multiStepContainer.innerHTML = "<p>No match for call type.</p>";
+        return;
       }
-
     } else {
-      // outbound => step3_outbound
+      // Outbound => step3
       renderQuestionArray(questionsData.step3_outbound, multiStepContainer);
     }
 
-    // Example: "Qualify Now" button
+    // optional "Qualify Now"
     var qBtn = document.createElement("button");
     qBtn.textContent = "Qualify Now";
-    qBtn.style.marginTop = "20px";
+    qBtn.style.marginTop="20px";
     qBtn.onclick = function(){
-      answers["qualification_ctm"] = "Qualified";
+      answers["qualification_ctm"]="Qualified";
       alert("Marked as Qualified!");
     };
     multiStepContainer.appendChild(qBtn);
 
-  } else if (stepIndex===25) {
-    // advanced sales
-    renderQuestionArray(questionsData.step2p5_salesAdvanced || [], multiStepContainer);
+  } else if(stepIndex===25){
+    // advanced
+    renderQuestionArray(questionsData.step2p5_salesAdvanced||[], multiStepContainer);
 
-  } else if (stepIndex===3) {
+  } else if(stepIndex===3){
     // preview
     renderQuestionArray(questionsData.stepPreview, multiStepContainer);
 
-  } else if (stepIndex===4) {
+  } else if(stepIndex===4){
     // final
     renderQuestionArray(questionsData.stepFinal, multiStepContainer);
   }
 
   var streetInput = multiStepContainer.querySelector("[name='event_street_ctm']");
-  if (streetInput) {
+  if(streetInput){
     initAutocompleteFor(streetInput);
   }
 }
 
-// Step2_newProject
-function renderNewProjectBase(){
-  // Покажем вопросы (даты, адрес, indoor/outdoor и т.д.)
+// render step2 for new project => event info + service detail
+function renderNewProjectAll(){
+  // 1) Render step2_newProject
   renderQuestionArray(questionsData.step2_newProject, multiStepContainer);
 
-  var btn = document.createElement("button");
-  btn.textContent = "Next step → Select Services";
-  btn.style.marginTop = "20px";
-  btn.onclick = function(){
-    collectAnswers();
-    renderNewProjectServiceChoice();
-  };
-  multiStepContainer.appendChild(btn);
-}
+  // 2) Then load chosen services (from step1 requested_services_ctm)
+  var chosen = answers.requested_services_ctm || []; 
+  // note: if user didn't pick anything, chosen might be []
 
-// Выбор сервисов
-function renderNewProjectServiceChoice(){
-  multiStepContainer.innerHTML = 
-    "<h3>New Project - Services</h3>" +
-    "<p>Select which services the client wants. Then click 'Load Service Questions'.</p>" +
-    "<div class='question-block'>" +
-      "<label><input type='checkbox' name='svc' value='liveBand'> Live Band</label><br/>" +
-      "<label><input type='checkbox' name='svc' value='stageRental'> Stage Rental</label><br/>" +
-      "<label><input type='checkbox' name='svc' value='karaoke'> Karaoke</label><br/>" +
-      "<label><input type='checkbox' name='svc' value='ledScreen'> LED Screen</label><br/>" +
-      "<label><input type='checkbox' name='svc' value='audio'> Audio</label><br/>" +
-      "<label><input type='checkbox' name='svc' value='tvRental'> TV Rental</label><br/>" +
-      "<label><input type='checkbox' name='svc' value='stepRepeat'> Step & Repeat / Red Carpet</label><br/>" +
-      "<label><input type='checkbox' name='svc' value='trussRental'> Truss Rental</label><br/>" +
-      "<label><input type='checkbox' name='svc' value='pipeDrape'> Pipe & Drape</label><br/>" +
-    "</div>" +
-    "<button id='svcNextBtn'>Load Service Questions</button>";
+  var svcWrap = document.createElement("div");
+  svcWrap.innerHTML = "<h3>Chosen Services</h3>";
+  multiStepContainer.appendChild(svcWrap);
 
-  var b = document.getElementById("svcNextBtn");
-  b.addEventListener("click", function(){
-    var checks = multiStepContainer.querySelectorAll("input[name='svc']:checked");
-    chosenServices = Array.from(checks).map(function(c){ return c.value; });
-    renderServicesQuestions();
+  // load each service from servicesIndex
+  chosen.forEach(function(opt){
+    // '1:Stage' or '2:Audio' - we want the key 'stageRental'? You might do a small map
+    // But let's assume we do a switch or a dictionary
+    var key = mapServiceKey(opt);
+    if(!key){
+      var pNo = document.createElement("p");
+      pNo.style.color="red";
+      pNo.textContent = "No JSON for service: " + opt;
+      svcWrap.appendChild(pNo);
+      return;
+    }
+    loadServiceJson(key, svcWrap);
   });
-}
 
-// Рендер выбранных сервисов
-async function renderServicesQuestions(){
-  multiStepContainer.innerHTML = 
-    "<h3>Service Details</h3>" +
-    "<div id='servicesContainer'></div>" +
-    "<button id='goToStep3Btn'>Next (Logistics / Step3)</button>";
-  var svcParent = document.getElementById("servicesContainer");
-
-  for(var i=0; i<chosenServices.length; i++){
-    var svc = chosenServices[i];
-    var url = servicesIndex[svc];
-    if(!url){
-      var p = document.createElement("p");
-      p.style.color = "red";
-      p.textContent = "No JSON for service: " + svc;
-      svcParent.appendChild(p);
-      continue;
-    }
-    try {
-      var resp = await fetch(url);
-      var arr = await resp.json();
-      var h4 = document.createElement("h4");
-      h4.textContent = "=== " + svc + " ===";
-      svcParent.appendChild(h4);
-
-      arr.forEach(function(q){
-        renderServiceQ(q, svcParent);
-      });
-    } catch(e){
-      console.error("Error loading", url, e);
-      var p2 = document.createElement("p");
-      p2.style.color="red";
-      p2.textContent = "Error loading " + svc;
-      svcParent.appendChild(p2);
-    }
-  }
-
-  var goBtn = document.getElementById("goToStep3Btn");
-  goBtn.addEventListener("click", function(){
+  // add a "done" or "go next"
+  var nextBtn2 = document.createElement("button");
+  nextBtn2.textContent = "Done with Step2 => go Next";
+  nextBtn2.style.marginTop="20px";
+  nextBtn2.onclick = function(){
     collectAnswers();
-    step=3;
+    // go step3 or step2.5 as you want
+    step=25; // or step=3
     renderStep(step);
-  });
+  };
+  multiStepContainer.appendChild(nextBtn2);
 }
 
-// Рендер single question из сервисных JSON
+// small function to map "1:Stage" -> 'stageRental'
+function mapServiceKey(opt){
+  // you can build a dictionary
+  var dict = {
+    "1:Stage":"stageRental",
+    "2:Audio":"audio",
+    "3:TVs":"tvRental",
+    "4:Projections & Screens":"???",
+    "5:LED Wall":"ledScreen",
+    "6:Live Stream":"???",
+    "7:Step & Repeat":"stepRepeat",
+    "8:Lighting":"???",
+    "9:Pipe&drape":"pipeDrape",
+    "10:Karaoke":"karaoke",
+    "11:Outdoor movie":"???",
+    "12:Full event production":"???",
+    "13:Other":"???"
+  };
+  return dict[opt] || null;
+}
+
+async function loadServiceJson(key, parentEl){
+  var url = servicesIndex[key];
+  if(!url){
+    var p1 = document.createElement("p");
+    p1.style.color="red";
+    p1.textContent = "No serviceIndex URL for key: " + key;
+    parentEl.appendChild(p1);
+    return;
+  }
+  try{
+    var resp = await fetch(url);
+    var arr = await resp.json();
+    var h4 = document.createElement("h4");
+    h4.textContent = "=== " + key + " ===";
+    parentEl.appendChild(h4);
+
+    arr.forEach(function(q){
+      renderServiceQ(q, parentEl);
+    });
+  } catch(e){
+    var p2 = document.createElement("p");
+    p2.style.color="red";
+    p2.textContent = "Error loading service " + key + " => " + e;
+    parentEl.appendChild(p2);
+  }
+}
+
+// same code for renderServiceQ, renderQuestionArray, collectAnswers, etc. 
 function renderServiceQ(q, parentEl){
+  // same logic as before
   var block = document.createElement("div");
   block.className = "question-block";
 
@@ -284,12 +275,11 @@ function renderServiceQ(q, parentEl){
 
     var sel = document.createElement("select");
     sel.name = q.name;
-    if(!q.multi){
-      var emptyOp = document.createElement("option");
-      emptyOp.value="";
-      emptyOp.textContent="-- select --";
-      sel.appendChild(emptyOp);
-    }
+    var emptyOp = document.createElement("option");
+    emptyOp.value="";
+    emptyOp.textContent="-- select --";
+    sel.appendChild(emptyOp);
+
     q.options.forEach(function(opt){
       var oEl = document.createElement("option");
       oEl.value=opt;
@@ -311,11 +301,9 @@ function renderServiceQ(q, parentEl){
     warn.textContent = "Unsupported type: " + q.type;
     block.appendChild(warn);
   }
-
   parentEl.appendChild(block);
 }
 
-// Рендер inbound/outbound questions
 function renderQuestionArray(arr, parentEl){
   arr.forEach(function(q){
     var block = document.createElement("div");
@@ -326,7 +314,6 @@ function renderQuestionArray(arr, parentEl){
       lab.textContent = q.label;
       block.appendChild(lab);
     }
-
     if(q.name==="_summary_"){
       block.innerHTML += generatePreviewHtml();
       parentEl.appendChild(block);
@@ -341,13 +328,13 @@ function renderQuestionArray(arr, parentEl){
         el = document.createElement("input");
         el.type = q.type;
         el.name = q.name;
-        el.value = answers[q.name] || "";
+        el.value = answers[q.name]||"";
         break;
       case "textarea":
         el = document.createElement("textarea");
         el.name = q.name;
-        el.rows = 3;
-        el.value = answers[q.name] || "";
+        el.value = answers[q.name]||"";
+        el.rows=3;
         break;
       case "select":
         el = document.createElement("select");
@@ -362,15 +349,9 @@ function renderQuestionArray(arr, parentEl){
           var opEl = document.createElement("option");
           opEl.value=opt;
           opEl.textContent=opt;
-          if(q.multi && Array.isArray(answers[q.name]) && answers[q.name].indexOf(opt)>=0){
-            opEl.selected = true;
-          }
-          else if(!q.multi && answers[q.name]===opt){
-            opEl.selected = true;
-          }
           el.appendChild(opEl);
         });
-        if(q.multi) el.multiple = true;
+        if(q.multi) el.multiple=true;
         break;
       default:
         block.innerHTML += "<p style='color:red;'>Unsupported type: " + q.type + "</p>";
@@ -380,73 +361,65 @@ function renderQuestionArray(arr, parentEl){
     parentEl.appendChild(block);
   });
 }
-
-// collect / validate
 function collectAnswers(){
   var els = multiStepContainer.querySelectorAll("input, select, textarea");
   els.forEach(function(el){
     if(!el.name) return;
     if(el.name.endsWith("[]")){
-      var base = el.name.slice(0, -2);
-      if(!answers[base]) answers[base] = [];
+      var base = el.name.slice(0,-2);
+      if(!answers[base]) answers[base]=[];
       if(el.checked) answers[base].push(el.value);
     }
     else if(el.type==="checkbox"){
       if(el.checked){
-        if(!answers[el.name]) answers[el.name] = [];
+        if(!answers[el.name]) answers[el.name]=[];
         answers[el.name].push(el.value);
       }
-    }
-    else {
+    } else {
       answers[el.name] = el.value;
     }
   });
 }
-
 function validateStep(st){
   if(st===1 && answers.flow_type==="Inbound"){
     var nm = getValue("contact_name");
     if(!nm){
-      alert("Client Name is required for inbound calls!");
+      alert("Client Name required for inbound!");
       return false;
     }
   }
   return true;
 }
-
 function getValue(n){
-  var el = multiStepContainer.querySelector("[name='" + n + "']");
+  var el = multiStepContainer.querySelector("[name='"+n+"']");
   if(!el) return "";
   if(el.multiple){
     return Array.from(el.selectedOptions).map(function(o){ return o.value; });
   }
   return el.value;
 }
-
 function generatePreviewHtml(){
-  var html = "<ul>";
+  var html="<ul>";
   Object.entries(answers).forEach(function(entry){
-    var k = entry[0];
-    var v = entry[1];
+    var k=entry[0];
+    var v=entry[1];
     if(Array.isArray(v)){
-      html += "<li><strong>" + k + ":</strong> " + v.join(", ") + "</li>";
+      html += "<li><strong>"+k+":</strong> "+v.join(", ")+"</li>";
     } else {
-      html += "<li><strong>" + k + ":</strong> " + v + "</li>";
+      html += "<li><strong>"+k+":</strong> "+v+"</li>";
     }
   });
-  html += "</ul>";
+  html+="</ul>";
   return html;
 }
-
 function updateProgress(st){
   var pct = Math.round(((st-1)/(4-1))*100);
   if(progressBarEl){
-    progressBarEl.style.width = pct + "%";
+    progressBarEl.style.width = pct+"%";
   }
 }
-
 // nav
-backBtn.addEventListener("click", function(){
+backBtn.addEventListener("click",function(){
   collectAnswers();
   if(step===25){
     step=2;
@@ -456,12 +429,12 @@ backBtn.addEventListener("click", function(){
   }
   renderStep(step);
 });
-nextBtn.addEventListener("click", function(){
+nextBtn.addEventListener("click",function(){
   if(!validateStep(step)) return;
   collectAnswers();
   if(step===2 && answers.flow_type==="Inbound" && answers.call_type_ctm==="New Project"){
-    // after finishing base Q => advanced
-    step=25;
+    // done step2 => advanced or step3
+    step=25; // or step=3
     renderStep(step);
     return;
   }
@@ -469,28 +442,25 @@ nextBtn.addEventListener("click", function(){
   if(step>4) step=4;
   renderStep(step);
 });
-previewBtn.addEventListener("click", function(){
+previewBtn.addEventListener("click",function(){
   collectAnswers();
   step=3;
   renderStep(step);
 });
-submitBtn.addEventListener("click", onSubmit);
-
+submitBtn.addEventListener("click",onSubmit);
 function onSubmit(){
   if(!validateStep(step)) return;
   collectAnswers();
   var q = answers["qualification_ctm"];
-  if(!q || q===""){
-    alert("Please select final qualification (or use 'Qualify Now').");
+  if(!q){
+    alert("Select final qualification, or 'Qualify Now'.");
     return;
   }
-  console.log("FINAL =>", answers);
-  addDoc(collection(db, "responses"), answers)
+  addDoc(collection(db,"responses"),answers)
     .then(function(docRef){
-      alert("Saved with ID: " + docRef.id);
-      // location.reload();
+      alert("Saved with ID: "+docRef.id);
     })
     .catch(function(err){
-      alert("Error saving: " + err);
+      alert("Error saving: "+err);
     });
 }
