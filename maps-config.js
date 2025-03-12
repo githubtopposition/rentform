@@ -7,7 +7,7 @@ export function initAutocompleteFor(inputEl) {
     autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace();
       console.log("Selected place =>", place);
-      // Если хотите распарсить city/state
+      // Можно убрать поля City/State, т.к. всё будет в одном
     });
   } else {
     console.warn("Google Maps not loaded or 'places' not available.");
