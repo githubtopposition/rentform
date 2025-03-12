@@ -18,26 +18,21 @@ body {
   margin: 0 auto;
   min-height: 100vh;
 }
-
 #form-column {
   flex: 1 1 60%;
   background: #fff;
   padding: 20px 20px 80px;
   position: relative;
 }
-
 #info-column {
   flex: 0 0 40%;
   background: #f2f2f2;
   border-left: 1px solid #ddd;
   padding: 20px;
 }
-
 #info-column h2 {
   margin-bottom: 16px;
 }
-
-/* Сводка Client Info */
 #clientInfoPanel {
   background: #fff;
   border: 1px solid #ccc;
@@ -46,6 +41,7 @@ body {
   min-height: 200px;
 }
 
+/* Header + progress */
 .header {
   margin-bottom: 20px;
 }
@@ -67,7 +63,7 @@ body {
   width: 0%;
 }
 
-/* Карточка question-block */
+/* question-block */
 .question-block {
   background: #fafafa;
   border-left: 4px solid #42a5f5;
@@ -75,13 +71,11 @@ body {
   border-radius: 4px;
   margin-bottom: 14px;
 }
-
 .question-block label,
 .question-block p {
   margin-bottom: 8px;
   display: block;
 }
-
 .question-block input[type="text"],
 .question-block input[type="date"],
 .question-block input[type="email"],
@@ -107,7 +101,7 @@ body {
   line-height: 1.4;
 }
 
-/* Список чекбоксов */
+/* checkbox-list */
 .checkbox-list {
   display: flex;
   flex-wrap: wrap;
@@ -120,7 +114,7 @@ body {
   gap: 4px;
 }
 
-/* Кнопки back/next */
+/* Кнопки back/next etc */
 .nav-buttons {
   position: absolute;
   bottom: 20px;
@@ -150,7 +144,7 @@ body {
   margin-bottom: 16px;
 }
 
-/* Плавающий блок Qualification */
+/* Плавающий Qualification */
 #qualificationBlock {
   position: fixed;
   bottom: 20px;
@@ -162,9 +156,8 @@ body {
   width: 240px;
   z-index: 9999;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  display: none; /* по умолчанию скрыт, показываем js-ом */
+  display: none;
 }
-
 #qualificationBlock h4 {
   margin-bottom: 8px;
 }
