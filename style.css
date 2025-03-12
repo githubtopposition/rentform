@@ -1,4 +1,100 @@
-/* ... старые стили как прежде ... */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f8f9fa;
+  color: #333;
+}
+
+/* Две колонки */
+#app-container {
+  display: flex;
+  flex-direction: row;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+#form-column {
+  flex: 1 1 60%;
+  background: #fff;
+  padding: 20px 20px 80px;
+  position: relative;
+}
+
+#info-column {
+  flex: 0 0 40%;
+  background: #f2f2f2;
+  border-left: 1px solid #ddd;
+  padding: 20px;
+}
+
+#info-column h2 {
+  margin-bottom: 16px;
+}
+
+/* Сводка Client Info */
+#clientInfoPanel {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 4px;
+  min-height: 200px;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+.header h1 {
+  text-align: center;
+  margin-bottom: 12px;
+  color: #444;
+}
+#progressBar {
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 10%;
+}
+#progressBar .progress {
+  height: 100%;
+  background: linear-gradient(90deg, #64b5f6, #42a5f5);
+  width: 0%;
+}
+
+/* Карточка question-block */
+.question-block {
+  background: #fafafa;
+  border-left: 4px solid #42a5f5;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+
+.question-block label,
+.question-block p {
+  margin-bottom: 8px;
+  display: block;
+}
+
+.question-block input[type="text"],
+.question-block input[type="date"],
+.question-block input[type="email"],
+.question-block input[type="number"],
+.question-block select,
+.question-block textarea {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  margin-bottom: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 
 .question-block .script-hint {
   background: #e8f0fe;
@@ -11,34 +107,79 @@
   line-height: 1.4;
 }
 
+/* Список чекбоксов */
 .checkbox-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 20px; /* расстояние между чекбоксами */
-  margin-top: 8px;
+  gap: 8px 24px;
+  margin-top: 6px;
 }
 .checkbox-list label {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
-/* Для плавающего блока Qualification */
+
+/* Кнопки back/next */
+.nav-buttons {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+.nav-buttons button {
+  background: #42a5f5;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  margin-left: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.nav-buttons button:hover {
+  background: #1e88e5;
+}
+
+/* alert */
+.alert {
+  background: #fdecea;
+  color: #d9534f;
+  border: 1px solid #f2b8b5;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+/* Плавающий блок Qualification */
 #qualificationBlock {
-  position: fixed; 
-  bottom: 20px; 
-  left: 20px; 
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
   background: #fff;
   border: 2px solid #ccc;
   border-radius: 6px;
   padding: 12px;
-  width: 220px;
+  width: 240px;
   z-index: 9999;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  display: none; /* по умолчанию скрыт, показываем js-ом */
 }
+
 #qualificationBlock h4 {
   margin-bottom: 8px;
 }
 #qualificationBlock select {
   width: 100%;
   margin-bottom: 8px;
+}
+#qualificationBlock button {
+  background: #42a5f5;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 4px;
+}
+#qualificationBlock button:hover {
+  background: #1e88e5;
 }
