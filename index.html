@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <title>RentForm - Multi-Step</title>
 
-  <!-- Подключаем базовые стили (ваш рабочий style.css) -->
+  <!-- Подключаем стили -->
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <div id="app">
-    <!-- Обёртка для нашей многошаговой формы -->
+    <!-- Обёртка для многошаговой формы -->
     <div id="formWrapper">
       <div class="header">
         <h1>Rent For Event</h1>
@@ -19,13 +19,13 @@
           <div class="progress"></div>
         </div>
 
-        <!-- Кнопка Admin Settings (добавлена) -->
+        <!-- Кнопка Admin Settings -->
         <button id="settingsBtn" class="adminBtn">Admin Settings</button>
       </div>
 
-      <!-- Контейнер, в котором рендерится многошаговая форма -->
+      <!-- Контейнер, в котором рендерятся шаги формы -->
       <div id="multiStepContainer">
-        <!-- В вашем form-handler.js этот блок заполняется шагами -->
+        <!-- form-handler.js будет сюда вставлять HTML шагов -->
       </div>
 
       <!-- Навигационные кнопки формы -->
@@ -38,42 +38,40 @@
     </div>
   </div>
 
-  <!-- Панель админ-настроек (по умолчанию скрыта, отображается по клику на Admin Settings) -->
+  <!-- Панель админ-настроек (скрыта по умолчанию) -->
   <div id="adminSettingsPanel" style="display:none;">
     <div class="settings-title">Custom Fields (Admin)</div>
     <div id="adminCustomFieldsList"></div>
-    <!-- Тут можно добавить другие настройки, инпуты и т.д. -->
+    <!-- Прочие админ-настройки при необходимости -->
   </div>
 
-  <!-- Ваши скрипты (по порядку) -->
+  <!-- Подключение модульных скриптов -->
   <script type="module" src="./firebase-config.js"></script>
   <script type="module" src="./maps-config.js"></script>
   <script type="module" src="./ctm-api-config.js"></script>
   <script type="module" src="./ctm-fields-sync.js"></script>
   <script type="module" src="./form-handler.js"></script>
 
-  <!-- JS-код инициализации (если он у вас был отдельно — оставьте как было) -->
-  <script>
-    // Если в form-handler.js нет автозапуска, то здесь вызываете init. 
-    // Пример:
-    /*
-    import { initFormLogic } from './form-handler.js';
+  <!-- Инициализация формы + переключалка Admin Panel -->
+  <script type="module">
+    import { initMultiStepForm } from "./form-handler.js";
+
+    // Запускаем инициализацию многошаговой формы
     document.addEventListener('DOMContentLoaded', () => {
-      initFormLogic();
+      initMultiStepForm({
+        formContainerId: "multiStepContainer",
+        prevBtnId: "backBtn",
+        nextBtnId: "nextBtn",
+        submitBtnId: "submitBtn",
+        adminBtnId: "settingsBtn"
+      });
     });
-    */
-    
-    // Либо, если внутри form-handler.js у вас уже есть событие DOMContentLoaded, 
-    // ничего дополнительно здесь писать не нужно.
-    
-    // Пример простого показа/скрытия панели админа (можно и в form-handler.js):
-    document.getElementById('settingsBtn').addEventListener('click', () => {
-      const panel = document.getElementById('adminSettingsPanel');
-      if (panel.style.display === 'none') {
-        panel.style.display = 'block';
-      } else {
-        panel.style.display = 'none';
-      }
+
+    // Переключатель отображения админ-панели
+    const settingsBtn = document.getElementById('settingsBtn');
+    const panel = document.getElementById('adminSettingsPanel');
+    settingsBtn.addEventListener('click', () => {
+      panel.style.display = (panel.style.display === 'none') ? 'block' : 'none';
     });
   </script>
 
