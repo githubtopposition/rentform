@@ -2,71 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>RentForm Script Example</title>
-  <style>
-    /* Basic page styling */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      font-size: 28px;
-      margin-bottom: 0.5em;
-    }
-
-    #formSteps {
-      border: 1px solid #ccc;
-      padding: 20px;
-      min-height: 200px;
-      margin-bottom: 1em;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.6em 1.2em;
-      margin-right: 10px;
-      border: none;
-      cursor: pointer;
-      font-size: 1em;
-      border-radius: 4px;
-    }
-
-    .btn-primary {
-      background-color: #337ab7;
-      color: #fff;
-    }
-    .btn-primary:hover {
-      background-color: #286090;
-    }
-
-    .btn-secondary {
-      background-color: #f0f0f0;
-      color: #333;
-    }
-    .btn-secondary:hover {
-      background-color: #e0e0e0;
-    }
-
-    .admin-btn {
-      background-color: #d8a33a; /* golden-ish */
-      color: #fff;
-      float: right;
-      margin-top: -36px;
-      margin-right: 2px;
-    }
-    .admin-btn:hover {
-      background-color: #b78d33;
-    }
-
-    .hidden {
-      display: none;
-    }
-  </style>
+  <title>RentForm Script - Main</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <div class="container">
@@ -76,23 +13,29 @@
     </h1>
 
     <div id="formSteps">
-      <!-- The form steps or content will be dynamically injected here -->
+      <!-- Сюда динамически вставятся шаги формы -->
       Шаги формы будут показаны тут…
     </div>
 
     <button class="btn btn-secondary" id="prevBtn">Назад</button>
     <button class="btn btn-secondary" id="nextBtn">Далее</button>
     <button class="btn btn-primary" id="submitBtn">Отправить</button>
-
   </div>
 
-  <!-- JS files -->
+  <!-- Подключение всех JS-файлов -->
+  <!-- Сначала конфиги/ключи, затем скрипты с логикой формы -->
   <script src="./ctm-api-config.js"></script>
+  <script src="./firebase-config.js"></script>
+  <script src="./google-maps-key.js"></script>
+  <script src="./maps-config.js"></script>
+  <script src="./ctm-fields-sync.js"></script>
   <script src="./form-handler.js"></script>
+
   <script>
-    // If ctmApiConfig is not set or missing the accessKey, optionally prompt user:
+    // Если в ctm-api-config.js нет заранее прописанных ключей,
+    // при необходимости можно запросить у пользователя:
     if (!window.ctmApiConfig || !window.ctmApiConfig.accessKey) {
-      const userKey = prompt("Введите ваш CTM AccessKey (или user)?");
+      const userKey = prompt("Введите ваш CTM AccessKey (или user) для ctmApiConfig:");
       if (userKey) {
         window.ctmApiConfig = window.ctmApiConfig || {};
         window.ctmApiConfig.accessKey = userKey;
@@ -100,7 +43,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Call the init function from form-handler.js
+      // Инициируем многошаговую форму (описано в form-handler.js)
       initMultiStepForm({
         formContainerId: 'formSteps',
         prevBtnId: 'prevBtn',
