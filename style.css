@@ -10,7 +10,7 @@ body {
   color: #333;
 }
 
-/* Две колонки */
+/* Две колонки (если нужно, пока не используем — убрано из index.html) */
 #app-container {
   display: flex;
   flex-direction: row;
@@ -89,7 +89,6 @@ body {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-
 .question-block .script-hint {
   background: #e8f0fe;
   color: #333;
@@ -179,9 +178,9 @@ body {
 
 /* Кнопка Admin Settings */
 .adminBtn {
-  float: right;            /* чтобы кнопка уехала в правый верх */
+  float: right;
   margin-right: 20px;
-  margin-top: -30px;       /* подстройте под свой заголовок */
+  margin-top: -30px;
   border-radius: 4px;
   background: #f6c234;
   color: #333;
