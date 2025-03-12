@@ -6,18 +6,17 @@
       "name": "contact_name"
     },
     {
+      "type": "text",
+      "label": "Phone Number",
+      "name": "phone_number"
+    },
+    {
       "type": "select",
       "label": "Call Type",
       "name": "call_type_ctm",
       "options": [
-        "New Project",
-        "Existing Project",
-        "Vendor",
-        "Technician",
-        "Complaint",
-        "Promotion/Sales/Spam Calls",
-        "HR Inquiry",
-        "Unknown"
+        "New Project","Existing Project","Vendor","Technician",
+        "Complaint","Promotion/Sales/Spam Calls","HR Inquiry","Unknown"
       ]
     },
     {
@@ -25,8 +24,8 @@
       "label": "Which Company Location?",
       "name": "company_location_ctm",
       "options": [
-        "Orlando","San Francisco","Las Vegas","Atlanta","New York",
-        "Los Angeles","Houston","Phoenix","Chicago","Miami"
+        "Orlando","San Francisco","Las Vegas","Atlanta",
+        "New York","Los Angeles","Houston","Phoenix","Chicago","Miami"
       ]
     },
     {
@@ -73,18 +72,8 @@
     },
     {
       "type": "text",
-      "label": "Event Street (Google Maps)",
-      "name": "event_street_ctm"
-    },
-    {
-      "type": "text",
-      "label": "City",
-      "name": "event_city_ctm"
-    },
-    {
-      "type": "text",
-      "label": "State",
-      "name": "event_state"
+      "label": "Event Location (Google Maps)",
+      "name": "event_location_ctm"
     },
     {
       "type": "select",
@@ -102,7 +91,6 @@
       "name": "rental_order_number_ctm"
     }
   ],
-
   "step2_vendor": [
     {
       "type": "text",
@@ -110,7 +98,6 @@
       "name": "vendor_company_name_ctm"
     }
   ],
-
   "step2_technician": [
     {
       "type": "text",
@@ -118,7 +105,6 @@
       "name": "tech_order_number"
     }
   ],
-
   "step2_complaint": [
     {
       "type": "text",
@@ -126,7 +112,6 @@
       "name": "complaint_order_number"
     }
   ],
-
   "step2_hr": [
     {
       "type": "text",
@@ -134,7 +119,6 @@
       "name": "hr_candidate_name"
     }
   ],
-
   "step2_unknown": [
     {
       "type": "textarea",
@@ -142,7 +126,6 @@
       "name": "unknown_notes"
     }
   ],
-
   "step3_outbound": [
     {
       "type": "textarea",
@@ -150,7 +133,6 @@
       "name": "outbound_moreinfo"
     }
   ],
-
   "step2p5_salesAdvanced": [
     {
       "type": "select",
@@ -159,7 +141,6 @@
       "options": ["Under $2k","$2k-$5k","$5k-$10k","$10k-$20k","$20k+"]
     }
   ],
-
   "stepPreview": [
     {
       "type": "text",
@@ -167,7 +148,6 @@
       "name": "_summary_"
     }
   ],
-
   "stepFinal": [
     {
       "type": "select",
