@@ -1,11 +1,10 @@
-// form-handler.js
+/* form-handler.js */
 
 /**
  * Initializes the multi-step form logic
- * @param {Object} options - various IDs from index.html
+ * @param {Object} options - IDs из index.html
  */
-function initMultiStepForm(options) {
-  // Grabbing DOM references
+export function initMultiStepForm(options) {
   const formContainer = document.getElementById(options.formContainerId);
   const prevBtn = document.getElementById(options.prevBtnId);
   const nextBtn = document.getElementById(options.nextBtnId);
@@ -14,7 +13,7 @@ function initMultiStepForm(options) {
 
   let currentStep = 0;
 
-  // Example steps data
+  // Пример данных шагов (заглушка)
   const stepsData = [
     {
       html: `
@@ -36,7 +35,6 @@ function initMultiStepForm(options) {
     }
   ];
 
-  // Renders current step
   function renderStep() {
     formContainer.innerHTML = stepsData[currentStep].html;
     prevBtn.style.display = (currentStep === 0) ? 'none' : 'inline-block';
@@ -59,42 +57,27 @@ function initMultiStepForm(options) {
   }
 
   function handleSubmit() {
-    // Collect data
-    const fullName = document.getElementById('fullName') ? document.getElementById('fullName').value : '';
-    const email = document.getElementById('email') ? document.getElementById('email').value : '';
+    const fullName = document.getElementById('fullName')?.value || '';
+    const email = document.getElementById('email')?.value || '';
 
-    // Example - just alert or you can do an API call
     alert(`Form submitted!\nName: ${fullName}\nEmail: ${email}`);
-
-    // Here you could do something with CTM API using ctmApiConfig:
-    // e.g. call an endpoint or store custom_fields, etc.
-    // (Pseudo-code):
-    // fetch(`https://api.calltrackingmetrics.com/api/v1/accounts/ACCOUNT_ID/calls.json`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Authorization': 'Basic ' + btoa(ctmApiConfig.accessKey + ':' + ctmApiConfig.secretKey),
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ ... })
-    // });
+    // Здесь можно сделать API-вызовы (CTM / Firebase / и т.д.)
   }
 
   function handleAdminSettings() {
-    // Basic example: open a prompt or show a hidden div, etc.
-    alert("Admin Settings clicked! Здесь откроется окно для настроек");
+    // Пример: открыть prompt или что-то ещё
+    alert("Admin Settings clicked! Окно для настроек");
   }
 
-  // Attach event listeners
+  // Привязываем слушатели
   nextBtn.addEventListener('click', nextStep);
   prevBtn.addEventListener('click', prevStep);
   submitBtn.addEventListener('click', handleSubmit);
-  adminBtn.addEventListener('click', handleAdminSettings);
 
-  // Initialize first step
+  // Если хотите, чтобы клик на Admin Settings что-то делал внутри формы —
+  // раскомментируйте:
+  // adminBtn.addEventListener('click', handleAdminSettings);
+
+  // Отрисовываем первый шаг
   renderStep();
-}
-
-/** Export to global scope (if needed) */
-if (typeof window !== 'undefined') {
-  window.initMultiStepForm = initMultiStepForm;
 }
