@@ -6,28 +6,62 @@
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <div id="app">
-    <div id="formWrapper">
-      <div class="header">
-        <h1>Rent For Event</h1>
-        <div id="progressBar">
-          <div class="progress"></div>
-        </div>
-      </div>
 
-      <div id="multiStepContainer"></div>
-
-      <div class="nav-buttons">
-        <button id="backBtn" style="display:none;">&lt; Back</button>
-        <button id="nextBtn" style="display:none;">Next &gt;</button>
-        <button id="previewBtn" style="display:none;">Preview</button>
-        <button id="submitBtn" style="display:none;">Submit</button>
+<div id="app-container">
+  <!-- Левая часть - форма -->
+  <div id="form-column">
+    <div class="header">
+      <h1>Rent For Event</h1>
+      <div id="progressBar">
+        <div class="progress"></div>
       </div>
+    </div>
+
+    <!-- Контейнер под вопросы -->
+    <div id="multiStepContainer"></div>
+
+    <!-- Кнопки "Back", "Next", "Preview", "Submit" -->
+    <div class="nav-buttons">
+      <button id="backBtn" style="display:none;">&lt; Back</button>
+      <button id="nextBtn" style="display:none;">Next &gt;</button>
+      <button id="previewBtn" style="display:none;">Preview</button>
+      <button id="submitBtn" style="display:none;">Submit</button>
     </div>
   </div>
 
-  <script type="module" src="./firebase-config.js"></script>
-  <script type="module" src="./maps-config.js"></script>
-  <script type="module" src="./form-handler.js"></script>
+  <!-- Правая часть - панель Client Info -->
+  <div id="info-column">
+    <h2>Client Info</h2>
+    <div id="clientInfoPanel">
+      <!-- Здесь будем показывать уже введенные данные -->
+    </div>
+  </div>
+</div>
+
+<!-- Плавающий блок квалификации -->
+<div id="qualificationBlock">
+  <h4>Qualify This Lead</h4>
+  <select name="qualification_ctm">
+    <option value="">-- select --</option>
+    <option value="Qualified">Qualified</option>
+    <option value="Not Qualified">Not Qualified</option>
+  </select>
+  <button id="qualifyNowBtn">Set Now</button>
+</div>
+
+<!-- 1) Подключаем ваш Google Maps ключ динамически из google-maps-key.js -->
+<script type="module">
+  import { GOOGLE_MAPS_KEY } from "./google-maps-key.js";
+
+  const script = document.createElement("script");
+  script.src = "https://maps.googleapis.com/maps/api/js?key=" + GOOGLE_MAPS_KEY + "&libraries=places";
+  document.head.appendChild(script);
+</script>
+
+<!-- 2) Подключаем firebase-config, maps-config, form-handler -->
+<script type="module" src="./firebase-config.js"></script>
+<script type="module" src="./maps-config.js"></script>
+<script type="module" src="./form-handler.js"></script>
+
 </body>
 </html>
