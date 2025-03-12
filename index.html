@@ -1,124 +1,125 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Мульти-форма с настройками</title>
-
-  <!-- Базовые стили -->
+  <title>RentForm Script Example</title>
   <style>
+    /* Basic styling */
     body {
-      margin: 0; 
-      padding: 0;
-      font-family: sans-serif;
-      background: #f9f9f9;
-    }
-    h1, h2 {
-      margin: 16px 0;
+      font-family: Arial, sans-serif;
+      margin: 20px;
     }
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 0.5em;
+    }
+
+    #formSteps {
+      border: 1px solid #ccc;
       padding: 20px;
-      background: #fff;
+      min-height: 200px;
+      margin-bottom: 1em;
     }
 
-    /* Кнопки навигации */
-    .btn-nav {
-      margin-top: 20px;
-    }
-    .btn-nav button {
-      margin-right: 8px;
-      padding: 10px 14px;
+    .btn {
+      display: inline-block;
+      padding: 0.6em 1.2em;
+      margin-right: 10px;
+      border: none;
       cursor: pointer;
+      font-size: 1em;
       border-radius: 4px;
-      border: 1px solid #ccc;
-      background: #efefef;
-      font-size: 14px;
-    }
-    .btn-nav button:hover {
-      background: #ddd;
     }
 
-    /* Кнопка Admin Settings */
-    #settingsBtn {
-      float: right;
-      margin-top: -40px; /* пример, чтобы кнопка была вверху справа */
-      border-radius: 4px;
-      background: #f6c234;
+    .btn-primary {
+      background-color: #337ab7;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background-color: #286090;
+    }
+
+    .btn-secondary {
+      background-color: #f0f0f0;
       color: #333;
-      border: 1px solid #ccc;
-      padding: 8px 12px;
-      cursor: pointer;
     }
-    #settingsBtn:hover {
-      background: #f2b720;
+    .btn-secondary:hover {
+      background-color: #e0e0e0;
     }
 
-    /* Панель настроек админа */
-    #adminSettingsPanel {
-      display: none; /* скрыто по умолчанию */
-      margin-top: 20px;
-      padding: 16px;
-      border: 1px solid #666;
-      background: #fafafa;
+    .admin-btn {
+      background-color: #d8a33a; /* golden-ish */
+      color: #fff;
+      float: right;
+      margin-top: -36px;
+      margin-right: 2px;
     }
-    #adminSettingsPanel.visible {
-      display: block; /* класс .visible будем ставить из JS */
-    }
-
-    .settings-title {
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-    #adminCustomFieldsList div {
-      padding: 4px 0;
+    .admin-btn:hover {
+      background-color: #b78d33;
     }
 
-    /* Пример для многошаговой формы */
-    #multiStepContainer {
-      padding: 10px;
-      border: 1px solid #ccc;
-      background: #fcfcfc;
-      margin-bottom: 10px;
-      min-height: 200px; /* чтобы блок был фиксированной высоты */
+    .hidden {
+      display: none;
     }
-    /* И т.д. - стилизуйте шаги, поля, и т.п. */
   </style>
 </head>
-
 <body>
   <div class="container">
-    <h1>Пример многошаговой формы</h1>
 
-    <!-- Кнопка Admin Settings -->
-    <button id="settingsBtn">Admin Settings</button>
+    <h1>Пример многошаговой формы 
+      <button class="btn admin-btn" id="adminSettingsBtn">Admin Settings</button>
+    </h1>
 
-    <!-- Многошаговая форма -->
-    <div id="multiStepContainer">
-      <!-- Здесь рендерятся шаги (JS их подставляет) -->
-      <p>Шаги формы будут показаны тут...</p>
+    <div id="formSteps">
+      <!-- The form steps or content will be dynamically injected here -->
+      Шаги формы будут показаны тут…
     </div>
 
-    <!-- Навигационные кнопки (Назад / Далее / Отправить) -->
-    <div class="btn-nav">
-      <button id="backBtn">Назад</button>
-      <button id="nextBtn">Далее</button>
-      <button id="submitBtn">Отправить</button>
-    </div>
+    <button class="btn btn-secondary" id="prevBtn">Назад</button>
+    <button class="btn btn-secondary" id="nextBtn">Далее</button>
+    <button class="btn btn-primary" id="submitBtn">Отправить</button>
 
-    <!-- Панель настроек админа (скрывается / показывается при клике) -->
-    <div id="adminSettingsPanel">
-      <div class="settings-title">Настройки Custom Fields (Admin)</div>
-      <div id="adminCustomFieldsList"></div>
-      <!-- Можете добавить прочие настройки, input'ы и пр. -->
-    </div>
   </div>
 
-  <!-- Подключаем скрипты (модули) -->
-  <script type="module" src="./firebase-config.js"></script>
-  <script type="module" src="./ctm-api-config.js"></script>
-  <script type="module" src="./ctm-fields-sync.js"></script>
-  <script type="module" src="./form-handler.js"></script>
-  
+  <!-- Scripts -->
+  <script src="./ctm-api-config.js"></script>
+  <script src="./form-handler.js"></script>
+  <script>
+    // Example main script initialization
+
+    // Make sure we have an API Access Key if not stored
+    // If ctmApiConfig has them, we won't prompt again
+    if (!window.ctmApiConfig || !window.ctmApiConfig.accessKey) {
+      // We do a prompt only if absolutely needed
+      const userKey = prompt("Введите ваш CTM AccessKey (или user)?");
+      if (userKey) {
+        // store or use the userKey...
+        window.ctmApiConfig = window.ctmApiConfig || {};
+        window.ctmApiConfig.accessKey = userKey;
+      }
+    }
+
+    // Initialize form
+    // We assume form-handler.js exports initFormSteps or something similar
+    // In form-handler.js you might have a function like: initMultiStepForm(options)
+    //  which handles the "prevBtn", "nextBtn", etc.
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // English comment: Let's call an initialization from form-handler
+      // with references to the DOM elements we have.
+      initMultiStepForm({
+        formContainerId: 'formSteps',
+        prevBtnId: 'prevBtn',
+        nextBtnId: 'nextBtn',
+        submitBtnId: 'submitBtn',
+        adminBtnId: 'adminSettingsBtn'
+      });
+    });
+  </script>
 </body>
 </html>
