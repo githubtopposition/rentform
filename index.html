@@ -2,56 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>RentForm Script - Main</title>
+  <title>RentForm - Multi-Step</title>
+
+  <!-- Подключаем базовые стили (ваш рабочий style.css) -->
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <div class="container">
+  <div id="app">
+    <!-- Обёртка для нашей многошаговой формы -->
+    <div id="formWrapper">
+      <div class="header">
+        <h1>Rent For Event</h1>
 
-    <h1>Пример многошаговой формы
-      <button class="btn admin-btn" id="adminSettingsBtn">Admin Settings</button>
-    </h1>
+        <!-- Прогресс-бар -->
+        <div id="progressBar">
+          <div class="progress"></div>
+        </div>
 
-    <div id="formSteps">
-      <!-- Сюда динамически вставятся шаги формы -->
-      Шаги формы будут показаны тут…
+        <!-- Кнопка Admin Settings (добавлена) -->
+        <button id="settingsBtn" class="adminBtn">Admin Settings</button>
+      </div>
+
+      <!-- Контейнер, в котором рендерится многошаговая форма -->
+      <div id="multiStepContainer">
+        <!-- В вашем form-handler.js этот блок заполняется шагами -->
+      </div>
+
+      <!-- Навигационные кнопки формы -->
+      <div class="nav-buttons">
+        <button id="backBtn" style="display:none;">&lt; Back</button>
+        <button id="nextBtn" style="display:none;">Next &gt;</button>
+        <button id="previewBtn" style="display:none;">Preview</button>
+        <button id="submitBtn" style="display:none;">Submit</button>
+      </div>
     </div>
-
-    <button class="btn btn-secondary" id="prevBtn">Назад</button>
-    <button class="btn btn-secondary" id="nextBtn">Далее</button>
-    <button class="btn btn-primary" id="submitBtn">Отправить</button>
   </div>
 
-  <!-- Подключение всех JS-файлов -->
-  <!-- Сначала конфиги/ключи, затем скрипты с логикой формы -->
-  <script src="./ctm-api-config.js"></script>
-  <script src="./firebase-config.js"></script>
-  <script src="./google-maps-key.js"></script>
-  <script src="./maps-config.js"></script>
-  <script src="./ctm-fields-sync.js"></script>
-  <script src="./form-handler.js"></script>
+  <!-- Панель админ-настроек (по умолчанию скрыта, отображается по клику на Admin Settings) -->
+  <div id="adminSettingsPanel" style="display:none;">
+    <div class="settings-title">Custom Fields (Admin)</div>
+    <div id="adminCustomFieldsList"></div>
+    <!-- Тут можно добавить другие настройки, инпуты и т.д. -->
+  </div>
 
+  <!-- Ваши скрипты (по порядку) -->
+  <script type="module" src="./firebase-config.js"></script>
+  <script type="module" src="./maps-config.js"></script>
+  <script type="module" src="./ctm-api-config.js"></script>
+  <script type="module" src="./ctm-fields-sync.js"></script>
+  <script type="module" src="./form-handler.js"></script>
+
+  <!-- JS-код инициализации (если он у вас был отдельно — оставьте как было) -->
   <script>
-    // Если в ctm-api-config.js нет заранее прописанных ключей,
-    // при необходимости можно запросить у пользователя:
-    if (!window.ctmApiConfig || !window.ctmApiConfig.accessKey) {
-      const userKey = prompt("Введите ваш CTM AccessKey (или user) для ctmApiConfig:");
-      if (userKey) {
-        window.ctmApiConfig = window.ctmApiConfig || {};
-        window.ctmApiConfig.accessKey = userKey;
-      }
-    }
-
+    // Если в form-handler.js нет автозапуска, то здесь вызываете init. 
+    // Пример:
+    /*
+    import { initFormLogic } from './form-handler.js';
     document.addEventListener('DOMContentLoaded', () => {
-      // Инициируем многошаговую форму (описано в form-handler.js)
-      initMultiStepForm({
-        formContainerId: 'formSteps',
-        prevBtnId: 'prevBtn',
-        nextBtnId: 'nextBtn',
-        submitBtnId: 'submitBtn',
-        adminBtnId: 'adminSettingsBtn'
-      });
+      initFormLogic();
+    });
+    */
+    
+    // Либо, если внутри form-handler.js у вас уже есть событие DOMContentLoaded, 
+    // ничего дополнительно здесь писать не нужно.
+    
+    // Пример простого показа/скрытия панели админа (можно и в form-handler.js):
+    document.getElementById('settingsBtn').addEventListener('click', () => {
+      const panel = document.getElementById('adminSettingsPanel');
+      if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+      } else {
+        panel.style.display = 'none';
+      }
     });
   </script>
+
 </body>
 </html>
