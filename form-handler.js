@@ -9,8 +9,8 @@ const previewBtn = document.getElementById("previewBtn");
 const submitBtn = document.getElementById("submitBtn");
 const progressBarEl = document.querySelector("#progressBar .progress");
 
-let questionsData = null;   
-let servicesIndex = null;   
+let questionsData = null;
+let servicesIndex = null;
 let step = 1;
 let answers = {};
 const totalSteps = 5;
@@ -75,7 +75,7 @@ function renderStep(stepIndex) {
       }
       switch(ctype) {
         case "New Project":
-          // step2_newProject => event date, address, times
+          // Показать step2_newProject (все вопросы)
           renderNewProjectBase();
           return;
         case "Existing Project":
@@ -132,16 +132,15 @@ function renderStep(stepIndex) {
     renderQuestionArray(questionsData.stepFinal, multiStepContainer);
   }
 
-  // init Google Maps for "event_street_ctm" if present
   var streetInput = multiStepContainer.querySelector("[name='event_street_ctm']");
   if (streetInput) {
     initAutocompleteFor(streetInput);
   }
 }
 
-// RENDER step2_newProject
+// Step2_newProject
 function renderNewProjectBase(){
-  // event date, address, times, delivery setup
+  // Покажем вопросы (даты, адрес, indoor/outdoor и т.д.)
   renderQuestionArray(questionsData.step2_newProject, multiStepContainer);
 
   var btn = document.createElement("button");
@@ -154,7 +153,7 @@ function renderNewProjectBase(){
   multiStepContainer.appendChild(btn);
 }
 
-// Step2 -> choose services
+// Выбор сервисов
 function renderNewProjectServiceChoice(){
   multiStepContainer.innerHTML = 
     "<h3>New Project - Services</h3>" +
@@ -180,7 +179,7 @@ function renderNewProjectServiceChoice(){
   });
 }
 
-// Render multiple chosen services
+// Рендер выбранных сервисов
 async function renderServicesQuestions(){
   multiStepContainer.innerHTML = 
     "<h3>Service Details</h3>" +
@@ -188,10 +187,10 @@ async function renderServicesQuestions(){
     "<button id='goToStep3Btn'>Next (Logistics / Step3)</button>";
   var svcParent = document.getElementById("servicesContainer");
 
-  for (var i=0; i<chosenServices.length; i++){
+  for(var i=0; i<chosenServices.length; i++){
     var svc = chosenServices[i];
     var url = servicesIndex[svc];
-    if (!url){
+    if(!url){
       var p = document.createElement("p");
       p.style.color = "red";
       p.textContent = "No JSON for service: " + svc;
@@ -208,7 +207,7 @@ async function renderServicesQuestions(){
       arr.forEach(function(q){
         renderServiceQ(q, svcParent);
       });
-    } catch(e) {
+    } catch(e){
       console.error("Error loading", url, e);
       var p2 = document.createElement("p");
       p2.style.color="red";
@@ -220,22 +219,22 @@ async function renderServicesQuestions(){
   var goBtn = document.getElementById("goToStep3Btn");
   goBtn.addEventListener("click", function(){
     collectAnswers();
-    step=3; // go preview or advanced, your choice
+    step=3;
     renderStep(step);
   });
 }
 
-// Render single question from service JSON (liveBand.json etc.)
+// Рендер single question из сервисных JSON
 function renderServiceQ(q, parentEl){
   var block = document.createElement("div");
   block.className = "question-block";
 
-  if (q.type==="label"){
+  if(q.type==="label"){
     var p = document.createElement("p");
     p.textContent = (q.id||"") + ": " + q.text;
     block.appendChild(p);
   }
-  else if (["text","date","email","number"].indexOf(q.type)>=0){
+  else if(["text","date","email","number"].indexOf(q.type)>=0){
     var lbl = document.createElement("label");
     lbl.textContent = (q.id||"") + " " + (q.label||"");
     block.appendChild(lbl);
@@ -244,7 +243,7 @@ function renderServiceQ(q, parentEl){
     inp.name = q.name;
     block.appendChild(inp);
   }
-  else if (q.type==="checkbox"){
+  else if(q.type==="checkbox"){
     var p2 = document.createElement("p");
     p2.textContent = (q.id||"") + ": " + (q.label||"");
     block.appendChild(p2);
@@ -261,7 +260,7 @@ function renderServiceQ(q, parentEl){
       block.appendChild(document.createElement("br"));
     });
   }
-  else if (q.type==="checkbox-multi"){
+  else if(q.type==="checkbox-multi"){
     var p3 = document.createElement("p");
     p3.textContent = (q.id||"") + ": " + (q.label||"");
     block.appendChild(p3);
@@ -278,14 +277,14 @@ function renderServiceQ(q, parentEl){
       block.appendChild(document.createElement("br"));
     });
   }
-  else if (q.type==="select"){
+  else if(q.type==="select"){
     var p4 = document.createElement("p");
     p4.textContent = (q.id||"") + ": " + (q.label||"");
     block.appendChild(p4);
 
     var sel = document.createElement("select");
     sel.name = q.name;
-    if (!q.multi){
+    if(!q.multi){
       var emptyOp = document.createElement("option");
       emptyOp.value="";
       emptyOp.textContent="-- select --";
@@ -293,14 +292,14 @@ function renderServiceQ(q, parentEl){
     }
     q.options.forEach(function(opt){
       var oEl = document.createElement("option");
-      oEl.value = opt;
-      oEl.textContent = opt;
+      oEl.value=opt;
+      oEl.textContent=opt;
       sel.appendChild(oEl);
     });
     block.appendChild(sel);
   }
-  else if (q.type==="conditional"){
-    if (q.blocks){
+  else if(q.type==="conditional"){
+    if(q.blocks){
       q.blocks.forEach(function(subQ){
         renderServiceQ(subQ, block);
       });
@@ -316,20 +315,19 @@ function renderServiceQ(q, parentEl){
   parentEl.appendChild(block);
 }
 
-// ----- RENDER standard inbound/outbound questions from questions.json -----
+// Рендер inbound/outbound questions
 function renderQuestionArray(arr, parentEl){
   arr.forEach(function(q){
     var block = document.createElement("div");
     block.className = "question-block";
 
-    if (q.label){
+    if(q.label){
       var lab = document.createElement("label");
       lab.textContent = q.label;
       block.appendChild(lab);
     }
 
-    // If preview
-    if (q.name==="_summary_"){
+    if(q.name==="_summary_"){
       block.innerHTML += generatePreviewHtml();
       parentEl.appendChild(block);
       return;
@@ -354,7 +352,7 @@ function renderQuestionArray(arr, parentEl){
       case "select":
         el = document.createElement("select");
         el.name = q.name;
-        if (!q.multi){
+        if(!q.multi){
           var optEmpty = document.createElement("option");
           optEmpty.value="";
           optEmpty.textContent="-- select --";
@@ -378,12 +376,12 @@ function renderQuestionArray(arr, parentEl){
         block.innerHTML += "<p style='color:red;'>Unsupported type: " + q.type + "</p>";
     }
 
-    if (el) block.appendChild(el);
+    if(el) block.appendChild(el);
     parentEl.appendChild(block);
   });
 }
 
-// ---------- COLLECT / VALIDATE ----------
+// collect / validate
 function collectAnswers(){
   var els = multiStepContainer.querySelectorAll("input, select, textarea");
   els.forEach(function(el){
