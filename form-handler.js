@@ -9,142 +9,170 @@ const previewBtn = document.getElementById("previewBtn");
 const submitBtn = document.getElementById("submitBtn");
 const progressBarEl = document.querySelector("#progressBar .progress");
 
+// We'll create a floating qualification block:
+let qualificationDiv = null; // later
+
 let questionsData = null;
 let servicesIndex = null;
 let step = 1;
 let answers = {};
 const totalSteps = 5;
 
-// 1) load questions + services index
+document.addEventListener("DOMContentLoaded", function(){
+  // create floating block
+  qualificationDiv = document.createElement("div");
+  qualificationDiv.id = "qualificationBlock";
+  qualificationDiv.innerHTML = `
+    <h4>Qualify This Lead</h4>
+    <select name="qualification_ctm">
+      <option value="">-- select --</option>
+      <option value="Qualified">Qualified</option>
+      <option value="Not Qualified">Not Qualified</option>
+    </select>
+    <button id="qualifyNowBtn">Set Now</button>
+  `;
+  qualificationDiv.style.display = "none"; // hidden by default
+  document.body.appendChild(qualificationDiv);
+
+  const qualifyNowBtn = document.getElementById("qualifyNowBtn");
+  qualifyNowBtn.addEventListener("click", function(){
+    const sel = qualificationDiv.querySelector("select[name='qualification_ctm']");
+    const val = sel.value;
+    if(!val){
+      alert("Please choose Qualified or Not Qualified");
+      return;
+    }
+    answers["qualification_ctm"] = val;
+    alert("Lead is now: " + val);
+  });
+});
+
+// load JSON
 fetch("./questions.json")
-  .then(function(r){ return r.json(); })
-  .then(function(data){
+  .then(r=>r.json())
+  .then(data => {
     questionsData = data;
-    answers.flow_type = "Inbound";
+    answers.flow_type = "Inbound"; // default
     return fetch("./data/services-index.json");
   })
-  .then(function(r){ return r.json(); })
-  .then(function(idx){
+  .then(r=>r.json())
+  .then(idx => {
     servicesIndex = idx;
     console.log("Loaded servicesIndex:", servicesIndex);
     renderStep(step);
   })
-  .catch(function(err){
-    console.error("Error loading JSON:", err);
-    multiStepContainer.innerHTML = "<p class='alert'>Failed to load JSON</p>";
+  .catch(err => {
+    console.error("Error:", err);
+    multiStepContainer.innerHTML="<p class='alert'>Failed to load JSON</p>";
   });
 
 function renderStep(stepIndex){
-  multiStepContainer.innerHTML = "";
-  backBtn.style.display    = (stepIndex>1) ? "inline-block":"none";
-  nextBtn.style.display    = (stepIndex<3) ? "inline-block":"none";
-  previewBtn.style.display = (stepIndex===3) ? "inline-block":"none";
-  submitBtn.style.display  = (stepIndex===4) ? "inline-block":"none";
+  multiStepContainer.innerHTML="";
+  backBtn.style.display=(stepIndex>1)?"inline-block":"none";
+  nextBtn.style.display=(stepIndex<3)?"inline-block":"none";
+  previewBtn.style.display=(stepIndex===3)?"inline-block":"none";
+  submitBtn.style.display=(stepIndex===4)?"inline-block":"none";
 
   updateProgress(stepIndex);
 
+  // decide if we show the floating qualification block
+  // let's say we show it on steps >=2 if call_type=New Project
+  let showQual = false;
+  if(stepIndex>=2 && answers.call_type_ctm==="New Project"){
+    showQual=true;
+  }
+  qualificationDiv.style.display = showQual ? "block" : "none";
+
   if(stepIndex===1){
-    // Step1 inbound/outbound
     if(answers.flow_type==="Inbound"){
       renderQuestionArray(questionsData.step1_inbound, multiStepContainer);
-
-      var switchBtn = document.createElement("button");
-      switchBtn.textContent = "Switch to Outbound?";
-      switchBtn.style.marginTop = "20px";
-      switchBtn.onclick = function(){
-        answers.flow_type="Outbound";
-        renderStep(1);
-      };
+      let switchBtn = document.createElement("button");
+      switchBtn.textContent="Switch to Outbound?";
+      switchBtn.style.marginTop="20px";
+      switchBtn.onclick=()=>{ answers.flow_type="Outbound"; renderStep(1); };
       multiStepContainer.appendChild(switchBtn);
-
     } else {
       renderQuestionArray(questionsData.step1_outbound, multiStepContainer);
     }
-
-  } else if(stepIndex===2){
-    // Step2 inbound => depends on call_type
+  }
+  else if(stepIndex===2){
     if(answers.flow_type==="Inbound"){
-      var ctype = answers.call_type_ctm || "";
+      let ctype=answers.call_type_ctm||"";
       if(!ctype){
-        multiStepContainer.innerHTML="<div class='alert'>Please select call type on Step1</div>";
+        multiStepContainer.innerHTML="<div class='alert'>Select call_type in step1</div>";
         return;
       }
       if(ctype==="New Project"){
-        // show event info + chosen services
         renderNewProjectAll();
         return;
-      } else if(ctype==="Existing Project"){
+      }
+      else if(ctype==="Existing Project"){
         renderQuestionArray(questionsData.step2_existing, multiStepContainer);
-      } else if(ctype==="Vendor"){
+      }
+      else if(ctype==="Vendor"){
         renderQuestionArray(questionsData.step2_vendor, multiStepContainer);
-      } else if(ctype==="Technician"){
+      }
+      else if(ctype==="Technician"){
         renderQuestionArray(questionsData.step2_technician, multiStepContainer);
-      } else if(ctype==="Complaint"){
+      }
+      else if(ctype==="Complaint"){
         renderQuestionArray(questionsData.step2_complaint, multiStepContainer);
-      } else if(ctype==="Promotion/Sales/Spam Calls"){
-        multiStepContainer.innerHTML="<div class='alert'>Marked as spam or promotion. No more details needed.</div>";
+      }
+      else if(ctype==="Promotion/Sales/Spam Calls"){
+        multiStepContainer.innerHTML="<div class='alert'>Marked as spam/promo. No further questions.</div>";
         return;
-      } else if(ctype==="HR Inquiry"){
+      }
+      else if(ctype==="HR Inquiry"){
         renderQuestionArray(questionsData.step2_hr, multiStepContainer);
-      } else if(ctype==="Unknown"){
+      }
+      else if(ctype==="Unknown"){
         renderQuestionArray(questionsData.step2_unknown, multiStepContainer);
-      } else {
+      }
+      else {
         multiStepContainer.innerHTML="<p>No match for call type</p>";
         return;
       }
-
     } else {
-      // Outbound => step3
+      // outbound => step3
       renderQuestionArray(questionsData.step3_outbound, multiStepContainer);
     }
 
-    // optional "Qualify Now" 
-    var qBtn = document.createElement("button");
-    qBtn.textContent = "Qualify Now";
-    qBtn.style.marginTop="20px";
-    qBtn.onclick=function(){
-      answers["qualification_ctm"]="Qualified";
-      alert("Marked as Qualified!");
-    };
-    multiStepContainer.appendChild(qBtn);
-
-  } else if(stepIndex===25){
+  }
+  else if(stepIndex===25){
     // advanced
-    renderQuestionArray(questionsData.step2p5_salesAdvanced||[], multiStepContainer);
-
-  } else if(stepIndex===3){
+    renderQuestionArray(questionsData.step2p5_salesAdvanced || [], multiStepContainer);
+  }
+  else if(stepIndex===3){
     renderQuestionArray(questionsData.stepPreview, multiStepContainer);
-
-  } else if(stepIndex===4){
+  }
+  else if(stepIndex===4){
     renderQuestionArray(questionsData.stepFinal, multiStepContainer);
   }
 
-  var streetInput = multiStepContainer.querySelector("[name='event_street_ctm']");
+  // Google Autocomplete
+  let streetInput=multiStepContainer.querySelector("[name='event_street_ctm']");
   if(streetInput){
     initAutocompleteFor(streetInput);
   }
 }
 
-// Step2 new project => event info + services
+// Step2 newProject => event info + services
 function renderNewProjectAll(){
-  // first: event info
+  // Event info
   renderQuestionArray(questionsData.step2_newProject, multiStepContainer);
 
-  // then load each chosen service
-  var chosen = answers.requested_services_ctm || [];
-  if(!Array.isArray(chosen)){
-    chosen=[]; // just in case
-  }
+  // Then load each chosen service
+  let chosen = answers.requested_services_ctm || [];
+  if(!Array.isArray(chosen)) chosen=[];
 
-  var svcWrap = document.createElement("div");
+  let svcWrap = document.createElement("div");
   svcWrap.innerHTML="<h3>Chosen Services</h3>";
   multiStepContainer.appendChild(svcWrap);
 
-  chosen.forEach(function(opt){
-    // map "1:Stage" -> "stageRental" etc.
-    var key = mapServiceKey(opt);
+  chosen.forEach(opt=>{
+    let key=mapServiceKey(opt);
     if(!key){
-      var p = document.createElement("p");
+      let p=document.createElement("p");
       p.style.color="red";
       p.textContent="No serviceIndex for: "+opt;
       svcWrap.appendChild(p);
@@ -153,58 +181,58 @@ function renderNewProjectAll(){
     loadServiceJson(key, svcWrap);
   });
 
-  var nextBtn2 = document.createElement("button");
+  let nextBtn2=document.createElement("button");
   nextBtn2.textContent="Done with Step2 => go Next";
   nextBtn2.style.marginTop="20px";
   nextBtn2.onclick=function(){
     collectAnswers();
-    step=25; // or step=3 if you'd prefer skipping advanced
+    step=25; // or 3
     renderStep(step);
   };
   multiStepContainer.appendChild(nextBtn2);
 }
 
-// map "1:Stage" -> "stageRental", etc.
 function mapServiceKey(opt){
-  var dict={
-    "1:Stage":"stageRental",
-    "2:Audio":"audio",
-    "3:TVs":"tvRental",
-    "4:Projections & Screens":"???",
-    "5:LED Wall":"ledScreen",
-    "6:Live Stream":"???",
-    "7:Step & Repeat":"stepRepeat",
-    "8:Lighting":"???",
-    "9:Pipe&drape":"pipeDrape",
-    "10:Karaoke":"karaoke",
-    "11:Outdoor movie":"???",
-    "12:Full event production":"???",
-    "13:Other":"???"
+  // Just rename them to match your servicesIndex keys
+  let dict={
+    "Stage":"stageRental",
+    "Audio":"audio",
+    "TVs":"tvRental",
+    "Projections & Screens":"???",
+    "LED Wall":"ledScreen",
+    "Live Stream":"???",
+    "Step & Repeat":"stepRepeat",
+    "Lighting":"???",
+    "Pipe & Drape":"pipeDrape",
+    "Karaoke":"karaoke",
+    "Outdoor Movie":"???",
+    "Full Event Production":"???",
+    "Other":"???"
   };
   return dict[opt]||null;
 }
 
 async function loadServiceJson(key, parentEl){
-  var url=servicesIndex[key];
+  let url=servicesIndex[key];
   if(!url){
-    var p1=document.createElement("p");
+    let p1=document.createElement("p");
     p1.style.color="red";
     p1.textContent="No JSON for key: "+key;
     parentEl.appendChild(p1);
     return;
   }
   try{
-    var resp=await fetch(url);
-    var arr=await resp.json();
-    var h4=document.createElement("h4");
+    let resp=await fetch(url);
+    let arr=await resp.json();
+    let h4=document.createElement("h4");
     h4.textContent="=== "+key+" ===";
     parentEl.appendChild(h4);
 
-    arr.forEach(function(q){
+    arr.forEach(q=>{
       renderServiceQ(q,parentEl);
     });
   } catch(e){
-    var p2=document.createElement("p");
+    let p2=document.createElement("p");
     p2.style.color="red";
     p2.textContent="Error loading service "+key+" => "+e;
     parentEl.appendChild(p2);
@@ -212,110 +240,127 @@ async function loadServiceJson(key, parentEl){
 }
 
 function renderServiceQ(q,parentEl){
-  var block=document.createElement("div");
+  let block=document.createElement("div");
   block.className="question-block";
 
+  // if scriptText / hint
+  if(q.scriptText){
+    let hint=document.createElement("div");
+    hint.className="script-hint";
+    hint.textContent=q.scriptText;
+    block.appendChild(hint);
+  }
+
   if(q.type==="label"){
-    var p=document.createElement("p");
+    let p=document.createElement("p");
     p.textContent=(q.id||"")+": "+q.text;
     block.appendChild(p);
   }
   else if(["text","date","email","number"].indexOf(q.type)>=0){
-    var lbl=document.createElement("label");
+    let lbl=document.createElement("label");
     lbl.textContent=(q.id||"")+" "+(q.label||"");
     block.appendChild(lbl);
-    var inp=document.createElement("input");
+    let inp=document.createElement("input");
     inp.type=q.type;
     inp.name=q.name;
     block.appendChild(inp);
   }
   else if(q.type==="checkbox"){
-    var p2=document.createElement("p");
+    let p2=document.createElement("p");
     p2.textContent=(q.id||"")+": "+(q.label||"");
     block.appendChild(p2);
+    let cList=document.createElement("div");
+    cList.className="checkbox-list";
+    block.appendChild(cList);
 
-    q.options.forEach(function(opt){
-      var l=document.createElement("label");
-      var c=document.createElement("input");
+    q.options.forEach(opt=>{
+      let l=document.createElement("label");
+      let c=document.createElement("input");
       c.type="checkbox";
       c.name=q.name;
       c.value=opt;
       l.appendChild(c);
       l.appendChild(document.createTextNode(opt));
-      block.appendChild(l);
-      block.appendChild(document.createElement("br"));
+      cList.appendChild(l);
     });
   }
   else if(q.type==="checkbox-multi"){
-    var p3=document.createElement("p");
+    let p3=document.createElement("p");
     p3.textContent=(q.id||"")+": "+(q.label||"");
     block.appendChild(p3);
+    let cList=document.createElement("div");
+    cList.className="checkbox-list";
+    block.appendChild(cList);
 
-    q.options.forEach(function(opt){
-      var l2=document.createElement("label");
-      var c2=document.createElement("input");
+    q.options.forEach(opt=>{
+      let l2=document.createElement("label");
+      let c2=document.createElement("input");
       c2.type="checkbox";
       c2.name=q.name+"[]";
       c2.value=opt;
       l2.appendChild(c2);
       l2.appendChild(document.createTextNode(opt));
-      block.appendChild(l2);
-      block.appendChild(document.createElement("br"));
+      cList.appendChild(l2);
     });
   }
   else if(q.type==="select"){
-    var p4=document.createElement("p");
+    let p4=document.createElement("p");
     p4.textContent=(q.id||"")+": "+(q.label||"");
     block.appendChild(p4);
 
-    var sel=document.createElement("select");
+    let sel=document.createElement("select");
     sel.name=q.name;
-    var emptyOp=document.createElement("option");
+    let emptyOp=document.createElement("option");
     emptyOp.value="";
     emptyOp.textContent="-- select --";
     sel.appendChild(emptyOp);
 
-    q.options.forEach(function(opt){
-      var oEl=document.createElement("option");
+    q.options.forEach(opt=>{
+      let oEl=document.createElement("option");
       oEl.value=opt;
       oEl.textContent=opt;
       sel.appendChild(oEl);
     });
     block.appendChild(sel);
   }
-  else if(q.type==="conditional"){
-    if(q.blocks){
-      q.blocks.forEach(function(subQ){
-        renderServiceQ(subQ,block);
-      });
-    }
-  }
   else {
-    var warn=document.createElement("p");
+    let warn=document.createElement("p");
     warn.style.color="red";
     warn.textContent="Unsupported type: "+q.type;
     block.appendChild(warn);
   }
+
   parentEl.appendChild(block);
 }
 
 function renderQuestionArray(arr, parentEl){
-  arr.forEach(function(q){
-    var block=document.createElement("div");
+  arr.forEach(q=>{
+    let block=document.createElement("div");
     block.className="question-block";
 
-    if(q.label){
-      var lab=document.createElement("label");
+    // Show script hint if present
+    if(q.scriptText){
+      let hint=document.createElement("div");
+      hint.className="script-hint";
+      hint.textContent=q.scriptText;
+      block.appendChild(hint);
+    }
+
+    // label
+    if(q.label && q.type!=="label"){
+      let lab=document.createElement("label");
       lab.textContent=q.label;
       block.appendChild(lab);
     }
+
+    // special case: _summary_
     if(q.name==="_summary_"){
       block.innerHTML += generatePreviewHtml();
       parentEl.appendChild(block);
       return;
     }
 
-    var el=null;
+    let el=null;
     switch(q.type){
       case "text":
       case "date":
@@ -334,53 +379,63 @@ function renderQuestionArray(arr, parentEl){
       case "select":
         el=document.createElement("select");
         el.name=q.name;
-        if(!q.multi){
-          var optEmpty=document.createElement("option");
-          optEmpty.value="";
-          optEmpty.textContent="-- select --";
-          el.appendChild(optEmpty);
+        {
+          let emptyOp=document.createElement("option");
+          emptyOp.value="";
+          emptyOp.textContent="-- select --";
+          el.appendChild(emptyOp);
         }
-        q.options.forEach(function(opt){
-          var opEl=document.createElement("option");
-          opEl.value=opt;
-          opEl.textContent=opt;
-          el.appendChild(opEl);
+        q.options.forEach(opt=>{
+          let oEl=document.createElement("option");
+          oEl.value=opt;
+          oEl.textContent=opt;
+          el.appendChild(oEl);
         });
         break;
       case "checkbox-multi":
-        // multiple checkboxes
-        // do something similar to serviceQ
-        var pBox=document.createElement("p");
-        pBox.textContent="(multiple checkboxes)";
-        block.appendChild(pBox);
+        // We'll do a similar approach
+        let p=document.createElement("p");
+        p.textContent="(multiple checkboxes)";
+        block.appendChild(p);
 
-        q.options.forEach(function(opt){
-          var l3=document.createElement("label");
-          var c3=document.createElement("input");
-          c3.type="checkbox";
-          c3.name=q.name+"[]";
-          c3.value=opt;
-          l3.appendChild(c3);
-          l3.appendChild(document.createTextNode(opt));
-          block.appendChild(l3);
-          block.appendChild(document.createElement("br"));
+        let cList=document.createElement("div");
+        cList.className="checkbox-list";
+        block.appendChild(cList);
+
+        q.options.forEach(opt=>{
+          let lb=document.createElement("label");
+          let cc=document.createElement("input");
+          cc.type="checkbox";
+          cc.name=q.name+"[]";
+          cc.value=opt;
+          lb.appendChild(cc);
+          lb.appendChild(document.createTextNode(opt));
+          cList.appendChild(lb);
         });
+        parentEl.appendChild(block);
+        return; // done
+      case "label":
+        // if we want just a text label
+        let pLab=document.createElement("p");
+        pLab.textContent=q.label;
+        block.appendChild(pLab);
         parentEl.appendChild(block);
         return;
       default:
-        block.innerHTML += "<p style='color:red;'>Unsupported type: "+q.type+"</p>";
+        block.innerHTML+="<p style='color:red;'>Unsupported type: "+q.type+"</p>";
     }
     if(el) block.appendChild(el);
+
     parentEl.appendChild(block);
   });
 }
 
 function collectAnswers(){
-  var els=multiStepContainer.querySelectorAll("input,select,textarea");
-  els.forEach(function(el){
+  let els=multiStepContainer.querySelectorAll("input,select,textarea");
+  els.forEach(el=>{
     if(!el.name) return;
     if(el.name.endsWith("[]")){
-      var base=el.name.slice(0,-2);
+      let base=el.name.slice(0,-2);
       if(!answers[base]) answers[base]=[];
       if(el.checked) answers[base].push(el.value);
     }
@@ -389,7 +444,8 @@ function collectAnswers(){
         if(!answers[el.name]) answers[el.name]=[];
         answers[el.name].push(el.value);
       }
-    } else {
+    }
+    else {
       answers[el.name]=el.value;
     }
   });
@@ -397,27 +453,25 @@ function collectAnswers(){
 
 function validateStep(st){
   if(st===1 && answers.flow_type==="Inbound"){
-    var nm=getValue("contact_name");
+    let nm=getValue("contact_name");
     if(!nm){
-      alert("Client Name required for inbound!");
+      alert("Client Name required!");
       return false;
     }
   }
   return true;
 }
 function getValue(n){
-  var el=multiStepContainer.querySelector("[name='"+n+"']");
+  let el=multiStepContainer.querySelector("[name='"+n+"']");
   if(!el) return "";
   if(el.multiple){
-    return Array.from(el.selectedOptions).map(function(o){return o.value;});
+    return Array.from(el.selectedOptions).map(o=>o.value);
   }
   return el.value;
 }
 function generatePreviewHtml(){
-  var html="<ul>";
-  Object.entries(answers).forEach(function(entry){
-    var k=entry[0];
-    var v=entry[1];
+  let html="<ul>";
+  Object.entries(answers).forEach(([k,v])=>{
     if(Array.isArray(v)){
       html+="<li><strong>"+k+":</strong> "+v.join(", ")+"</li>";
     } else {
@@ -428,24 +482,21 @@ function generatePreviewHtml(){
   return html;
 }
 function updateProgress(st){
-  var pct=Math.round(((st-1)/(4-1))*100);
+  let pct=Math.round(((st-1)/(4-1))*100);
   if(progressBarEl){
     progressBarEl.style.width=pct+"%";
   }
 }
 
-backBtn.addEventListener("click",function(){
+backBtn.addEventListener("click",()=>{
   collectAnswers();
-  if(step===25){
-    step=2;
-  } else {
-    step--;
-    if(step<1) step=1;
-  }
+  if(step===25) step=2;
+  else step--;
+  if(step<1) step=1;
   renderStep(step);
 });
-nextBtn.addEventListener("click",function(){
-  if(!validateStep(step)) return;
+nextBtn.addEventListener("click",()=>{
+  if(!validateStep(step))return;
   collectAnswers();
   if(step===2 && answers.flow_type==="Inbound" && answers.call_type_ctm==="New Project"){
     step=25; 
@@ -456,26 +507,27 @@ nextBtn.addEventListener("click",function(){
   if(step>4) step=4;
   renderStep(step);
 });
-previewBtn.addEventListener("click",function(){
+previewBtn.addEventListener("click",()=>{
   collectAnswers();
   step=3;
   renderStep(step);
 });
 submitBtn.addEventListener("click",onSubmit);
+
 function onSubmit(){
-  if(!validateStep(step)) return;
+  if(!validateStep(step))return;
   collectAnswers();
-  var q=answers["qualification_ctm"]||"";
+  let q=answers["qualification_ctm"]||"";
   if(!q){
-    alert("Select final qualification or use 'Qualify Now'");
+    alert("Please finalize qualification or use the floating block!");
     return;
   }
   console.log("FINAL =>",answers);
-  addDoc(collection(db,"responses"),answers)
-    .then(function(docRef){
-      alert("Saved with ID:"+docRef.id);
+  addDoc(collection(db,"responses"), answers)
+    .then(docRef=>{
+      alert("Saved with ID: "+docRef.id);
     })
-    .catch(function(e){
-      alert("Error saving =>"+e);
+    .catch(err=>{
+      alert("Error saving => "+err);
     });
 }
