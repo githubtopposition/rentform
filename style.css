@@ -1,4 +1,4 @@
-/* Reset */
+/* Basic reset */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -26,7 +26,6 @@ body {
   position: relative;
 }
 
-/* Header with progress bar */
 .header {
   margin-bottom: 24px;
 }
@@ -49,7 +48,6 @@ body {
   width: 0%;
 }
 
-/* Question blocks */
 .question-block {
   background: #fafafa;
   border-left: 4px solid #42a5f5;
@@ -57,7 +55,7 @@ body {
   margin-bottom: 14px;
   border-radius: 4px;
 }
-.question-block label, 
+.question-block label,
 .question-block p {
   margin-bottom: 8px;
   display: block;
@@ -82,7 +80,6 @@ body {
   outline: none;
 }
 
-/* Nav buttons */
 .nav-buttons {
   position: absolute;
   bottom: 20px;
@@ -103,7 +100,6 @@ body {
   background: #1e88e5;
 }
 
-/* Alerts / errors */
 .alert {
   background: #fdecea;
   color: #d9534f;
@@ -111,38 +107,4 @@ body {
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 16px;
-}
-
-/* Help Icon / Tooltip (example) */
-.help-icon {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  background: #42a5f5;
-  color: #fff;
-  text-align: center;
-  line-height: 16px;
-  border-radius: 50%;
-  cursor: pointer;
-  margin-left: 6px;
-  font-size: 12px;
-  position: relative;
-}
-.help-icon:hover .help-text {
-  display: block;
-}
-.help-text {
-  display: none;
-  position: absolute;
-  top: 20px;
-  left: -80px;
-  width: 220px;
-  background: #fefefe;
-  color: #333;
-  border: 1px solid #ccc;
-  padding: 8px;
-  border-radius: 4px;
-  z-index: 999;
-  font-size: 12px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
