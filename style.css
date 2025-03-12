@@ -176,3 +176,32 @@ body {
 #qualificationBlock button:hover {
   background: #1e88e5;
 }
+
+/* Кнопка Admin Settings */
+.adminBtn {
+  float: right;            /* чтобы кнопка уехала в правый верх */
+  margin-right: 20px;
+  margin-top: -30px;       /* подстройте под свой заголовок */
+  border-radius: 4px;
+  background: #f6c234;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.adminBtn:hover {
+  background: #f2b720;
+}
+
+/* Панель админ-настроек */
+#adminSettingsPanel {
+  border: 1px solid #666;
+  background: #fafafa;
+  padding: 16px;
+  margin: 20px auto;
+  max-width: 800px;
+}
+.settings-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
