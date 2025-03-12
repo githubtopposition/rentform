@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>RentForm Script Example</title>
   <style>
-    /* Basic styling */
+    /* Basic page styling */
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
@@ -71,7 +71,7 @@
 <body>
   <div class="container">
 
-    <h1>Пример многошаговой формы 
+    <h1>Пример многошаговой формы
       <button class="btn admin-btn" id="adminSettingsBtn">Admin Settings</button>
     </h1>
 
@@ -86,32 +86,21 @@
 
   </div>
 
-  <!-- Scripts -->
+  <!-- JS files -->
   <script src="./ctm-api-config.js"></script>
   <script src="./form-handler.js"></script>
   <script>
-    // Example main script initialization
-
-    // Make sure we have an API Access Key if not stored
-    // If ctmApiConfig has them, we won't prompt again
+    // If ctmApiConfig is not set or missing the accessKey, optionally prompt user:
     if (!window.ctmApiConfig || !window.ctmApiConfig.accessKey) {
-      // We do a prompt only if absolutely needed
       const userKey = prompt("Введите ваш CTM AccessKey (или user)?");
       if (userKey) {
-        // store or use the userKey...
         window.ctmApiConfig = window.ctmApiConfig || {};
         window.ctmApiConfig.accessKey = userKey;
       }
     }
 
-    // Initialize form
-    // We assume form-handler.js exports initFormSteps or something similar
-    // In form-handler.js you might have a function like: initMultiStepForm(options)
-    //  which handles the "prevBtn", "nextBtn", etc.
-
     document.addEventListener('DOMContentLoaded', () => {
-      // English comment: Let's call an initialization from form-handler
-      // with references to the DOM elements we have.
+      // Call the init function from form-handler.js
       initMultiStepForm({
         formContainerId: 'formSteps',
         prevBtnId: 'prevBtn',
